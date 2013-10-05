@@ -6,6 +6,8 @@ import java.util.TimerTask;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Point;
 import android.util.Log;
 
 
@@ -41,7 +43,7 @@ public class Board {
 	int startX;
 	int startY;
 
-	int tileSize = 70;
+	int tileSize = 50;
 	boolean win = false;
 	boolean lose = false;
 
@@ -981,11 +983,39 @@ public class Board {
 			for(int x=0; x<width; x++){
 
 				if(!board[x][y].isOpened()&&!board[x][y].isWrong()){
-					int[] xLightTri ={xSpacing+1,xSpacing+1,xSpacing+(tileSize+2)};
-					int[] yLightTri ={ySpacing+1,ySpacing+(tileSize+2),ySpacing+1};
-
-					int[] xDarkTri ={xSpacing+(tileSize+2),xSpacing+(tileSize+2),xSpacing+1};
-					int[] yDarkTri ={ySpacing+(tileSize+2),ySpacing+1,ySpacing+(tileSize+2)};
+					
+					Paint lightGray = new Paint(Paint.ANTI_ALIAS_FLAG);
+					lightGray.setColor(android.graphics.Color.LTGRAY);
+					lightGray.setStyle(Paint.Style.FILL_AND_STROKE);
+					lightGray.setAntiAlias(true);
+					
+					Path path = new Path();
+					
+					path.moveTo(xSpacing+1, ySpacing+1);
+					path.lineTo(xSpacing+1, ySpacing+1);
+					path.lineTo(xSpacing+1, ySpacing+(tileSize+2));					
+					path.lineTo(xSpacing+(tileSize+2), ySpacing+1);
+					path.lineTo(xSpacing+1, ySpacing+1);
+					
+					path.close();
+					g.drawPath(path, lightGray);
+					
+					Paint black = new Paint(Paint.ANTI_ALIAS_FLAG);
+					black.setColor(android.graphics.Color.BLACK);
+					black.setStyle(Paint.Style.FILL_AND_STROKE);
+					black.setAntiAlias(true);
+					
+					path = new Path();
+					
+					path.moveTo(xSpacing+(tileSize+2), ySpacing+(tileSize+2));
+					path.lineTo(xSpacing+(tileSize+2), ySpacing+(tileSize+2));
+					path.lineTo(xSpacing+(tileSize+2), ySpacing+1);					
+					path.lineTo(xSpacing+1, ySpacing+(tileSize+2));
+					path.lineTo(xSpacing+(tileSize+2), ySpacing+(tileSize+2));
+					
+					path.close();
+					g.drawPath(path, black);
+					
 
 //					g.setColor(Color.LIGHT_GRAY);
 //					g.fillPolygon(xLightTri, yLightTri, 3,paint);
@@ -995,7 +1025,8 @@ public class Board {
 //
 					paint.setColor(Color.GRAY);
 					paint.setStyle(Paint.Style.FILL);
-					g.drawRect(xSpacing+1+3, ySpacing+1+3, (tileSize+1)-6+(xSpacing+1+3), (tileSize+1)-6+(ySpacing+1+3),paint);	
+					//g.drawRect(xSpacing+4, ySpacing+4, (tileSize)+(xSpacing), (tileSize)+(ySpacing),paint);
+					g.drawRect(xSpacing+tileSize/8, ySpacing+tileSize/8, (tileSize)+(xSpacing)-tileSize/8, (tileSize)+(ySpacing)-tileSize/8,paint);
 
 				}
 

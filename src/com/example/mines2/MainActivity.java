@@ -12,7 +12,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         drawView = new DrawPanel(this, this);
-        drawView.setBackgroundColor(Color.WHITE);
+        drawView.setBackgroundColor(Color.LTGRAY);
         setContentView(drawView);
 
     }

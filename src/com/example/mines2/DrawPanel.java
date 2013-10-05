@@ -19,7 +19,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	int x = 0;
 	int y = 0;
 	Board playBoard;
-	String difficulty = "Easy";
+	String difficulty = "Medium";
 	boolean gameOver = false;
 	boolean flagMode;
 	MainActivity mactivity;
