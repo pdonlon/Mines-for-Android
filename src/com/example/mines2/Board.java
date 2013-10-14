@@ -7,11 +7,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.Shader.TileMode;
+import android.graphics.Typeface;
 import android.util.Log;
 
 
@@ -22,6 +24,8 @@ public class Board {
 	//	med 	16x16 	40		216
 	//	exp 	30x16 	99		381
 
+	static Typeface tf;
+	
 	boolean doneAnimating = true;
 	DrawPanel game;
 	CheckList pressed;
@@ -47,7 +51,7 @@ public class Board {
 	int startX;
 	int startY;
 
-	int tileSize = 100;
+	int tileSize = 80;
 	boolean win = false;
 	boolean lose = false;
 
@@ -84,6 +88,8 @@ public class Board {
 		this.height = height;
 		bombs = new CheckList();
 
+		tf = Typeface.create("Font Name",Typeface.BOLD);
+		
 		startup();
 	}
 
@@ -995,7 +1001,9 @@ public class Board {
 		
 		Paint paint = new Paint();
 		paint.setColor(Color.BLACK);
-
+		paint.setTypeface(tf);
+		paint.setTextSize(30);
+		
 		if(speedTrick)
 			g.drawText("", 1, 1, paint);
 		else
@@ -1154,9 +1162,8 @@ public class Board {
 					}
 
 					else if(board[x][y].beingPressed()){
-						paint.setColor(Color.GRAY);
 						paint.setStyle(Paint.Style.FILL);
-						g.drawRect(xSpacing+1, ySpacing+1, (tileSize+1)+xSpacing+1, (tileSize+1)+ySpacing+1,paint);
+						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,gray);
 					}
 
 					else if(board[x][y].isQuestionMarked()){
@@ -1173,59 +1180,31 @@ public class Board {
 
 					if(board[x][y].isBomb()){
 
-						paint.setColor(color1);
-						paint.setStyle(Paint.Style.FILL);
-						g.drawRect(xSpacing+1, ySpacing+1, (tileSize+1), (tileSize+1),paint);
+							paint.setStyle(Style.FILL);
+							paint.setColor(Color.RED);
+							g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
+							paint.setColor(Color.BLACK);
+							g.drawCircle(xSpacing+(tileSize/2), ySpacing+(tileSize/2), (tileSize/4),paint);
 
-						paint.setColor(Color.BLACK);
+							paint.setStrokeWidth(5);
+							paint.setStyle(Style.STROKE);
+							g.drawLine(xSpacing+(tileSize/4), ySpacing+(tileSize/4), xSpacing+tileSize-(tileSize/4), ySpacing+tileSize-(tileSize/4),paint); //top left/bottom right
+							g.drawLine(xSpacing+(tileSize/8), ySpacing+(tileSize/2), xSpacing+tileSize-(tileSize/8), ySpacing+(tileSize/2),paint);//mid 
+							g.drawLine(xSpacing+tileSize-(tileSize/4), ySpacing+(tileSize/4), xSpacing+(tileSize/4), ySpacing+tileSize-(tileSize/4),paint);//top right/bottom left
+							g.drawLine(xSpacing+(tileSize/2), ySpacing+(tileSize/8), xSpacing+(tileSize/2), ySpacing+tileSize-(tileSize/8),paint);//top/down
 
-						if(compactMode){
-							g.drawCircle(xSpacing+9-2, ySpacing+9-2, 10,paint);
-
-							g.drawLine(xSpacing+8-2, ySpacing+8-2, xSpacing+21-2, ySpacing+21-2,paint); //top left/bottom right
-							g.drawLine(xSpacing+8-2, ySpacing+8-2-1, xSpacing+21-2, ySpacing+21-2-1,paint); //top left/bottom right
-							g.drawLine(xSpacing+8-2, ySpacing+8-2+1, xSpacing+21-2, ySpacing+21-2+1,paint); //top left/bottom right
-
-							g.drawLine(xSpacing+5-2, ySpacing+14-2, xSpacing+23-2, ySpacing+14-2,paint);//mid 
-							g.drawLine(xSpacing+5-2, ySpacing+14-1, xSpacing+23-2, ySpacing+14-1,paint);//mid 
-
-
-							g.drawLine(xSpacing+21-2, ySpacing+8-2, xSpacing+8-2, ySpacing+21-2,paint);//top right/bottom left
-							g.drawLine(xSpacing+21-2, ySpacing+8-2-1, xSpacing+8-2, ySpacing+21-2-1,paint);//top right/bottom left
-							g.drawLine(xSpacing+21-2, ySpacing+8-2+1, xSpacing+8-2, ySpacing+21-2+1,paint);//top right/bottom left
-
-							g.drawLine(xSpacing+14-2, ySpacing+5-2, xSpacing+14-2, ySpacing+23-2,paint);//top/down
-							g.drawLine(xSpacing+14-1, ySpacing+5-2, xSpacing+14-1, ySpacing+23-2,paint);//top/down
-
+							paint.setColor(color1);
+							paint.setStyle(Paint.Style.STROKE); 
+							g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
+							paint.setColor(Color.GRAY);
+							paint.setStrokeWidth(3);
+							g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
+							
 						}
-						else{
-
-							g.drawCircle(xSpacing+9, ySpacing+9, 11,paint);
-
-							g.drawLine(xSpacing+7, ySpacing+7, xSpacing+22, ySpacing+22,paint); //top left/bottom right
-							g.drawLine(xSpacing+7, ySpacing+7-1, xSpacing+22, ySpacing+22-1,paint); //top left/bottom right
-							g.drawLine(xSpacing+7, ySpacing+7+1, xSpacing+22, ySpacing+22+1,paint); //top left/bottom right
-
-
-							g.drawLine(xSpacing+5-2, ySpacing+14, xSpacing+23+2, ySpacing+14,paint);//mid 
-							g.drawLine(xSpacing+5-2, ySpacing+15, xSpacing+23+2, ySpacing+15,paint);//mid 
-
-							g.drawLine(xSpacing+22, ySpacing+7, xSpacing+7, ySpacing+22,paint);//top right/bottom left
-							g.drawLine(xSpacing+22, ySpacing+7-1, xSpacing+7, ySpacing+22-1,paint);//top right/bottom left
-							g.drawLine(xSpacing+22, ySpacing+7+1, xSpacing+7, ySpacing+22+1,paint);//top right/bottom left
-
-							g.drawLine(xSpacing+14, ySpacing+5-2, xSpacing+14, ySpacing+23+2,paint);//top/down
-							g.drawLine(xSpacing+15, ySpacing+5-2, xSpacing+15, ySpacing+23+2,paint);//top/down
-
-						}
-						paint.setColor(Color.GRAY);
-						paint.setStyle(Paint.Style.STROKE);
-						g.drawRect(xSpacing+1, ySpacing+1, (tileSize)+xSpacing+1, (tileSize)+ySpacing+1,paint);
-					}
 					else if(board[x][y].getBombsSurrounding()==0)
 					{
 						paint.setColor(color1);
-						paint.setStyle(Paint.Style.STROKE); //stroke?
+						paint.setStyle(Paint.Style.STROKE);
 						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
 						paint.setColor(Color.GRAY);
 						paint.setStrokeWidth(3);
@@ -1240,16 +1219,16 @@ public class Board {
 						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
 						paint.setColor(Color.WHITE);
 						//g.setFont(font);
-						if(compactMode)
-							g.drawText(""+board[x][y].getBombsSurrounding(), xSpacing+(tileSize/2), ySpacing+(tileSize/2),paint);
-						else
-							g.drawText(""+board[x][y].getBombsSurrounding(), xSpacing+(tileSize/2), ySpacing+(tileSize/2),paint);
+//						if(compactMode)
+//							g.drawText(""+board[x][y].getBombsSurrounding(), xSpacing+((tileSize*2)/3), ySpacing+((tileSize*2)/3),paint);
+//						else
+						g.drawText(""+board[x][y].getBombsSurrounding(), xSpacing+((tileSize*2)/5), ySpacing+((tileSize*2)/3),paint);
 						paint.setColor(Color.GRAY);
 						paint.setStyle(Paint.Style.STROKE);
-						g.drawRect(xSpacing+1, ySpacing+1, (tileSize)+xSpacing+1, (tileSize)+ySpacing+1,paint);
+						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
 
 						paint.setColor(color1);
-						paint.setStyle(Paint.Style.STROKE); //stroke?
+						paint.setStyle(Paint.Style.STROKE); 
 						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
 						paint.setColor(Color.GRAY);
 						paint.setStrokeWidth(3);
@@ -1310,6 +1289,16 @@ public class Board {
 				g.drawRect(getHint()[0]*(tileSize+1)+2, getHint()[1]*(tileSize+1)+2, 20, 20,paint);
 		}
 
+		int colors1 = Color.argb(0, 0, 0, 0);
+		int colors2 = Color.argb(100, 0, 0, 0);
+
+		
+		Shader shader = new LinearGradient(0, 0, (width)*tileSize, (height)*tileSize, colors1, colors2, TileMode.CLAMP);
+		//Paint paint = new Paint(); 
+		paint.setShader(shader); 
+		
+		g.drawRect(new RectF(0, 0, (width)*tileSize, (height)*tileSize), paint);
+		
 		if(gameOver()){
 			paint.setColor(Color.WHITE);
 			paint.setStyle(Paint.Style.STROKE);
@@ -1317,6 +1306,7 @@ public class Board {
 			paint.setColor(Color.BLACK);
 			g.drawText(gameOverMessage(), 2, getWindowY()-63,paint);
 		}
+		
 		//g.setColor(Color.);
 		//getwindowy -36
 	}
