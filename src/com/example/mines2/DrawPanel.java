@@ -26,7 +26,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	Board playBoard;
 	String difficulty = "Easy";
 	boolean gameOver = false;
-	boolean flagMode;
+	public static boolean flagMode;
 	MainActivity mactivity;
 
 	Context ctx;
@@ -286,7 +286,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		});
 
 		b.start();
-
 	}
 
 	public void explosion(){

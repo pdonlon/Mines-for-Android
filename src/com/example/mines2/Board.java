@@ -1086,6 +1086,18 @@ public class Board {
 		int color2 = Color.argb(128,39,39,39);
 		int color3 = Color.argb(127,200,200,200);;
 
+
+		int colors1 = Color.argb(0, 0, 0, 0);
+		int colors2 = Color.argb(100, 0, 0, 0);
+
+		
+		Shader shader = new LinearGradient(0, 0, (width)*tileSize, (height)*tileSize, colors1, colors2, TileMode.CLAMP);
+		//Paint paint = new Paint(); 
+		paint.setShader(shader); 
+		
+		g.drawRect(new RectF(0, 0, (width)*tileSize, (height)*tileSize), paint);
+		
+		paint.setShader(null);
 		//		Graphics2D g2d = (Graphics2D)g;
 		//		GradientPaint gp = new GradientPaint(0, 0, color1, getWindowX(), getWindowY()-78, color2);
 		//		g2d.setPaint(gp);
@@ -1161,7 +1173,7 @@ public class Board {
 						}
 					}
 
-					else if(board[x][y].beingPressed()){
+					else if(board[x][y].beingPressed()&&!DrawPanel.flagMode){
 						paint.setStyle(Paint.Style.FILL);
 						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,gray);
 					}
@@ -1288,16 +1300,6 @@ public class Board {
 
 				g.drawRect(getHint()[0]*(tileSize+1)+2, getHint()[1]*(tileSize+1)+2, 20, 20,paint);
 		}
-
-		int colors1 = Color.argb(0, 0, 0, 0);
-		int colors2 = Color.argb(100, 0, 0, 0);
-
-		
-		Shader shader = new LinearGradient(0, 0, (width)*tileSize, (height)*tileSize, colors1, colors2, TileMode.CLAMP);
-		//Paint paint = new Paint(); 
-		paint.setShader(shader); 
-		
-		g.drawRect(new RectF(0, 0, (width)*tileSize, (height)*tileSize), paint);
 		
 		if(gameOver()){
 			paint.setColor(Color.WHITE);
