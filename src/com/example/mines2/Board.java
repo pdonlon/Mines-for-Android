@@ -5,9 +5,13 @@ import java.util.TimerTask;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.RectF;
+import android.graphics.Shader;
+import android.graphics.Shader.TileMode;
 import android.util.Log;
 
 
@@ -43,7 +47,7 @@ public class Board {
 	int startX;
 	int startY;
 
-	int tileSize = 50;
+	int tileSize = 100;
 	boolean win = false;
 	boolean lose = false;
 
@@ -59,7 +63,7 @@ public class Board {
 	boolean compactMode = false;
 
 	int timeCounter;
-	
+
 	int windowSizeY = 1100;
 
 	Timer timer;
@@ -192,7 +196,7 @@ public class Board {
 	}
 
 	public boolean checkBoard(){
-		
+
 		boolean correct = true;		
 
 		for(int y =0; y<height; y++){
@@ -334,11 +338,11 @@ public class Board {
 			public void run() {
 				timeCounter++;
 				game.mactivity.runOnUiThread(new Runnable() {
-				     public void run() {
+					public void run() {
 
-					game.invalidate();
+						game.invalidate();
 
-				    }
+					}
 				});
 			}
 
@@ -348,8 +352,11 @@ public class Board {
 
 	public void endTimer()
 	{
-		timer.cancel();
-		timer.purge();
+		if(timer != null)
+		{
+			timer.cancel();
+			timer.purge();
+		}
 	}
 
 	public void placeBombs(){
@@ -506,7 +513,7 @@ public class Board {
 
 		game.mactivity.runOnUiThread(new Runnable(){ public void run() {
 			game.invalidate();}});	
-		}
+	}
 
 	public void finishFlagging(){
 
@@ -571,8 +578,8 @@ public class Board {
 
 	public void tileAnimation(){
 
-//		runOnUiThread(new Runnable(){
-//		t = new Thread( new Runnable()
+		//		runOnUiThread(new Runnable(){
+		//		t = new Thread( new Runnable()
 		t =  new Thread(new Runnable(){
 			public void run(){
 
@@ -589,7 +596,7 @@ public class Board {
 					}
 
 					tileTurn();
-					
+
 					zeroCount--;
 				}
 				doneAnimating = true;
@@ -610,7 +617,7 @@ public class Board {
 		}
 
 		game.mactivity.runOnUiThread(new Runnable(){ public void run() {
-		game.invalidate();}});
+			game.invalidate();}});
 	}
 
 	public void markFlagged(int x, int y){
@@ -766,7 +773,7 @@ public class Board {
 									&& flagsSurrounding(x,y) != board[x][y].getBombsSurrounding())){
 						xHint = x;
 						yHint = y;
-						
+
 						if(flagsSurrounding(x,y)== b.getBombsSurrounding()&&unopenedAndUnflaggedAround(x, y))
 							hintColorYellow = true;
 						else
@@ -786,12 +793,12 @@ public class Board {
 		showHint = true;
 
 	}
-	
+
 	public void removeHint(){
 
 		showHint = false;
 	}
-	
+
 	public void setCheck(boolean a)
 	{
 		showCheck = a;
@@ -843,41 +850,41 @@ public class Board {
 		else 
 			if(firstTurn){
 
-			setStartXandY(x,y);
+				setStartXandY(x,y);
 
-			firstTurn = false;
-			openBox(x,y);
+				firstTurn = false;
+				openBox(x,y);
 
-		}
-		else{
-
-			if(!board[x][y].isOpened()){
-
-				board[x][y].setOpened(true);
-
-				if(board[x][y].isBomb()){
-
-					touchedBomb = true;
-					lose = true;
-
-					bombs.remove(x,y); //so it won't print twice
-					bombs.enque(x, y); //first to print
-
-					endOfGame();
-
-
-				}
-
-				else if(board[x][y].getBombsSurrounding()==0){
-					openZeros(x, y);
-					
-					// TODO this crashes and shouldn't instead should animate and shit
-					tileAnimation();
-
-				}
-				else;
 			}
-		}
+			else{
+
+				if(!board[x][y].isOpened()){
+
+					board[x][y].setOpened(true);
+
+					if(board[x][y].isBomb()){
+
+						touchedBomb = true;
+						lose = true;
+
+						bombs.remove(x,y); //so it won't print twice
+						bombs.enque(x, y); //first to print
+
+						endOfGame();
+
+
+					}
+
+					else if(board[x][y].getBombsSurrounding()==0){
+						openZeros(x, y);
+
+						// TODO this crashes and shouldn't instead should animate and shit
+						tileAnimation();
+
+					}
+					else;
+				}
+			}
 		checkWin();
 	}
 
@@ -963,9 +970,32 @@ public class Board {
 
 	public void paintBoard(Canvas g){
 
+
+		//		Paint pgray = new Paint();
+		//		pgray.setColor(android.graphics.Color.DKGRAY);
+		//		//g.drawRect(0, 0, (tileSize)*getWidth(), (tileSize*getHeight()), pgray);
+
+
+		Paint black = new Paint();
+		black.setColor(Color.BLACK);
+		
+		Paint background = new Paint();
+		background.setColor(Color.LTGRAY);
+
+		Paint gray = new Paint();
+		gray.setColor(Color.GRAY);
+		Paint darkGray = new Paint();
+		darkGray.setColor(Color.argb(255, 100, 100, 100));
+		Paint thickDarkGray = new Paint();
+		thickDarkGray.setColor(Color.argb(255, 100, 100, 100));
+		Paint lightGray = new Paint();
+		lightGray.setColor(Color.argb(255, 170, 170, 170));
+		
+		int gap = tileSize/6; //originally 15
+		
 		Paint paint = new Paint();
 		paint.setColor(Color.BLACK);
-		
+
 		if(speedTrick)
 			g.drawText("", 1, 1, paint);
 		else
@@ -983,69 +1013,78 @@ public class Board {
 			for(int x=0; x<width; x++){
 
 				if(!board[x][y].isOpened()&&!board[x][y].isWrong()){
-					
-					Paint lightGray = new Paint(Paint.ANTI_ALIAS_FLAG);
-					lightGray.setColor(android.graphics.Color.LTGRAY);
-					lightGray.setStyle(Paint.Style.FILL_AND_STROKE);
-					lightGray.setAntiAlias(true);
-					
-					Path path = new Path();
-					
-					path.moveTo(xSpacing+1, ySpacing+1);
-					path.lineTo(xSpacing+1, ySpacing+1);
-					path.lineTo(xSpacing+1, ySpacing+(tileSize+2));					
-					path.lineTo(xSpacing+(tileSize+2), ySpacing+1);
-					path.lineTo(xSpacing+1, ySpacing+1);
-					
-					path.close();
-					g.drawPath(path, lightGray);
-					
-					Paint black = new Paint(Paint.ANTI_ALIAS_FLAG);
-					black.setColor(android.graphics.Color.BLACK);
-					black.setStyle(Paint.Style.FILL_AND_STROKE);
-					black.setAntiAlias(true);
-					
-					path = new Path();
-					
-					path.moveTo(xSpacing+(tileSize+2), ySpacing+(tileSize+2));
-					path.lineTo(xSpacing+(tileSize+2), ySpacing+(tileSize+2));
-					path.lineTo(xSpacing+(tileSize+2), ySpacing+1);					
-					path.lineTo(xSpacing+1, ySpacing+(tileSize+2));
-					path.lineTo(xSpacing+(tileSize+2), ySpacing+(tileSize+2));
-					
-					path.close();
-					g.drawPath(path, black);
-					
 
-//					g.setColor(Color.LIGHT_GRAY);
-//					g.fillPolygon(xLightTri, yLightTri, 3,paint);
+					// set width of thick cheese lines
+					thickDarkGray.setStrokeWidth(15);				
+
+							// draw background square
+							g.drawRect(xSpacing, ySpacing, tileSize + xSpacing, tileSize + ySpacing, darkGray);
+
+							// draw cheese rectangles
+							g.drawRect(xSpacing, ySpacing, gap + xSpacing, tileSize + ySpacing, lightGray);
+							g.drawRect(xSpacing, ySpacing, tileSize + xSpacing, gap + ySpacing, lightGray);
+
+							// draw cheese lines
+							g.drawLine((gap/3) + xSpacing, tileSize+(gap/3) + ySpacing, tileSize+5 + xSpacing, 5 + ySpacing, thickDarkGray);
+
+							// draw inner square
+							g.drawRect(gap + xSpacing, gap + ySpacing, tileSize-gap + xSpacing, tileSize-gap + ySpacing, gray);
+
+						
+					
+					// cover up excess with white triangles
+					//g.drawRect((width+1)*100, 100, (width+1)*100 + 20, (height+1)*100, background);
+					//g.drawRect(100, (height+1)*100, (width+1)*100, (height+1)*100 + 20, background);
+
+					// gradient stuff
+//					int color1 = Color.argb(0, 0, 0, 0);
+//					int color2 = Color.argb(100, 0, 0, 0);
 //
-//					g.setColor(Color.BLACK);
-//					g.fillPolygon(xDarkTri, yDarkTri, 3);
+//					
+//					Shader shader = new LinearGradient(0, 0, (width)*tileSize, (height)*tileSize, color1, color2, TileMode.CLAMP);
+//					//Paint paint = new Paint(); 
+//					paint.setShader(shader); 
+//					
+//					g.drawRect(new RectF(0, 0, (width)*tileSize, (height)*tileSize), paint); 
+					
+//					Paint lightGray = new Paint();
+//					lightGray.setColor(android.graphics.Color.LTGRAY);
+//					lightGray.setStyle(Paint.Style.FILL_AND_STROKE);
 //
-					paint.setColor(Color.GRAY);
-					paint.setStyle(Paint.Style.FILL);
-					//g.drawRect(xSpacing+4, ySpacing+4, (tileSize)+(xSpacing), (tileSize)+(ySpacing),paint);
-					g.drawRect(xSpacing+tileSize/8, ySpacing+tileSize/8, (tileSize)+(xSpacing)-tileSize/8, (tileSize)+(ySpacing)-tileSize/8,paint);
+//					Paint darkGray = new Paint();
+//					darkGray.setColor(android.graphics.Color.DKGRAY);
+//					darkGray.setStyle(Paint.Style.FILL_AND_STROKE);
+//					//lightGray.setStrokeWidth(3);
+//					g.drawRect(xSpacing,  ySpacing, xSpacing+tileSize, ySpacing+tileSize, darkGray);
+//
+//					g.drawLine(xSpacing,  ySpacing, xSpacing+tileSize, ySpacing+tileSize, lightGray);
+//					g.drawLine(xSpacing+tileSize, ySpacing, xSpacing,  ySpacing+tileSize, lightGray);
+
+					
+					
+//					paint.setColor(Color.GRAY);
+//					paint.setStyle(Paint.Style.FILL);
+//					//g.drawRect(xSpacing+4, ySpacing+4, (tileSize)+(xSpacing), (tileSize)+(ySpacing),paint);
+//					g.drawRect(xSpacing+tileSize/8, ySpacing+tileSize/8, (tileSize)+(xSpacing)-tileSize/8, (tileSize)+(ySpacing)-tileSize/8,paint);
 
 				}
 
-				xSpacing+=(tileSize+1);
+				xSpacing+=(tileSize);
 			}
-			ySpacing+=(tileSize+1);
+			ySpacing+=(tileSize);
 		}
 
 		int color1 =Color.argb(128,140,140,140);
 		int color2 = Color.argb(128,39,39,39);
 		int color3 = Color.argb(127,200,200,200);;
 
-//		Graphics2D g2d = (Graphics2D)g;
-//		GradientPaint gp = new GradientPaint(0, 0, color1, getWindowX(), getWindowY()-78, color2);
-//		g2d.setPaint(gp);
-		
+		//		Graphics2D g2d = (Graphics2D)g;
+		//		GradientPaint gp = new GradientPaint(0, 0, color1, getWindowX(), getWindowY()-78, color2);
+		//		g2d.setPaint(gp);
+
 		paint.setStyle(Paint.Style.FILL);
 		//g.drawRect( 0, 0, getWindowX(), getWindowY()-78,paint);	#1
-		
+
 		//g2d.fillRect(xSpacing+1, ySpacing+1, (tileSize), (tileSize));
 
 		ySpacing =0;
@@ -1142,7 +1181,7 @@ public class Board {
 
 						if(compactMode){
 							g.drawCircle(xSpacing+9-2, ySpacing+9-2, 10,paint);
-							
+
 							g.drawLine(xSpacing+8-2, ySpacing+8-2, xSpacing+21-2, ySpacing+21-2,paint); //top left/bottom right
 							g.drawLine(xSpacing+8-2, ySpacing+8-2-1, xSpacing+21-2, ySpacing+21-2-1,paint); //top left/bottom right
 							g.drawLine(xSpacing+8-2, ySpacing+8-2+1, xSpacing+21-2, ySpacing+21-2+1,paint); //top left/bottom right
@@ -1150,19 +1189,19 @@ public class Board {
 							g.drawLine(xSpacing+5-2, ySpacing+14-2, xSpacing+23-2, ySpacing+14-2,paint);//mid 
 							g.drawLine(xSpacing+5-2, ySpacing+14-1, xSpacing+23-2, ySpacing+14-1,paint);//mid 
 
-							
+
 							g.drawLine(xSpacing+21-2, ySpacing+8-2, xSpacing+8-2, ySpacing+21-2,paint);//top right/bottom left
 							g.drawLine(xSpacing+21-2, ySpacing+8-2-1, xSpacing+8-2, ySpacing+21-2-1,paint);//top right/bottom left
 							g.drawLine(xSpacing+21-2, ySpacing+8-2+1, xSpacing+8-2, ySpacing+21-2+1,paint);//top right/bottom left
-							
+
 							g.drawLine(xSpacing+14-2, ySpacing+5-2, xSpacing+14-2, ySpacing+23-2,paint);//top/down
 							g.drawLine(xSpacing+14-1, ySpacing+5-2, xSpacing+14-1, ySpacing+23-2,paint);//top/down
 
 						}
 						else{
-							
+
 							g.drawCircle(xSpacing+9, ySpacing+9, 11,paint);
-							
+
 							g.drawLine(xSpacing+7, ySpacing+7, xSpacing+22, ySpacing+22,paint); //top left/bottom right
 							g.drawLine(xSpacing+7, ySpacing+7-1, xSpacing+22, ySpacing+22-1,paint); //top left/bottom right
 							g.drawLine(xSpacing+7, ySpacing+7+1, xSpacing+22, ySpacing+22+1,paint); //top left/bottom right
@@ -1174,7 +1213,7 @@ public class Board {
 							g.drawLine(xSpacing+22, ySpacing+7, xSpacing+7, ySpacing+22,paint);//top right/bottom left
 							g.drawLine(xSpacing+22, ySpacing+7-1, xSpacing+7, ySpacing+22-1,paint);//top right/bottom left
 							g.drawLine(xSpacing+22, ySpacing+7+1, xSpacing+7, ySpacing+22+1,paint);//top right/bottom left
-							
+
 							g.drawLine(xSpacing+14, ySpacing+5-2, xSpacing+14, ySpacing+23+2,paint);//top/down
 							g.drawLine(xSpacing+15, ySpacing+5-2, xSpacing+15, ySpacing+23+2,paint);//top/down
 
@@ -1186,34 +1225,42 @@ public class Board {
 					else if(board[x][y].getBombsSurrounding()==0)
 					{
 						paint.setColor(color1);
-						paint.setStyle(Paint.Style.STROKE);
-						g.drawRect(xSpacing+1, ySpacing+1, (tileSize+1)+xSpacing+1, (tileSize+1)+ySpacing+1,paint);
+						paint.setStyle(Paint.Style.STROKE); //stroke?
+						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
 						paint.setColor(Color.GRAY);
-						g.drawRect(xSpacing+1, ySpacing+1, (tileSize)+xSpacing+1, (tileSize)+ySpacing+1,paint);
+						paint.setStrokeWidth(3);
+						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
+
 					}
 
 					else{
 						paint.setStyle(Paint.Style.FILL);
-						g.drawRect(xSpacing+1, ySpacing+1, (tileSize+1)+xSpacing+1, (tileSize+1)+ySpacing+1,paint);
+						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
 						paint.setColor(color3);
-						g.drawRect(xSpacing+1, ySpacing+1, (tileSize+1)+xSpacing+1, (tileSize+1)+ySpacing+1,paint);
+						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
 						paint.setColor(Color.WHITE);
 						//g.setFont(font);
 						if(compactMode)
-							g.drawText(""+board[x][y].getBombsSurrounding(), xSpacing+8, ySpacing+16,paint);
+							g.drawText(""+board[x][y].getBombsSurrounding(), xSpacing+(tileSize/2), ySpacing+(tileSize/2),paint);
 						else
-							g.drawText(""+board[x][y].getBombsSurrounding(), xSpacing+10, ySpacing+19,paint);
+							g.drawText(""+board[x][y].getBombsSurrounding(), xSpacing+(tileSize/2), ySpacing+(tileSize/2),paint);
 						paint.setColor(Color.GRAY);
 						paint.setStyle(Paint.Style.STROKE);
 						g.drawRect(xSpacing+1, ySpacing+1, (tileSize)+xSpacing+1, (tileSize)+ySpacing+1,paint);
 
+						paint.setColor(color1);
+						paint.setStyle(Paint.Style.STROKE); //stroke?
+						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
+						paint.setColor(Color.GRAY);
+						paint.setStrokeWidth(3);
+						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
 					}
 
 				}
 
-				xSpacing += (tileSize+1);
+				xSpacing += (tileSize);
 			}
-			ySpacing+= (tileSize+1);
+			ySpacing+= (tileSize);
 		}
 
 		paint.setColor(Color.GRAY);
@@ -1229,13 +1276,13 @@ public class Board {
 
 		g.drawText("___________________________________________________________________________________________________________________________________________________", 
 				0, windowSizeY-50,paint);
-		
+
 		g.drawText("Open Mode: ", 60, windowSizeY,paint);
 		g.drawText("|: ", 350, windowSizeY,paint);
 		g.drawText("Flag Mode: ", getWindowX()+40, windowSizeY,paint);
-		
+
 		if(showCheck){
-			
+
 			if(checkBoard())
 				paint.setColor(Color.argb(80, 0, 255, 0));
 
@@ -1244,22 +1291,22 @@ public class Board {
 
 			paint.setStyle(Paint.Style.FILL);
 			g.drawRect(0, 0, getWindowX(), getWindowY()-78,paint);
-			
+
 		}
 
 		if(showHint){
 			getHint();
 			int color = Color.argb(255,255,0,0);
 			if(hintColorYellow)
-			color = Color.argb(255,255,255,0);
+				color = Color.argb(255,255,255,0);
 
 			paint.setColor(color);
-//			g2d.setStroke(new BasicStroke(3));
+			//			g2d.setStroke(new BasicStroke(3));
 			paint.setStyle(Paint.Style.STROKE);
 			if(!compactMode)
 				g.drawRect(getHint()[0]*(tileSize+1)+2, getHint()[1]*(tileSize+1)+2, 25, 25,paint);
 			else
-		
+
 				g.drawRect(getHint()[0]*(tileSize+1)+2, getHint()[1]*(tileSize+1)+2, 20, 20,paint);
 		}
 
