@@ -1220,6 +1220,9 @@ public class Board {
 						}
 					else if(board[x][y].getBombsSurrounding()==0)
 					{
+						paint.setColor(Color.LTGRAY);
+						paint.setStyle(Paint.Style.FILL);
+						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
 						paint.setColor(color1);
 						paint.setStyle(Paint.Style.STROKE);
 						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
