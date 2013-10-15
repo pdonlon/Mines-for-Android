@@ -1077,6 +1077,12 @@ public class Board {
 //					g.drawRect(xSpacing+tileSize/8, ySpacing+tileSize/8, (tileSize)+(xSpacing)-tileSize/8, (tileSize)+(ySpacing)-tileSize/8,paint);
 
 				}
+				
+				else{
+					paint.setColor(Color.LTGRAY);
+					paint.setStyle(Paint.Style.FILL);
+					g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
+				}
 
 				xSpacing+=(tileSize);
 			}
@@ -1220,9 +1226,9 @@ public class Board {
 						}
 					else if(board[x][y].getBombsSurrounding()==0)
 					{
-						paint.setColor(Color.LTGRAY);
-						paint.setStyle(Paint.Style.FILL);
-						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
+//						paint.setColor(Color.LTGRAY);
+//						paint.setStyle(Paint.Style.FILL);
+//						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
 						paint.setColor(color1);
 						paint.setStyle(Paint.Style.STROKE);
 						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
