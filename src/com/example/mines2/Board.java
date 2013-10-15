@@ -1204,8 +1204,8 @@ public class Board {
 					if(board[x][y].isBomb()){
 
 							paint.setStyle(Style.FILL);
-							paint.setColor(Color.RED);
-							g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
+//							paint.setColor(Color.RED);
+//							g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
 							paint.setColor(Color.BLACK);
 							g.drawCircle(xSpacing+(tileSize/2), ySpacing+(tileSize/2), (tileSize/4),paint);
 
@@ -1226,12 +1226,7 @@ public class Board {
 						}
 					else if(board[x][y].getBombsSurrounding()==0)
 					{
-//						paint.setColor(Color.LTGRAY);
-//						paint.setStyle(Paint.Style.FILL);
-//						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
-						paint.setColor(color1);
 						paint.setStyle(Paint.Style.STROKE);
-						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
 						paint.setColor(Color.GRAY);
 						paint.setStrokeWidth(3);
 						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
@@ -1244,19 +1239,11 @@ public class Board {
 						paint.setColor(color3);
 						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
 						paint.setColor(Color.WHITE);
-						//g.setFont(font);
-//						if(compactMode)
-//							g.drawText(""+board[x][y].getBombsSurrounding(), xSpacing+((tileSize*2)/3), ySpacing+((tileSize*2)/3),paint);
-//						else
+
 						g.drawText(""+board[x][y].getBombsSurrounding(), xSpacing+((tileSize*2)/5), ySpacing+((tileSize*2)/3),paint);
+
 						paint.setColor(Color.GRAY);
 						paint.setStyle(Paint.Style.STROKE);
-						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
-
-						paint.setColor(color1);
-						paint.setStyle(Paint.Style.STROKE); 
-						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
-						paint.setColor(Color.GRAY);
 						paint.setStrokeWidth(3);
 						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
 					}
