@@ -199,7 +199,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				}
 
 			}
-			else
 
 				if(playBoard.lose){
 
