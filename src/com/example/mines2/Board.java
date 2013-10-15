@@ -15,6 +15,7 @@ import android.graphics.Shader;
 import android.graphics.Shader.TileMode;
 import android.graphics.Typeface;
 import android.util.Log;
+import android.view.Display;
 
 
 public class Board {
@@ -51,7 +52,7 @@ public class Board {
 	int startX;
 	int startY;
 
-	int tileSize = 80;
+	int tileSize = 70;
 	boolean win = false;
 	boolean lose = false;
 
@@ -90,6 +91,7 @@ public class Board {
 
 		tf = Typeface.create("Font Name",Typeface.BOLD);
 		
+		//tileSize = MainActivity.screenWidth / width;
 		startup();
 	}
 
@@ -1037,7 +1039,6 @@ public class Board {
 
 							// draw inner square
 							g.drawRect(gap + xSpacing, gap + ySpacing, tileSize-gap + xSpacing, tileSize-gap + ySpacing, gray);
-
 						
 					
 					// cover up excess with white triangles
@@ -1082,6 +1083,10 @@ public class Board {
 			ySpacing+=(tileSize);
 		}
 
+		// cover up excess with white triangles
+		g.drawRect((width)*tileSize, 0, (width)*tileSize+tileSize/5, (height)*tileSize, background);
+		g.drawRect(0, (height)*tileSize, (width)*tileSize, (height)*tileSize+tileSize/5, background);
+		
 		int color1 =Color.argb(128,140,140,140);
 		int color2 = Color.argb(128,39,39,39);
 		int color3 = Color.argb(127,200,200,200);;

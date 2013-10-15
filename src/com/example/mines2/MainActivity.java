@@ -2,15 +2,21 @@ package com.example.mines2;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
+
+
 
 public class MainActivity extends Activity {
     DrawPanel drawView;
 	
 	static MenuItem mens1;
 	static MenuItem mens2;
+	
+	static int screenWidth, screenHeight;
 
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -38,6 +44,12 @@ public class MainActivity extends Activity {
         drawView = new DrawPanel(this, this);
         drawView.setBackgroundColor(Color.LTGRAY);
         setContentView(drawView);
+        
+		
+		Display display = getWindowManager().getDefaultDisplay();
+		
+		screenWidth = display.getWidth();  // deprecated
+		screenHeight = display.getHeight();  // deprecated
 
     }
 }
