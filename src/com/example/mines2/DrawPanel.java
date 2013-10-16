@@ -136,7 +136,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			int pressX = (int) e.getX();
 			int pressY = (int) e.getY();
 
-			if(pressY > playBoard.windowSizeY-49){
+			if(pressY > MainActivity.screenHeight*5/7){
 				if(pressX>350){
 					flagMode = true;
 					Log.v("Flagged On: ", ""+e.getX()+ " "+e.getY());

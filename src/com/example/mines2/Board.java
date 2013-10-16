@@ -91,7 +91,11 @@ public class Board {
 
 		tf = Typeface.create("Font Name",Typeface.BOLD);
 		
-		//tileSize = MainActivity.screenWidth / width;
+		if (MainActivity.screenWidth < MainActivity.screenHeight)
+			tileSize = MainActivity.screenWidth / width;
+		else
+			tileSize = (MainActivity.screenHeight-200) / height;
+
 		startup();
 	}
 
@@ -1145,43 +1149,19 @@ public class Board {
 
 					else if(board[x][y].isFlagged()){
 
-						if(compactMode){
-							xArray[0] = xSpacing+8; //top left
-							yArray[0] = ySpacing+6;
-
-							xArray[1] = xSpacing+17; //top mid
-							yArray[1] = ySpacing+9;
-
-							xArray[2] = xSpacing+7; //bottom right
-							yArray[2] = ySpacing+13;
-						}
-
-						else{
-							xArray[0] = xSpacing+10; //top left
-							yArray[0] = ySpacing+8;
-
-							xArray[1] = xSpacing+23; //top mid
-							yArray[1] = ySpacing+13;
-
-							xArray[2] = xSpacing+10; //bottom right
-							yArray[2] = ySpacing+16;
-						}
-
+						paint.setStyle(Style.FILL);
+												
+						g.drawRect(xSpacing+tileSize/3, ySpacing+(tileSize)/3, xSpacing+(tileSize*2)/3, ySpacing+(tileSize)/2, paint);
+						
+						paint.setColor(Color.BLACK);
+						g.drawLine(xSpacing+(tileSize)/3, ySpacing+(tileSize)/3, xSpacing+(tileSize)/3, ySpacing+(tileSize*3)/4, paint);
+						
 						paint.setColor(Color.RED);
 						//g.fillPolygon(xArray,yArray, 3);
 						paint.setColor(color3);
 						//g.fillPolygon(xArray,yArray, 3);
 						paint.setColor(Color.BLACK);
-						if(compactMode)
-						{
-							g.drawLine(xSpacing+7, ySpacing+6, xSpacing+7, ySpacing+17,paint);
-							g.drawLine(xSpacing+8, ySpacing+6, xSpacing+8, ySpacing+17,paint);
-						}
-						else{
-							g.drawLine(xSpacing+9, ySpacing+8, xSpacing+9, ySpacing+22,paint);
-							g.drawLine(xSpacing+10, ySpacing+8, xSpacing+10, ySpacing+22,paint);
-
-						}
+				
 					}
 
 					else if(board[x][y].beingPressed()&&!DrawPanel.flagMode){
@@ -1267,11 +1247,11 @@ public class Board {
 		g.drawText("Time: "+timeCounter, getWindowX()-75, getWindowY()-63,paint);
 
 		g.drawText("___________________________________________________________________________________________________________________________________________________", 
-				0, windowSizeY-50,paint);
+				0, (MainActivity.screenHeight*5)/7,paint);
 
-		g.drawText("Open Mode: ", 60, windowSizeY,paint);
-		g.drawText("|: ", 350, windowSizeY,paint);
-		g.drawText("Flag Mode: ", getWindowX()+40, windowSizeY,paint);
+		g.drawText("Open Mode ", (MainActivity.screenWidth*1)/8, (MainActivity.screenHeight*6)/7,paint);
+		g.drawText("|: ", MainActivity.screenWidth/2, (MainActivity.screenHeight*6)/7,paint);
+		g.drawText("Flag Mode ", (MainActivity.screenWidth*5)/8, (MainActivity.screenHeight*6)/7,paint);
 
 		if(showCheck){
 
