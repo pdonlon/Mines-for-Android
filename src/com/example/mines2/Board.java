@@ -27,7 +27,7 @@ public class Board {
 
 	static Typeface tf;
 	
-	boolean doneAnimating = true;
+	static boolean doneAnimating = true;
 	DrawPanel game;
 	CheckList pressed;
 	CheckList bombs;
@@ -932,11 +932,9 @@ public class Board {
 		for(int i=0; i<height; i++){
 			for(int k=0; k<width; k++){
 
-
-
 				if(board[k][i].isFlagged()&&board[k][i].isBomb()){
 					bombs.remove(k,i);
-					//					unsafeBombCount--;
+						unsafeBombCount--;
 				}
 
 				else if(board[k][i].isFlagged()&&!board[k][i].isBomb()){
@@ -979,6 +977,17 @@ public class Board {
 		return gameOver;
 	}
 
+	public void zoomIn()
+	{	
+		tileSize = tileSize*2;
+		
+	}
+	
+	public void zoomOut(){
+		
+		tileSize = tileSize/2;
+		
+	}
 
 	public void paintBoard(Canvas g){
 
@@ -1008,15 +1017,13 @@ public class Board {
 		Paint paint = new Paint();
 		paint.setColor(Color.BLACK);
 		paint.setTypeface(tf);
-		paint.setTextSize(30);
+		paint.setTextSize(tileSize/3);
 		
 		if(speedTrick)
 			g.drawText("", 1, 1, paint);
 		else
 			speedTrick = true;
 
-		int[] xArray = new int[3];
-		int[] yArray = new int[3];
 
 		int ySpacing = 0; 
 
@@ -1029,7 +1036,7 @@ public class Board {
 				if(!board[x][y].isOpened()&&!board[x][y].isWrong()){
 
 					// set width of thick cheese lines
-					thickDarkGray.setStrokeWidth(15);				
+					thickDarkGray.setStrokeWidth(tileSize/6);				
 
 							// draw background square
 							g.drawRect(xSpacing, ySpacing, tileSize + xSpacing, tileSize + ySpacing, darkGray);
@@ -1039,8 +1046,11 @@ public class Board {
 							g.drawRect(xSpacing, ySpacing, tileSize + xSpacing, gap + ySpacing, lightGray);
 
 							// draw cheese lines
-							g.drawLine((gap/3) + xSpacing, tileSize+(gap/3) + ySpacing, tileSize+5 + xSpacing, 5 + ySpacing, thickDarkGray);
+							g.drawLine((gap/3) + xSpacing, tileSize+(gap/3) + ySpacing, tileSize+(gap/3) + xSpacing, (gap/3) + ySpacing, thickDarkGray);
 
+							//g.drawLine(5 + xOff, 105 + yOff, 105 + xOff, 5 + yOff, thickDarkGray);
+
+							
 							// draw inner square
 							g.drawRect(gap + xSpacing, gap + ySpacing, tileSize-gap + xSpacing, tileSize-gap + ySpacing, gray);
 						
@@ -1151,10 +1161,11 @@ public class Board {
 
 						paint.setStyle(Style.FILL);
 												
-						g.drawRect(xSpacing+tileSize/3, ySpacing+(tileSize)/3, xSpacing+(tileSize*2)/3, ySpacing+(tileSize)/2, paint);
+						g.drawRect(xSpacing+tileSize/3, ySpacing+(tileSize)/3, xSpacing+(tileSize*2)/3, ySpacing+(tileSize)/2, paint); //flag
 						
 						paint.setColor(Color.BLACK);
-						g.drawLine(xSpacing+(tileSize)/3, ySpacing+(tileSize)/3, xSpacing+(tileSize)/3, ySpacing+(tileSize*3)/4, paint);
+						paint.setStrokeWidth(3);
+						g.drawLine(xSpacing+(tileSize)/3, ySpacing+(tileSize)/3, xSpacing+(tileSize)/3, ySpacing+(tileSize*3)/4, paint); //flag pole
 						
 						paint.setColor(Color.RED);
 						//g.fillPolygon(xArray,yArray, 3);
@@ -1273,13 +1284,10 @@ public class Board {
 				color = Color.argb(255,255,255,0);
 
 			paint.setColor(color);
-			//			g2d.setStroke(new BasicStroke(3));
+			paint.setStrokeWidth(tileSize/12);
 			paint.setStyle(Paint.Style.STROKE);
-			if(!compactMode)
-				g.drawRect(getHint()[0]*(tileSize+1)+2, getHint()[1]*(tileSize+1)+2, 25, 25,paint);
-			else
 
-				g.drawRect(getHint()[0]*(tileSize+1)+2, getHint()[1]*(tileSize+1)+2, 20, 20,paint);
+				g.drawRect(getHint()[0]*(tileSize), getHint()[1]*(tileSize), getHint()[0]*(tileSize)+tileSize, getHint()[1]*(tileSize)+tileSize,paint);
 		}
 		
 		if(gameOver()){

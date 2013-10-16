@@ -16,6 +16,8 @@ public class MainActivity extends Activity {
 
 	static MenuItem mens1;
 	static MenuItem mens2;
+	static MenuItem mens3;
+	static MenuItem mens4;
 
 	static int screenWidth, screenHeight;
 
@@ -23,16 +25,30 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		mens1 = menu.add(0, 1, 2, "Hint");
 		mens2 = menu.add(0, 2, 2,"Reset");
+		mens3 = menu.add(0, 3, 2, "Zoom In");
+		mens4 = menu.add(0, 4, 2,"Zoom Out");
 		return true;
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case 1:
-			drawView.playBoard.showHint = true;
+			drawView.playBoard.hint();
+			runOnUiThread(new Runnable(){ public void run() {
+				drawView.invalidate();}});	
 			return true;
 		case 2:
 			drawView.resetGame();
+			return true;
+		case 3:
+			drawView.playBoard.zoomIn();
+			runOnUiThread(new Runnable(){ public void run() {
+				drawView.invalidate();}});
+			return true;
+		case 4:
+			drawView.playBoard.zoomOut();
+			runOnUiThread(new Runnable(){ public void run() {
+				drawView.invalidate();}});
 			return true;
 		}
 		return false;
