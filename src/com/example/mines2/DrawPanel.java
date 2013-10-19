@@ -228,21 +228,22 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				//			x = ((int) e.getX()-50);
 				//			y = ((int) e.getY()-50);
 				//			invalidate(); //repaint()
-				if(playBoard.getZoom()>0)
+				if(playBoard.getZoom()>-5)
 				{
-					float x = (e.getX());
-					float y = (e.getY());
+//					float x = (e.getX());
+//					float y = (e.getY());
+//
+//					float diffX = playBoard.getOffX() - x;
+//					Log.v(" here: ", ""+playBoard.getOffX());
+//					//if((x-diffX)+playBoard.getWidth()*playBoard.getTileSize()>0
+//					//	&& (x-diffX)+playBoard.getWidth()*playBoard.getTileSize()<playBoard.getWidth()*playBoard.getTileSize())
+//
+//					playBoard.setOffX(x - diffX);
+//					
+//					//Log.v(" here: ", ""+diffX);
+//					float diffY = playBoard.getOffY() - y;
+//					playBoard.setOffY(y - diffY);
 
-					float diffX = playBoard.getOffX() - x;
-					//				if(Math.abs(diffX)>50)
-					//if((x-diffX)+playBoard.getWidth()*playBoard.getTileSize()>0
-					//	&& (x-diffX)+playBoard.getWidth()*playBoard.getTileSize()<playBoard.getWidth()*playBoard.getTileSize())
-
-					playBoard.setOffX(x - diffX);
-					Log.v(" here: ", ""+x);
-					float diffY = playBoard.getOffY() - y;
-					//				if(Math.abs(diffY)>50)
-					playBoard.setOffY(y - diffY);
 					//				
 					//				x = (e.getX()-2-playBoard.getOffX())/(playBoard.tileSize+1);
 					//				y = (e.getY()-4-playBoard.getOffY())/(playBoard.tileSize+1);

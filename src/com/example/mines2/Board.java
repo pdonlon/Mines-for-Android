@@ -932,7 +932,7 @@ public class Board {
 
 		if(getOpenedBoxCount() == totalBoxes - totalBombs){
 			win = true;
-			if(flagCount >0){
+			if(flagCount >=0){
 				finishFlagging();
 			}
 
@@ -947,7 +947,7 @@ public class Board {
 		for(int y=0; y<height; y++){
 			for(int x=0; x<width; x++){
 
-				if(board[x][y].isOpened())
+				if(board[x][y].isOpened()&&!board[x][y].isBomb())
 					opened++;
 			}
 		}
