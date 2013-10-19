@@ -18,6 +18,9 @@ public class MainActivity extends Activity {
 	static MenuItem mens2;
 	static MenuItem mens3;
 	static MenuItem mens4;
+	static MenuItem mens5;
+	static MenuItem mens6;
+	static MenuItem mens7;
 
 	static int screenWidth, screenHeight;
 
@@ -27,6 +30,9 @@ public class MainActivity extends Activity {
 		mens2 = menu.add(0, 2, 2,"Reset");
 		mens3 = menu.add(0, 3, 2, "Zoom In");
 		mens4 = menu.add(0, 4, 2,"Zoom Out");
+		mens2 = menu.add(0, 5, 2,"Easy");
+		mens3 = menu.add(0, 6, 2, "Meduim");
+		mens4 = menu.add(0, 7, 2,"Hard");
 		return true;
 	}
 
@@ -41,19 +47,50 @@ public class MainActivity extends Activity {
 			drawView.resetGame();
 			return true;
 		case 3:
-			drawView.playBoard.zoomIn();
+			drawView.playBoard.zoomIn(2,2);
 			runOnUiThread(new Runnable(){ public void run() {
 				drawView.invalidate();}});
 			return true;
 		case 4:
-			drawView.playBoard.zoomOut();
+			drawView.playBoard.zoomOut(2,2);
 			runOnUiThread(new Runnable(){ public void run() {
 				drawView.invalidate();}});
+			return true;
+		case 5:
+			drawView.playBoard.setWidth(9);
+			drawView.playBoard.setHeight(9);
+			drawView.setDifficulty("Easy");
+			drawView.playBoard.setTotalBombs(10);
+			startingUp();
+			return true;
+		case 6:
+			drawView.playBoard.setWidth(16);
+			drawView.playBoard.setHeight(16);
+			drawView.setDifficulty("Medium");
+			drawView.playBoard.setTotalBombs(40);
+			startingUp();
+			return true;
+		case 7:
+			drawView.playBoard.setWidth(16);
+			drawView.playBoard.setHeight(30);
+			drawView.setDifficulty("Hard");
+			drawView.playBoard.setTotalBombs(99);
+			startingUp();
 			return true;
 		}
 		return false;
 	}
 
+	public void startingUp()
+	{
+		drawView.playBoard.setUp();
+		drawView.resetGame();
+		drawView.playBoard.initializeBoard();
+		drawView.playBoard.adjustTiles();
+		runOnUiThread(new Runnable(){ public void run() {
+			drawView.invalidate();}});
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

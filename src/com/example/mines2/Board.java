@@ -70,6 +70,8 @@ public class Board {
 	int timeCounter;
 
 	int windowSizeY = 1100;
+	float offX;
+	float offY;
 
 	Timer timer;
 	TimerTask tt;
@@ -90,12 +92,9 @@ public class Board {
 		bombs = new CheckList();
 
 		tf = Typeface.create("Font Name",Typeface.BOLD);
-		
-		if (MainActivity.screenWidth < MainActivity.screenHeight)
-			tileSize = MainActivity.screenWidth / width;
-		else
-			tileSize = (MainActivity.screenHeight-200) / height;
 
+		adjustTiles();
+		
 		startup();
 	}
 
@@ -154,20 +153,6 @@ public class Board {
 		return lose;
 	}
 
-	public int getWindowX(){
-
-		int windowX = (tileSize+1)*getWidth()+1;
-
-		return windowX;
-	}
-
-	public int getWindowY(){
-
-		int windowY = (tileSize+1)*getHeight()+80;
-
-		return windowY;
-	}
-
 	public boolean getFirstTurn(){
 
 		return firstTurn;
@@ -191,6 +176,16 @@ public class Board {
 
 	}
 
+	public float getOffX()
+	{
+		return offX;
+	}
+	
+	public float getOffY()
+	{
+		return offY;
+	}
+	
 	public void check(){
 
 		checkBoard = true;
@@ -225,7 +220,10 @@ public class Board {
 
 	public boolean alreadyThere(int x, int y){
 
+		if(pressed!= null)
 		return pressed.alreadyHead(x, y);
+		
+		return true;
 
 	}
 
@@ -275,6 +273,15 @@ public class Board {
 
 	}
 
+	public void adjustTiles(){
+		
+		if (MainActivity.screenWidth < MainActivity.screenHeight)
+			tileSize = MainActivity.screenWidth / width;
+		else
+			tileSize = (MainActivity.screenHeight-200) / height;
+		
+	}
+	
 	public void startup(){
 
 		bombs.empty();
@@ -977,16 +984,21 @@ public class Board {
 		return gameOver;
 	}
 
-	public void zoomIn()
+	public void zoomIn(int x, int y)
 	{	
 		tileSize = tileSize*2;
 		
+		offX = -tileSize*x/2;
+		offY = -tileSize*y/2;
+		
 	}
 	
-	public void zoomOut(){
+	public void zoomOut(int x, int y){
 		
 		tileSize = tileSize/2;
 		
+		offX = -tileSize/x;
+		offY = -tileSize/y;
 	}
 
 	public void paintBoard(Canvas g){
@@ -995,7 +1007,6 @@ public class Board {
 		//		Paint pgray = new Paint();
 		//		pgray.setColor(android.graphics.Color.DKGRAY);
 		//		//g.drawRect(0, 0, (tileSize)*getWidth(), (tileSize*getHeight()), pgray);
-
 
 		Paint black = new Paint();
 		black.setColor(Color.BLACK);
@@ -1012,7 +1023,7 @@ public class Board {
 		Paint lightGray = new Paint();
 		lightGray.setColor(Color.argb(255, 170, 170, 170));
 		
-		int gap = tileSize/6; //originally 15
+		float gap = tileSize/6; //originally 15
 		
 		Paint paint = new Paint();
 		paint.setColor(Color.BLACK);
@@ -1025,11 +1036,11 @@ public class Board {
 			speedTrick = true;
 
 
-		int ySpacing = 0; 
+		float ySpacing = offX; 
 
 		for(int y=0; y<height; y++){
 
-			int xSpacing = 0;
+			float xSpacing = offY;
 
 			for(int x=0; x<width; x++){
 
@@ -1048,9 +1059,6 @@ public class Board {
 							// draw cheese lines
 							g.drawLine((gap/3) + xSpacing, tileSize+(gap/3) + ySpacing, tileSize+(gap/3) + xSpacing, (gap/3) + ySpacing, thickDarkGray);
 
-							//g.drawLine(5 + xOff, 105 + yOff, 105 + xOff, 5 + yOff, thickDarkGray);
-
-							
 							// draw inner square
 							g.drawRect(gap + xSpacing, gap + ySpacing, tileSize-gap + xSpacing, tileSize-gap + ySpacing, gray);
 						
@@ -1104,8 +1112,8 @@ public class Board {
 		}
 
 		// cover up excess with white triangles
-		g.drawRect((width)*tileSize, 0, (width)*tileSize+tileSize/5, (height)*tileSize, background);
-		g.drawRect(0, (height)*tileSize, (width)*tileSize, (height)*tileSize+tileSize/5, background);
+		g.drawRect((width)*tileSize+offX, 0+offY, (width)*tileSize+tileSize/5+offX, (height)*tileSize+offY, background);
+		g.drawRect(0+offX, (height)*tileSize+offY, (width)*tileSize+offX, (height)*tileSize+tileSize/5+offY, background);
 		
 		int color1 =Color.argb(128,140,140,140);
 		int color2 = Color.argb(128,39,39,39);
@@ -1116,11 +1124,11 @@ public class Board {
 		int colors2 = Color.argb(100, 0, 0, 0);
 
 		
-		Shader shader = new LinearGradient(0, 0, (width)*tileSize, (height)*tileSize, colors1, colors2, TileMode.CLAMP);
+		Shader shader = new LinearGradient(offX, offY, (width)*tileSize+offX, (height)*tileSize+offY, colors1, colors2, TileMode.CLAMP);
 		//Paint paint = new Paint(); 
 		paint.setShader(shader); 
 		
-		g.drawRect(new RectF(0, 0, (width)*tileSize, (height)*tileSize), paint);
+		g.drawRect(new RectF(offX, offY, (width)*tileSize+offX, (height)*tileSize+offY), paint);
 		
 		paint.setShader(null);
 		//		Graphics2D g2d = (Graphics2D)g;
@@ -1132,11 +1140,11 @@ public class Board {
 
 		//g2d.fillRect(xSpacing+1, ySpacing+1, (tileSize), (tileSize));
 
-		ySpacing =0;
+		ySpacing = offY;
 
 		for(int y=0; y<height; y++){
 
-			int xSpacing = 0;
+			float xSpacing = offX;
 
 			for(int x=0; x<width; x++){
 
@@ -1175,7 +1183,7 @@ public class Board {
 				
 					}
 
-					else if(board[x][y].beingPressed()&&!DrawPanel.flagMode){
+					else if(board[x][y].beingPressed()&&!(game.getFlagMode())){
 						paint.setStyle(Paint.Style.FILL);
 						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,gray);
 					}
@@ -1248,15 +1256,15 @@ public class Board {
 
 		paint.setColor(Color.GRAY);
 		paint.setStyle(Paint.Style.STROKE);
-		g.drawRect(0, getWindowY()-79, getWindowX(), 22,paint);
+		//g.drawRect(0, getWindowY()-79, getWindowX(), 22,paint);
 		paint.setColor(Color.WHITE);
 		paint.setStyle(Paint.Style.FILL);
-		g.drawRect(0, getWindowY()-78, getWindowX(), 21,paint);
+		//g.drawRect(0, getWindowY()-78, getWindowX(), 21,paint);
 		paint.setColor(Color.BLACK);
 		//g.setFont(new Font("Arial", Font.BOLD,13)); // like the little mermaid
-		g.drawText("Flags: "+getFlagCount(), 25, getWindowY()-63,paint);
-		g.drawText("Time: "+timeCounter, getWindowX()-75, getWindowY()-63,paint);
-
+		g.drawText("Time: "+timeCounter, (MainActivity.screenWidth*1)/9, height*tileSize + tileSize/2,paint);
+		g.drawText("Flags: "+getFlagCount(), (MainActivity.screenWidth*1)/2, height*tileSize + tileSize/2,paint);
+		
 		g.drawText("___________________________________________________________________________________________________________________________________________________", 
 				0, (MainActivity.screenHeight*5)/7,paint);
 
@@ -1273,7 +1281,7 @@ public class Board {
 				paint.setColor(Color.argb(80, 255, 0, 0));
 
 			paint.setStyle(Paint.Style.FILL);
-			g.drawRect(0, 0, getWindowX(), getWindowY()-78,paint);
+			g.drawRect(0, 0, MainActivity.screenWidth, MainActivity.screenHeight,paint);
 
 		}
 
@@ -1293,9 +1301,9 @@ public class Board {
 		if(gameOver()){
 			paint.setColor(Color.WHITE);
 			paint.setStyle(Paint.Style.STROKE);
-			g.drawRect(0, getWindowY()-78, getWindowX(), 21,paint);
+			//g.drawRect(0, getWindowY()-78, getWindowX(), 21,paint);
 			paint.setColor(Color.BLACK);
-			g.drawText(gameOverMessage(), 2, getWindowY()-63,paint);
+			//g.drawText(gameOverMessage(), 2, getWindowY()-63,paint);
 		}
 		
 		//g.setColor(Color.);

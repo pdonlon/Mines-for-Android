@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader.TileMode;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,11 +27,21 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	Board playBoard;
 	String difficulty = "Easy";
 	boolean gameOver = false;
-	public static boolean flagMode;
+	boolean flagMode;
 	MainActivity mactivity;
 
 	Context ctx;
 
+	public boolean getFlagMode()
+	{
+		return flagMode;
+	}
+	
+	public void setFlagMode(boolean a)
+	{	
+		flagMode = a;
+	}
+	
 	public DrawPanel(Context context, MainActivity mactivity) {
 
 		super(context);      
@@ -60,6 +71,11 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 		this.playBoard.initializeBoard();
 
+	}
+	
+	public void setDifficulty(String a){
+
+		difficulty = a;
 	}
 
 	// paintComponent()
@@ -130,11 +146,11 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				//Log.v("Pressed here: ", ""+e.getX()+ " "+e.getY()); //takes label and text
 				playBoard.removeHint();
 
-				int x = ((int) e.getX()-2)/(playBoard.tileSize+1);
-				int y = ((int) e.getY()-4)/(playBoard.tileSize+1);
+				float x = (e.getX()-2-playBoard.getOffX())/(playBoard.tileSize+1);
+				float y = (e.getY()-4-playBoard.getOffY())/(playBoard.tileSize+1);
 
-				int pressX = (int) e.getX();
-				int pressY = (int) e.getY();
+				float pressX = e.getX()-playBoard.getOffX();
+				float pressY = e.getY()-playBoard.getOffY();
 
 				if(pressY > MainActivity.screenHeight*5/7){
 					if(pressX>350){
@@ -156,23 +172,23 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				if (e.getY() < 0)
 					return true;
 
-				playBoard.add(x, y);
-				playBoard.press(x,y);
+				playBoard.add((int)x, (int)y);
+				playBoard.press((int)x, (int)y);
 				invalidate();
 
 			}
 			else if(e.getAction() == MotionEvent.ACTION_UP)
 			{//released
 				//Log.v("Released here: ", ""+e.getX()+ " "+e.getY());
-				x = ((int) e.getX()-50);
-				y = ((int) e.getY()-50);
+				float x = (e.getX()-50-playBoard.getOffX());
+				float y = (e.getY()-50-playBoard.getOffY());
 				invalidate(); //repaint()
 
 				if(!playBoard.isEmpty())
 					playBoard.resetPressed();
 
-				int x = ((int)e.getX()-2)/(playBoard.tileSize+1);
-				int y = ((int)e.getY()-4)/(playBoard.tileSize+1);
+				x = (e.getX()-2-playBoard.getOffX())/(playBoard.tileSize+1);
+				y = (e.getY()-4-playBoard.getOffY())/(playBoard.tileSize+1);
 
 				if (e.getY() < 0)
 					return true;
@@ -181,19 +197,19 @@ public class DrawPanel extends View implements View.OnTouchListener {
 					return true;
 
 
-				if(playBoard.isValid(x, y)){
+				if(playBoard.isValid((int)x, (int)y)){
 
 					if(gameOver)
 						resetGame();
 
-					else if(!playBoard.isOpen(x,y)&&!flagMode)
-						playBoard.open(x, y);
+					else if(!playBoard.isOpen((int)x, (int)y)&&!flagMode)
+						playBoard.open((int)x, (int)y);
 					else if(!flagMode)
-						playBoard.fastClick(x,y);
+						playBoard.fastClick((int)x, (int)y);
 
 					if(!gameOver()&&flagMode){
 
-						playBoard.markFlagged(x, y);
+						playBoard.markFlagged((int)x, (int)y);
 						Log.v("Flagged here: ", ""+e.getX()+ " "+e.getY());
 
 					}
@@ -215,18 +231,18 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				//			y = ((int) e.getY()-50);
 				//			invalidate(); //repaint()
 
-				int x = ((int) e.getX()-2)/(playBoard.tileSize+1);
-				int y = ((int) e.getY()-4)/(playBoard.tileSize+1);
+				float x = (e.getX()-2-playBoard.getOffX())/(playBoard.tileSize+1);
+				float y = (e.getY()-4-playBoard.getOffY())/(playBoard.tileSize+1);
 
 				if (x >= playBoard.getWidth() || y >= playBoard.getHeight())
 					return true;
 
 				invalidate();
 
-				if(!playBoard.alreadyThere(x,y)&&playBoard.isValid(x, y)){
+				if(!playBoard.alreadyThere((int)x, (int)y)&&playBoard.isValid((int)x, (int)y)){
 					playBoard.resetPressed();
-					playBoard.replace(x, y);
-					playBoard.press(x,y);
+					playBoard.replace((int)x, (int)y);
+					playBoard.press((int)x, (int)y);
 					invalidate();
 				}
 				invalidate();
@@ -237,7 +253,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		else
 			return true;
 	}
-
 
 	public boolean gameOver(){
 
@@ -265,10 +280,24 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 	public void bombAnimation(){
 
+		final String tempDifficulty = difficulty;
+		
+		int vibrationTime; 
+		
+		if(tempDifficulty.contains("Easy"))
+			vibrationTime = 50;
+		else if(tempDifficulty.contains("Medium"))
+			vibrationTime = 25;
+		else 
+			vibrationTime = 10;
+		
+		final int tempVibration = vibrationTime;
+		
 		Thread b;
 		b = new Thread( new Runnable(){
 			public void run(){
 
+				Vibrator v = (Vibrator) mactivity.getSystemService(Context.VIBRATOR_SERVICE);
 				Board.doneAnimating = false;
 
 				int bombsLeft = playBoard.getUnsafeBombCount()-1;
@@ -276,13 +305,14 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				while(bombsLeft>0){
 
 					try {
-						Thread.sleep(5);
+						Thread.sleep(tempVibration);
 					} catch(InterruptedException ex) {
 						Thread.currentThread().interrupt();
 					}
 
 					explosion();
-
+					// Vibration in milliseconds
+					v.vibrate(tempVibration);
 					bombsLeft--;
 				}
 				Board.doneAnimating = true;
