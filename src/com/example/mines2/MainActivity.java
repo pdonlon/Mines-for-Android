@@ -47,12 +47,12 @@ public class MainActivity extends Activity {
 			drawView.resetGame();
 			return true;
 		case 3:
-			drawView.playBoard.zoomIn(2,2);
+			drawView.playBoard.zoomIn(8,8);
 			runOnUiThread(new Runnable(){ public void run() {
 				drawView.invalidate();}});
 			return true;
 		case 4:
-			drawView.playBoard.zoomOut(2,2);
+			drawView.playBoard.zoomOut(8,8);
 			runOnUiThread(new Runnable(){ public void run() {
 				drawView.invalidate();}});
 			return true;

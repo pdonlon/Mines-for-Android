@@ -26,7 +26,7 @@ public class Board {
 	//	exp 	30x16 	99		381
 
 	static Typeface tf;
-	
+
 	static boolean doneAnimating = true;
 	DrawPanel game;
 	CheckList pressed;
@@ -51,8 +51,9 @@ public class Board {
 
 	int startX;
 	int startY;
+	int zoom;
 
-	int tileSize = 70;
+	float tileSize = 70;
 	boolean win = false;
 	boolean lose = false;
 
@@ -94,7 +95,7 @@ public class Board {
 		tf = Typeface.create("Font Name",Typeface.BOLD);
 
 		adjustTiles();
-		
+
 		startup();
 	}
 
@@ -116,6 +117,16 @@ public class Board {
 	public void setHeight(int a){
 
 		height = a;
+	}
+	
+	public float getTileSize()
+	{
+		return tileSize;
+	}
+	
+	public int getZoom()
+	{
+		return zoom;
 	}
 
 	public int getTotalBombs(){
@@ -180,10 +191,20 @@ public class Board {
 	{
 		return offX;
 	}
+
+	public void setOffX(float a)
+	{
+		offX = a;
+	}
 	
 	public float getOffY()
 	{
 		return offY;
+	}
+
+	public void setOffY(float a)
+	{
+		offY = a;
 	}
 	
 	public void check(){
@@ -221,8 +242,8 @@ public class Board {
 	public boolean alreadyThere(int x, int y){
 
 		if(pressed!= null)
-		return pressed.alreadyHead(x, y);
-		
+			return pressed.alreadyHead(x, y);
+
 		return true;
 
 	}
@@ -274,14 +295,14 @@ public class Board {
 	}
 
 	public void adjustTiles(){
-		
+
 		if (MainActivity.screenWidth < MainActivity.screenHeight)
 			tileSize = MainActivity.screenWidth / width;
 		else
 			tileSize = (MainActivity.screenHeight-200) / height;
-		
+
 	}
-	
+
 	public void startup(){
 
 		bombs.empty();
@@ -941,7 +962,7 @@ public class Board {
 
 				if(board[k][i].isFlagged()&&board[k][i].isBomb()){
 					bombs.remove(k,i);
-						unsafeBombCount--;
+					unsafeBombCount--;
 				}
 
 				else if(board[k][i].isFlagged()&&!board[k][i].isBomb()){
@@ -987,18 +1008,47 @@ public class Board {
 	public void zoomIn(int x, int y)
 	{	
 		tileSize = tileSize*2;
-		
+
 		offX = -tileSize*x/2;
 		offY = -tileSize*y/2;
+
+		float difference;
+
+		if(width*tileSize+offX <= MainActivity.screenWidth){
+			difference = MainActivity.screenWidth - (width*tileSize+offX);
+			offX = offX + difference/2;
+		}
+
+		if(height*tileSize+offY <= MainActivity.screenHeight){
+			difference = MainActivity.screenHeight - (height*tileSize+offY);
+			offY = offY + difference/2;
+		}
+
+		zoom++;
 		
 	}
-	
+
 	public void zoomOut(int x, int y){
-		
+
 		tileSize = tileSize/2;
-		
+
 		offX = -tileSize/x;
 		offY = -tileSize/y;
+
+		float difference;
+
+		if(width*tileSize+offX <= MainActivity.screenWidth){
+			difference = MainActivity.screenWidth - (width*tileSize+offX);
+			offX = offX + difference/2;
+		}
+
+		if(height*tileSize+offY <= MainActivity.screenHeight){
+			difference = MainActivity.screenHeight - (height*tileSize+offY);
+			offY = offY + difference/2;
+		}
+		
+		zoom--;
+		
 	}
 
 	public void paintBoard(Canvas g){
@@ -1010,7 +1060,7 @@ public class Board {
 
 		Paint black = new Paint();
 		black.setColor(Color.BLACK);
-		
+
 		Paint background = new Paint();
 		background.setColor(Color.LTGRAY);
 
@@ -1022,25 +1072,25 @@ public class Board {
 		thickDarkGray.setColor(Color.argb(255, 100, 100, 100));
 		Paint lightGray = new Paint();
 		lightGray.setColor(Color.argb(255, 170, 170, 170));
-		
+
 		float gap = tileSize/6; //originally 15
-		
+
 		Paint paint = new Paint();
 		paint.setColor(Color.BLACK);
 		paint.setTypeface(tf);
 		paint.setTextSize(tileSize/3);
-		
+
 		if(speedTrick)
 			g.drawText("", 1, 1, paint);
 		else
 			speedTrick = true;
 
 
-		float ySpacing = offX; 
+		float ySpacing = offY; 
 
 		for(int y=0; y<height; y++){
 
-			float xSpacing = offY;
+			float xSpacing = offX;
 
 			for(int x=0; x<width; x++){
 
@@ -1049,57 +1099,57 @@ public class Board {
 					// set width of thick cheese lines
 					thickDarkGray.setStrokeWidth(tileSize/6);				
 
-							// draw background square
-							g.drawRect(xSpacing, ySpacing, tileSize + xSpacing, tileSize + ySpacing, darkGray);
+					// draw background square
+					g.drawRect(xSpacing, ySpacing, tileSize + xSpacing, tileSize + ySpacing, darkGray);
 
-							// draw cheese rectangles
-							g.drawRect(xSpacing, ySpacing, gap + xSpacing, tileSize + ySpacing, lightGray);
-							g.drawRect(xSpacing, ySpacing, tileSize + xSpacing, gap + ySpacing, lightGray);
+					// draw cheese rectangles
+					g.drawRect(xSpacing, ySpacing, gap + xSpacing, tileSize + ySpacing, lightGray);
+					g.drawRect(xSpacing, ySpacing, tileSize + xSpacing, gap + ySpacing, lightGray);
 
-							// draw cheese lines
-							g.drawLine((gap/3) + xSpacing, tileSize+(gap/3) + ySpacing, tileSize+(gap/3) + xSpacing, (gap/3) + ySpacing, thickDarkGray);
+					// draw cheese lines
+					g.drawLine((gap/3) + xSpacing, tileSize+(gap/3) + ySpacing, tileSize+(gap/3) + xSpacing, (gap/3) + ySpacing, thickDarkGray);
 
-							// draw inner square
-							g.drawRect(gap + xSpacing, gap + ySpacing, tileSize-gap + xSpacing, tileSize-gap + ySpacing, gray);
-						
-					
+					// draw inner square
+					g.drawRect(gap + xSpacing, gap + ySpacing, tileSize-gap + xSpacing, tileSize-gap + ySpacing, gray);
+
+
 					// cover up excess with white triangles
 					//g.drawRect((width+1)*100, 100, (width+1)*100 + 20, (height+1)*100, background);
 					//g.drawRect(100, (height+1)*100, (width+1)*100, (height+1)*100 + 20, background);
 
 					// gradient stuff
-//					int color1 = Color.argb(0, 0, 0, 0);
-//					int color2 = Color.argb(100, 0, 0, 0);
-//
-//					
-//					Shader shader = new LinearGradient(0, 0, (width)*tileSize, (height)*tileSize, color1, color2, TileMode.CLAMP);
-//					//Paint paint = new Paint(); 
-//					paint.setShader(shader); 
-//					
-//					g.drawRect(new RectF(0, 0, (width)*tileSize, (height)*tileSize), paint); 
-					
-//					Paint lightGray = new Paint();
-//					lightGray.setColor(android.graphics.Color.LTGRAY);
-//					lightGray.setStyle(Paint.Style.FILL_AND_STROKE);
-//
-//					Paint darkGray = new Paint();
-//					darkGray.setColor(android.graphics.Color.DKGRAY);
-//					darkGray.setStyle(Paint.Style.FILL_AND_STROKE);
-//					//lightGray.setStrokeWidth(3);
-//					g.drawRect(xSpacing,  ySpacing, xSpacing+tileSize, ySpacing+tileSize, darkGray);
-//
-//					g.drawLine(xSpacing,  ySpacing, xSpacing+tileSize, ySpacing+tileSize, lightGray);
-//					g.drawLine(xSpacing+tileSize, ySpacing, xSpacing,  ySpacing+tileSize, lightGray);
+					//					int color1 = Color.argb(0, 0, 0, 0);
+					//					int color2 = Color.argb(100, 0, 0, 0);
+					//
+					//					
+					//					Shader shader = new LinearGradient(0, 0, (width)*tileSize, (height)*tileSize, color1, color2, TileMode.CLAMP);
+					//					//Paint paint = new Paint(); 
+					//					paint.setShader(shader); 
+					//					
+					//					g.drawRect(new RectF(0, 0, (width)*tileSize, (height)*tileSize), paint); 
 
-					
-					
-//					paint.setColor(Color.GRAY);
-//					paint.setStyle(Paint.Style.FILL);
-//					//g.drawRect(xSpacing+4, ySpacing+4, (tileSize)+(xSpacing), (tileSize)+(ySpacing),paint);
-//					g.drawRect(xSpacing+tileSize/8, ySpacing+tileSize/8, (tileSize)+(xSpacing)-tileSize/8, (tileSize)+(ySpacing)-tileSize/8,paint);
+					//					Paint lightGray = new Paint();
+					//					lightGray.setColor(android.graphics.Color.LTGRAY);
+					//					lightGray.setStyle(Paint.Style.FILL_AND_STROKE);
+					//
+					//					Paint darkGray = new Paint();
+					//					darkGray.setColor(android.graphics.Color.DKGRAY);
+					//					darkGray.setStyle(Paint.Style.FILL_AND_STROKE);
+					//					//lightGray.setStrokeWidth(3);
+					//					g.drawRect(xSpacing,  ySpacing, xSpacing+tileSize, ySpacing+tileSize, darkGray);
+					//
+					//					g.drawLine(xSpacing,  ySpacing, xSpacing+tileSize, ySpacing+tileSize, lightGray);
+					//					g.drawLine(xSpacing+tileSize, ySpacing, xSpacing,  ySpacing+tileSize, lightGray);
+
+
+
+					//					paint.setColor(Color.GRAY);
+					//					paint.setStyle(Paint.Style.FILL);
+					//					//g.drawRect(xSpacing+4, ySpacing+4, (tileSize)+(xSpacing), (tileSize)+(ySpacing),paint);
+					//					g.drawRect(xSpacing+tileSize/8, ySpacing+tileSize/8, (tileSize)+(xSpacing)-tileSize/8, (tileSize)+(ySpacing)-tileSize/8,paint);
 
 				}
-				
+
 				else{
 					paint.setColor(Color.LTGRAY);
 					paint.setStyle(Paint.Style.FILL);
@@ -1114,7 +1164,7 @@ public class Board {
 		// cover up excess with white triangles
 		g.drawRect((width)*tileSize+offX, 0+offY, (width)*tileSize+tileSize/5+offX, (height)*tileSize+offY, background);
 		g.drawRect(0+offX, (height)*tileSize+offY, (width)*tileSize+offX, (height)*tileSize+tileSize/5+offY, background);
-		
+
 		int color1 =Color.argb(128,140,140,140);
 		int color2 = Color.argb(128,39,39,39);
 		int color3 = Color.argb(127,200,200,200);;
@@ -1123,13 +1173,13 @@ public class Board {
 		int colors1 = Color.argb(0, 0, 0, 0);
 		int colors2 = Color.argb(100, 0, 0, 0);
 
-		
+
 		Shader shader = new LinearGradient(offX, offY, (width)*tileSize+offX, (height)*tileSize+offY, colors1, colors2, TileMode.CLAMP);
 		//Paint paint = new Paint(); 
 		paint.setShader(shader); 
-		
+
 		g.drawRect(new RectF(offX, offY, (width)*tileSize+offX, (height)*tileSize+offY), paint);
-		
+
 		paint.setShader(null);
 		//		Graphics2D g2d = (Graphics2D)g;
 		//		GradientPaint gp = new GradientPaint(0, 0, color1, getWindowX(), getWindowY()-78, color2);
@@ -1168,19 +1218,19 @@ public class Board {
 					else if(board[x][y].isFlagged()){
 
 						paint.setStyle(Style.FILL);
-												
+
 						g.drawRect(xSpacing+tileSize/3, ySpacing+(tileSize)/3, xSpacing+(tileSize*2)/3, ySpacing+(tileSize)/2, paint); //flag
-						
+
 						paint.setColor(Color.BLACK);
 						paint.setStrokeWidth(3);
 						g.drawLine(xSpacing+(tileSize)/3, ySpacing+(tileSize)/3, xSpacing+(tileSize)/3, ySpacing+(tileSize*3)/4, paint); //flag pole
-						
+
 						paint.setColor(Color.RED);
 						//g.fillPolygon(xArray,yArray, 3);
 						paint.setColor(color3);
 						//g.fillPolygon(xArray,yArray, 3);
 						paint.setColor(Color.BLACK);
-				
+
 					}
 
 					else if(board[x][y].beingPressed()&&!(game.getFlagMode())){
@@ -1202,27 +1252,27 @@ public class Board {
 
 					if(board[x][y].isBomb()){
 
-							paint.setStyle(Style.FILL);
-//							paint.setColor(Color.RED);
-//							g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
-							paint.setColor(Color.BLACK);
-							g.drawCircle(xSpacing+(tileSize/2), ySpacing+(tileSize/2), (tileSize/4),paint);
+						paint.setStyle(Style.FILL);
+						//							paint.setColor(Color.RED);
+						//							g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
+						paint.setColor(Color.BLACK);
+						g.drawCircle(xSpacing+(tileSize/2), ySpacing+(tileSize/2), (tileSize/4),paint);
 
-							paint.setStrokeWidth(5);
-							paint.setStyle(Style.STROKE);
-							g.drawLine(xSpacing+(tileSize/4), ySpacing+(tileSize/4), xSpacing+tileSize-(tileSize/4), ySpacing+tileSize-(tileSize/4),paint); //top left/bottom right
-							g.drawLine(xSpacing+(tileSize/8), ySpacing+(tileSize/2), xSpacing+tileSize-(tileSize/8), ySpacing+(tileSize/2),paint);//mid 
-							g.drawLine(xSpacing+tileSize-(tileSize/4), ySpacing+(tileSize/4), xSpacing+(tileSize/4), ySpacing+tileSize-(tileSize/4),paint);//top right/bottom left
-							g.drawLine(xSpacing+(tileSize/2), ySpacing+(tileSize/8), xSpacing+(tileSize/2), ySpacing+tileSize-(tileSize/8),paint);//top/down
+						paint.setStrokeWidth(5);
+						paint.setStyle(Style.STROKE);
+						g.drawLine(xSpacing+(tileSize/4), ySpacing+(tileSize/4), xSpacing+tileSize-(tileSize/4), ySpacing+tileSize-(tileSize/4),paint); //top left/bottom right
+						g.drawLine(xSpacing+(tileSize/8), ySpacing+(tileSize/2), xSpacing+tileSize-(tileSize/8), ySpacing+(tileSize/2),paint);//mid 
+						g.drawLine(xSpacing+tileSize-(tileSize/4), ySpacing+(tileSize/4), xSpacing+(tileSize/4), ySpacing+tileSize-(tileSize/4),paint);//top right/bottom left
+						g.drawLine(xSpacing+(tileSize/2), ySpacing+(tileSize/8), xSpacing+(tileSize/2), ySpacing+tileSize-(tileSize/8),paint);//top/down
 
-							paint.setColor(color1);
-							paint.setStyle(Paint.Style.STROKE); 
-							g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
-							paint.setColor(Color.GRAY);
-							paint.setStrokeWidth(3);
-							g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
-							
-						}
+						paint.setColor(color1);
+						paint.setStyle(Paint.Style.STROKE); 
+						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
+						paint.setColor(Color.GRAY);
+						paint.setStrokeWidth(3);
+						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,paint);
+
+					}
 					else if(board[x][y].getBombsSurrounding()==0)
 					{
 						paint.setStyle(Paint.Style.STROKE);
@@ -1264,7 +1314,7 @@ public class Board {
 		//g.setFont(new Font("Arial", Font.BOLD,13)); // like the little mermaid
 		g.drawText("Time: "+timeCounter, (MainActivity.screenWidth*1)/9, height*tileSize + tileSize/2,paint);
 		g.drawText("Flags: "+getFlagCount(), (MainActivity.screenWidth*1)/2, height*tileSize + tileSize/2,paint);
-		
+
 		g.drawText("___________________________________________________________________________________________________________________________________________________", 
 				0, (MainActivity.screenHeight*5)/7,paint);
 
@@ -1295,9 +1345,9 @@ public class Board {
 			paint.setStrokeWidth(tileSize/12);
 			paint.setStyle(Paint.Style.STROKE);
 
-				g.drawRect(getHint()[0]*(tileSize), getHint()[1]*(tileSize), getHint()[0]*(tileSize)+tileSize, getHint()[1]*(tileSize)+tileSize,paint);
+			g.drawRect(getHint()[0]*(tileSize), getHint()[1]*(tileSize), getHint()[0]*(tileSize)+tileSize, getHint()[1]*(tileSize)+tileSize,paint);
 		}
-		
+
 		if(gameOver()){
 			paint.setColor(Color.WHITE);
 			paint.setStyle(Paint.Style.STROKE);
@@ -1305,7 +1355,7 @@ public class Board {
 			paint.setColor(Color.BLACK);
 			//g.drawText(gameOverMessage(), 2, getWindowY()-63,paint);
 		}
-		
+
 		//g.setColor(Color.);
 		//getwindowy -36
 	}

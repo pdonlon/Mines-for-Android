@@ -36,12 +36,12 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	{
 		return flagMode;
 	}
-	
+
 	public void setFlagMode(boolean a)
 	{	
 		flagMode = a;
 	}
-	
+
 	public DrawPanel(Context context, MainActivity mactivity) {
 
 		super(context);      
@@ -71,8 +71,10 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 		this.playBoard.initializeBoard();
 
+
+
 	}
-	
+
 	public void setDifficulty(String a){
 
 		difficulty = a;
@@ -175,14 +177,12 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				playBoard.add((int)x, (int)y);
 				playBoard.press((int)x, (int)y);
 				invalidate();
-
 			}
 			else if(e.getAction() == MotionEvent.ACTION_UP)
 			{//released
 				//Log.v("Released here: ", ""+e.getX()+ " "+e.getY());
 				float x = (e.getX()-50-playBoard.getOffX());
 				float y = (e.getY()-50-playBoard.getOffY());
-				invalidate(); //repaint()
 
 				if(!playBoard.isEmpty())
 					playBoard.resetPressed();
@@ -213,13 +213,11 @@ public class DrawPanel extends View implements View.OnTouchListener {
 						Log.v("Flagged here: ", ""+e.getX()+ " "+e.getY());
 
 					}
+					if(playBoard.lose){
 
-				}
+						bombAnimation();
 
-				if(playBoard.lose){
-
-					bombAnimation();
-
+					}
 				}
 				invalidate();
 			}
@@ -230,22 +228,37 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				//			x = ((int) e.getX()-50);
 				//			y = ((int) e.getY()-50);
 				//			invalidate(); //repaint()
+				if(playBoard.getZoom()>0)
+				{
+					float x = (e.getX());
+					float y = (e.getY());
 
-				float x = (e.getX()-2-playBoard.getOffX())/(playBoard.tileSize+1);
-				float y = (e.getY()-4-playBoard.getOffY())/(playBoard.tileSize+1);
+					float diffX = playBoard.getOffX() - x;
+					//				if(Math.abs(diffX)>50)
+					//if((x-diffX)+playBoard.getWidth()*playBoard.getTileSize()>0
+					//	&& (x-diffX)+playBoard.getWidth()*playBoard.getTileSize()<playBoard.getWidth()*playBoard.getTileSize())
 
-				if (x >= playBoard.getWidth() || y >= playBoard.getHeight())
-					return true;
-
-				invalidate();
-
-				if(!playBoard.alreadyThere((int)x, (int)y)&&playBoard.isValid((int)x, (int)y)){
-					playBoard.resetPressed();
-					playBoard.replace((int)x, (int)y);
-					playBoard.press((int)x, (int)y);
+					playBoard.setOffX(x - diffX);
+					Log.v(" here: ", ""+x);
+					float diffY = playBoard.getOffY() - y;
+					//				if(Math.abs(diffY)>50)
+					playBoard.setOffY(y - diffY);
+					//				
+					//				x = (e.getX()-2-playBoard.getOffX())/(playBoard.tileSize+1);
+					//				y = (e.getY()-4-playBoard.getOffY())/(playBoard.tileSize+1);
+					//				
+					//				if (x >= playBoard.getWidth() || y >= playBoard.getHeight())
+					//					return true;
+					//
+					//
+					//				if(!playBoard.alreadyThere((int)x, (int)y)&&playBoard.isValid((int)x, (int)y)){
+					//					playBoard.resetPressed();
+					//					playBoard.replace((int)x, (int)y);
+					//					playBoard.press((int)x, (int)y);
+					//				}
+					//				if(Math.abs(diffX)>50||Math.abs(diffY)>50)
 					invalidate();
 				}
-				invalidate();
 			}
 			return true;
 
@@ -281,18 +294,18 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	public void bombAnimation(){
 
 		final String tempDifficulty = difficulty;
-		
+
 		int vibrationTime; 
-		
+
 		if(tempDifficulty.contains("Easy"))
 			vibrationTime = 50;
 		else if(tempDifficulty.contains("Medium"))
 			vibrationTime = 25;
 		else 
 			vibrationTime = 10;
-		
+
 		final int tempVibration = vibrationTime;
-		
+
 		Thread b;
 		b = new Thread( new Runnable(){
 			public void run(){
