@@ -155,10 +155,17 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				pressY = (e.getY()) - playBoard.getOffY();
 
 				playBoard.removeHint();
+				
+				float x = (e.getX()-playBoard.getOffX())/(playBoard.tileSize);
+				float y = (e.getY()-playBoard.getOffY())/(playBoard.tileSize);
 
-				float x = (e.getX()-2-playBoard.getOffX())/(playBoard.tileSize+1);
-				float y = (e.getY()-4-playBoard.getOffY())/(playBoard.tileSize+1);
-
+				if(playBoard.isUntouched((int)x,(int)y))
+				{
+					playBoard.setPressedCords((int)x, (int)y);
+					playBoard.setPressed(true);
+					invalidate();
+				}
+				
 				float pressX = e.getX()-playBoard.getOffX();
 				float pressY = e.getY()-playBoard.getOffY();
 
@@ -175,20 +182,15 @@ public class DrawPanel extends View implements View.OnTouchListener {
 					x = pressX;
 					return true;
 				}
-
-				if ((x >= playBoard.getWidth() || y >= playBoard.getHeight()))
-					return true;
-
-				if (e.getY() < 0)
-					return true;
+//
+//				if ((x >= playBoard.getWidth() || y >= playBoard.getHeight()))
+//					return true;
+//
+//				if (e.getY() < 0)
+//					return true;
 
 				//playBoard.add((int)x, (int)y);
-				if(playBoard.isUntouched((int)x,(int)y))
-				{
-					playBoard.setPressedCords((int)x, (int)y);
-					playBoard.setPressed(true);
-					invalidate();
-				}
+				
 			}
 			else if(e.getAction() == MotionEvent.ACTION_UP)
 			{//released
