@@ -230,7 +230,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		if(playBoard.getWin() || playBoard.getLose())
 		{
 			gameOver = true;
-
+			Log.v("Pressed here: ", "WIN"); //takes label and text
 			playBoard.endTimer();
 		}		
 		return gameOver;

@@ -6,6 +6,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -36,6 +37,48 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
+	public boolean dispatchKeyEvent(KeyEvent event) {
+		       int action = event.getAction();
+		       int keyCode = event.getKeyCode();
+		 
+		           switch (keyCode) {
+		           case KeyEvent.KEYCODE_VOLUME_UP:
+		               if (action == KeyEvent.ACTION_UP) {
+		            	   drawView.setFlagMode(false);
+		               }
+//		               if (action == KeyEvent.ACTION_DOWN) {
+//		                 iview.setImageDrawable(constants.open);
+//		                 //if (Build.VERSION.SDK_INT>=11)
+//		             //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+//		               }
+		               return true;
+		           case KeyEvent.KEYCODE_VOLUME_DOWN:
+		             if (action == KeyEvent.ACTION_UP) {
+		            	   drawView.setFlagMode(true);
+
+		             }
+//		               if (action == KeyEvent.ACTION_DOWN) {
+//		                 iview.setImageDrawable(constants.open);
+//		                 //if (Build.VERSION.SDK_INT>=11)
+//		             //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+//		               }
+//		               return true;
+//		           case KeyEvent.KEYCODE_CAMERA:
+//		               if (action == KeyEvent.ACTION_UP) {
+//		                 iview.setImageDrawable(constants.closed);
+//		               }
+//		               if (action == KeyEvent.ACTION_DOWN) {
+//		                 iview.setImageDrawable(constants.open);
+//		                 //if (Build.VERSION.SDK_INT>=11)
+//		             //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+//		               }
+		               return true;
+		           
+		               //return super.dispatchKeyEvent(event);
+		           }
+	               return true;
+		       }
+	
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case 1:

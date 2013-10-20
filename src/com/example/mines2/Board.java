@@ -974,7 +974,7 @@ public class Board {
 		checkWin();
 	}
 
-	void checkWin(){
+	public void checkWin(){
 
 		if(getOpenedBoxCount() == totalBoxes - totalBombs){
 			win = true;
