@@ -149,7 +149,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			// check e.getAction() == MotionEvent.ACTION_DOWN
 			if (e.getAction() == MotionEvent.ACTION_DOWN){ //pressed
 				//Log.v("Pressed here: ", ""+e.getX()+ " "+e.getY()); //takes label and text
-				
+
 				dragging = false;
 				pressX = (e.getX()) - playBoard.getOffX();
 				pressY = (e.getY()) - playBoard.getOffY();
@@ -182,53 +182,56 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				if (e.getY() < 0)
 					return true;
 
-				playBoard.add((int)x, (int)y);
-				playBoard.setPressedCords((int)x, (int)y);
-				playBoard.setPressed(true);
-				invalidate();
+				//playBoard.add((int)x, (int)y);
+				if(playBoard.isUntouched((int)x,(int)y))
+				{
+					playBoard.setPressedCords((int)x, (int)y);
+					playBoard.setPressed(true);
+					invalidate();
+				}
 			}
 			else if(e.getAction() == MotionEvent.ACTION_UP)
 			{//released
 				//Log.v("Released here: ", ""+e.getX()+ " "+e.getY());
 				if(!dragging){
-//				float x = (e.getX()-50-playBoard.getOffX());
-//				float y = (e.getY()-50-playBoard.getOffY());
+					//				float x = (e.getX()-50-playBoard.getOffX());
+					//				float y = (e.getY()-50-playBoard.getOffY());
 
 
-				x = (int) playBoard.getPressedCords()[0];
-				y = (int) playBoard.getPressedCords()[1];
-//
-//				if (e.getY() < 0)
-//					return true;
-//
-//				if (x >= playBoard.getWidth() || y >= playBoard.getHeight())
-//					return true;
+					x = (int) playBoard.getPressedCords()[0];
+					y = (int) playBoard.getPressedCords()[1];
+					//
+					//				if (e.getY() < 0)
+					//					return true;
+					//
+					//				if (x >= playBoard.getWidth() || y >= playBoard.getHeight())
+					//					return true;
 
 
-				if(playBoard.isValid((int)x, (int)y)){
+					if(playBoard.isValid((int)x, (int)y)){
 
-					if(gameOver)
-						resetGame();
+						if(gameOver)
+							resetGame();
 
-					else if(!playBoard.isOpen((int)x, (int)y)&&!flagMode)
-						playBoard.open((int)x, (int)y);
-					else if(!flagMode)
-						playBoard.fastClick((int)x, (int)y);
+						else if(!playBoard.isOpen((int)x, (int)y)&&!flagMode)
+							playBoard.open((int)x, (int)y);
+						else if(!flagMode)
+							playBoard.fastClick((int)x, (int)y);
 
-					if(!gameOver()&&flagMode){
+						if(!gameOver()&&flagMode){
 
-						playBoard.markFlagged((int)x, (int)y);
-						Log.v("Flagged here: ", ""+e.getX()+ " "+e.getY());
+							playBoard.markFlagged((int)x, (int)y);
+							Log.v("Flagged here: ", ""+e.getX()+ " "+e.getY());
 
+						}
+						if(playBoard.lose){
+
+							bombAnimation();
+
+						}
 					}
-					if(playBoard.lose){
-
-						bombAnimation();
-
-					}
-				}
-				playBoard.setPressed(false);
-				invalidate();
+					playBoard.setPressed(false);
+					invalidate();
 				}
 				else
 					dragging = false;

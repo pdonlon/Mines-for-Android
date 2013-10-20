@@ -264,6 +264,16 @@ public class Board {
 
 	}
 
+	public boolean isUntouched(int x, int y)
+	{
+		boolean untouched = false;
+		
+		if(!board[x][y].isOpened() && !board[x][y].isFlagged() && !board[x][y].isQuestionMarked() && !board[x][y].isWrong())
+			untouched = true;
+		
+		return untouched;
+	}
+	
 	public boolean alreadyThere(int x, int y){
 
 		if(pressed!= null)
