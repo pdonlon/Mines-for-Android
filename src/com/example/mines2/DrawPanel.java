@@ -27,6 +27,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	Board playBoard;
 	String difficulty = "Easy";
 	boolean gameOver = false;
+	boolean dragging;
 	boolean flagMode;
 	MainActivity mactivity;
 	float pressX;
@@ -149,9 +150,10 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			if (e.getAction() == MotionEvent.ACTION_DOWN){ //pressed
 				//Log.v("Pressed here: ", ""+e.getX()+ " "+e.getY()); //takes label and text
 				
+				dragging = false;
 				pressX = (e.getX()) - playBoard.getOffX();
 				pressY = (e.getY()) - playBoard.getOffY();
-				
+
 				playBoard.removeHint();
 
 				float x = (e.getX()-2-playBoard.getOffX())/(playBoard.tileSize+1);
@@ -162,7 +164,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 				if(pressY > MainActivity.screenHeight*5/7){
 					if(pressX>350){
-						flagMode = true;
+						flagMode = false; //TODO
 						Log.v("Flagged On: ", ""+e.getX()+ " "+e.getY());
 					}
 					else{
@@ -181,26 +183,26 @@ public class DrawPanel extends View implements View.OnTouchListener {
 					return true;
 
 				playBoard.add((int)x, (int)y);
-				playBoard.press((int)x, (int)y);
+				playBoard.setPressedCords((int)x, (int)y);
+				playBoard.setPressed(true);
 				invalidate();
 			}
 			else if(e.getAction() == MotionEvent.ACTION_UP)
 			{//released
 				//Log.v("Released here: ", ""+e.getX()+ " "+e.getY());
-				float x = (e.getX()-50-playBoard.getOffX());
-				float y = (e.getY()-50-playBoard.getOffY());
+				if(!dragging){
+//				float x = (e.getX()-50-playBoard.getOffX());
+//				float y = (e.getY()-50-playBoard.getOffY());
 
-				if(!playBoard.isEmpty())
-					playBoard.resetPressed();
 
-				x = (e.getX()-2-playBoard.getOffX())/(playBoard.tileSize+1);
-				y = (e.getY()-4-playBoard.getOffY())/(playBoard.tileSize+1);
-
-				if (e.getY() < 0)
-					return true;
-
-				if (x >= playBoard.getWidth() || y >= playBoard.getHeight())
-					return true;
+				x = (int) playBoard.getPressedCords()[0];
+				y = (int) playBoard.getPressedCords()[1];
+//
+//				if (e.getY() < 0)
+//					return true;
+//
+//				if (x >= playBoard.getWidth() || y >= playBoard.getHeight())
+//					return true;
 
 
 				if(playBoard.isValid((int)x, (int)y)){
@@ -225,47 +227,37 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 					}
 				}
+				playBoard.setPressed(false);
 				invalidate();
+				}
+				else
+					dragging = false;
 			}
 
 			else
 			{
-				//			Log.v("Dragging here: ", ""+e.getX()+ " "+e.getY());
-				//			x = ((int) e.getX()-50);
-				//			y = ((int) e.getY()-50);
-				//			invalidate(); //repaint()
+
 				if(playBoard.getZoom()>-5)
 				{
 					float x = (e.getX());
 					float y = (e.getY());
 
 					playBoard.setDiffX(playBoard.getOffX() - x);
-					Log.v(" here: ", ""+playBoard.getOffX());
-					
-					//if(playBoard.getOffX() - playBoard.getDiffX() - pressX>0){
-						playBoard.setOffX(playBoard.getOffX() - playBoard.getDiffX() - pressX);
-					//}
-//					else
-//						playBoard.setOffX(0);
-					
-					//Log.v(" here: ", ""+playBoard.getOffY());
 					playBoard.setDiffY(playBoard.getOffY() - y);
-					playBoard.setOffY(playBoard.getOffY() - playBoard.getDiffY() - pressY);
 
-					//				
-					//				x = (e.getX()-2-playBoard.getOffX())/(playBoard.tileSize+1);
-					//				y = (e.getY()-4-playBoard.getOffY())/(playBoard.tileSize+1);
-					//				
-					//				if (x >= playBoard.getWidth() || y >= playBoard.getHeight())
-					//					return true;
-					//
-					//
-					//				if(!playBoard.alreadyThere((int)x, (int)y)&&playBoard.isValid((int)x, (int)y)){
-					//					playBoard.resetPressed();
-					//					playBoard.replace((int)x, (int)y);
-					//					playBoard.press((int)x, (int)y);
-					//				}
-					//				if(Math.abs(diffX)>50||Math.abs(diffY)>50)
+					if(!dragging && (Math.abs(playBoard.getDiffX() + pressX) > playBoard.getTileSize() || Math.abs(playBoard.getDiffY() + pressY) > playBoard.getTileSize() )){
+						Log.v(" X: ", ""+Math.abs(playBoard.getDiffX() + pressX));
+						Log.v(" Y: ", ""+Math.abs(playBoard.getDiffY() + pressY));
+						dragging = true;
+						playBoard.setPressed(false);
+					}
+
+					if(dragging){
+						playBoard.setOffX(playBoard.getOffX() - playBoard.getDiffX() - pressX);
+						playBoard.setOffY(playBoard.getOffY() - playBoard.getDiffY() - pressY);
+					}
+
+
 					invalidate();
 				}
 			}

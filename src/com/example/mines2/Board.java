@@ -62,7 +62,8 @@ public class Board {
 	boolean firstTurn = true;
 	boolean touchedBomb = false;
 	boolean speedTrick = false;
-
+	boolean beingPressed = false;
+	
 	boolean checkBoard = false; 
 	boolean showHint = false; 
 	boolean hintColorYellow = false;
@@ -78,6 +79,8 @@ public class Board {
 
 	Timer timer;
 	TimerTask tt;
+	
+	int [] pressedCords = new int[2];
 
 	//Font font = new Font("SANS_SERIF", Font.BOLD,10);
 	//Font compactFont = new Font("SANS_SERIF", Font.BOLD,8);
@@ -282,21 +285,29 @@ public class Board {
 		pressed.enque(x, y);
 
 	}
-
-	public void press(int x, int y){
-
-		board[x][y].setPressed(true);
+	
+	public void setPressedCords(int a, int b)
+	{
+		pressedCords[0] = a;
+		pressedCords[1] = b;
+		
+	}
+	
+	public int[] getPressedCords(){
+		
+		return pressedCords;  
+		
 	}
 
-	public void resetPressed(){
+	public boolean beingPressed(){
+		
+		return beingPressed;
+	}
+	
+	public void setPressed(boolean a){
 
-		try{
-			if(pressed.getHead()!=null)
-				board[pressed.getHead().getXCord()][pressed.getHead().getYCord()].setPressed(false);
-		}
-		catch(Exception e){
-
-		}
+		beingPressed = a;
+		
 	}
 
 	public int getUnsafeBombCount(){
@@ -309,7 +320,7 @@ public class Board {
 		for(int y=0; y<height; y++ ){
 			for(int x=0; x<width; x++){
 
-				board[x][y] = new Mine (false, 0, false, false, false, false, false, false);
+				board[x][y] = new Mine (false, 0, false, false, false, false, false);
 
 			}
 		}
@@ -374,7 +385,7 @@ public class Board {
 		for(int y=0; y<height; y++){
 			for(int x=0; x<width; x++){
 
-				board[x][y] = new Mine (false, 0, false, false, false, false, false, false); 
+				board[x][y] = new Mine (false, 0, false, false, false, false, false); 
 
 			}
 		}
@@ -879,20 +890,20 @@ public class Board {
 
 	}
 
-	public boolean isEmpty(){
-
-		boolean empty = false;
-
-		try{
-			if(pressed.getHead()==null)
-				empty = true;
-		}
-		catch(Exception e){
-
-		}
-
-		return empty;
-	}
+//	public boolean isEmpty(){
+//
+//		boolean empty = false;
+//
+//		try{
+//			if(pressed.getHead()==null)
+//				empty = true;
+//		}
+//		catch(Exception e){
+//
+//		}
+//
+//		return empty;
+//	}
 
 
 	public void openBox(int x, int y){
@@ -1255,11 +1266,6 @@ public class Board {
 
 					}
 
-					else if(board[x][y].beingPressed()&&!(game.getFlagMode())){
-						paint.setStyle(Paint.Style.FILL);
-						g.drawRect(xSpacing, ySpacing, (tileSize)+xSpacing, (tileSize)+ySpacing,gray);
-					}
-
 					else if(board[x][y].isQuestionMarked()){
 						paint.setColor(Color.WHITE);
 						//g.setFont(font);
@@ -1324,6 +1330,11 @@ public class Board {
 				xSpacing += (tileSize);
 			}
 			ySpacing+= (tileSize);
+		}
+		
+		if(beingPressed&&!(game.getFlagMode())){
+			paint.setStyle(Paint.Style.FILL);
+			g.drawRect(pressedCords[0]*tileSize+offX, pressedCords[1]*tileSize+offY, pressedCords[0]*tileSize+offX+(tileSize), pressedCords[1]*tileSize+offY+(tileSize),gray);
 		}
 
 		paint.setColor(Color.GRAY);
