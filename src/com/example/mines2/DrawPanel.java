@@ -29,6 +29,8 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	boolean gameOver = false;
 	boolean flagMode;
 	MainActivity mactivity;
+	float pressX;
+	float pressY;
 
 	Context ctx;
 
@@ -146,6 +148,10 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			// check e.getAction() == MotionEvent.ACTION_DOWN
 			if (e.getAction() == MotionEvent.ACTION_DOWN){ //pressed
 				//Log.v("Pressed here: ", ""+e.getX()+ " "+e.getY()); //takes label and text
+				
+				pressX = (e.getX()) - playBoard.getOffX();
+				pressY = (e.getY()) - playBoard.getOffY();
+				
 				playBoard.removeHint();
 
 				float x = (e.getX()-2-playBoard.getOffX())/(playBoard.tileSize+1);
@@ -230,19 +236,21 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				//			invalidate(); //repaint()
 				if(playBoard.getZoom()>-5)
 				{
-//					float x = (e.getX());
-//					float y = (e.getY());
-//
-//					float diffX = playBoard.getOffX() - x;
-//					Log.v(" here: ", ""+playBoard.getOffX());
-//					//if((x-diffX)+playBoard.getWidth()*playBoard.getTileSize()>0
-//					//	&& (x-diffX)+playBoard.getWidth()*playBoard.getTileSize()<playBoard.getWidth()*playBoard.getTileSize())
-//
-//					playBoard.setOffX(x - diffX);
-//					
-//					//Log.v(" here: ", ""+diffX);
-//					float diffY = playBoard.getOffY() - y;
-//					playBoard.setOffY(y - diffY);
+					float x = (e.getX());
+					float y = (e.getY());
+
+					playBoard.setDiffX(playBoard.getOffX() - x);
+					Log.v(" here: ", ""+playBoard.getOffX());
+					
+					//if(playBoard.getOffX() - playBoard.getDiffX() - pressX>0){
+						playBoard.setOffX(playBoard.getOffX() - playBoard.getDiffX() - pressX);
+					//}
+//					else
+//						playBoard.setOffX(0);
+					
+					//Log.v(" here: ", ""+playBoard.getOffY());
+					playBoard.setDiffY(playBoard.getOffY() - y);
+					playBoard.setOffY(playBoard.getOffY() - playBoard.getDiffY() - pressY);
 
 					//				
 					//				x = (e.getX()-2-playBoard.getOffX())/(playBoard.tileSize+1);

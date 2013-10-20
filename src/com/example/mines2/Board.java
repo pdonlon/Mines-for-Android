@@ -44,6 +44,8 @@ public class Board {
 	int unsafeBombCount;
 	int zeroCount;
 	int fastCount;
+	float diffX;
+	float diffY;
 
 	int flagLimit;
 	int totalBombs;
@@ -191,10 +193,20 @@ public class Board {
 	{
 		return offX;
 	}
-
+	
 	public void setOffX(float a)
 	{
 		offX = a;
+	}
+	
+	public float getDiffX()
+	{
+		return diffX;
+	}
+	
+	public void setDiffX(float a)
+	{
+		diffX = a;
 	}
 	
 	public float getOffY()
@@ -205,6 +217,16 @@ public class Board {
 	public void setOffY(float a)
 	{
 		offY = a;
+	}
+	
+	public float getDiffY()
+	{
+		return diffY;
+	}
+	
+	public void setDiffY(float a)
+	{
+		diffY = a;
 	}
 	
 	public void check(){
