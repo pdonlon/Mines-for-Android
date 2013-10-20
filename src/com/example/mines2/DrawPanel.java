@@ -86,66 +86,17 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	// paintComponent()
 	public void onDraw(Canvas g) {
 
-		//
-		//		// set width of thick cheese lines
-		//		thickDarkGray.setStrokeWidth(15);
-		//		
-		//		// set dimensions of squares
-		//		int NumberOfSquaresAcross = 5;
-		//		int NumberOfSquaresDown = 9;
-		//
-		//
-		//		for (int xOff=0; xOff < NumberOfSquaresAcross*100; xOff += 100)
-		//			for (int yOff=0; yOff < NumberOfSquaresDown*100; yOff += 100)
-		//			{
-		//
-		//				// draw background square
-		//				g.drawRect(100 + xOff, 100 + yOff, 200 + xOff, 200 + yOff, darkGray);
-		//
-		//				// draw cheese rectangles
-		//				g.drawRect(100 + xOff, 100 + yOff, 115 + xOff, 200 + yOff, lightGray);
-		//				g.drawRect(100 + xOff, 100 + yOff, 200 + xOff, 115 + yOff, lightGray);
-		//
-		//				// draw cheese lines
-		//				g.drawLine(105 + xOff, 205 + yOff, 205 + xOff, 105 + yOff, thickDarkGray);
-		//
-		//				// draw inner square
-		//				g.drawRect(115 + xOff, 115 + yOff, 185 + xOff, 185 + yOff, gray);
-		//
-		//			}
-		//		
-		//		// cover up excess with white triangles
-		//		g.drawRect((NumberOfSquaresAcross+1)*100, 100, (NumberOfSquaresAcross+1)*100 + 20, (NumberOfSquaresDown+1)*100, background);
-		//		g.drawRect(100, (NumberOfSquaresDown+1)*100, (NumberOfSquaresAcross+1)*100, (NumberOfSquaresDown+1)*100 + 20, background);
-		//
-		//		// gradient stuff
-		//		int color1 = Color.argb(0, 0, 0, 0);
-		//		int color2 = Color.argb(100, 0, 0, 0);
-		//
-		//		
-		//		Shader shader = new LinearGradient(0, 0, (NumberOfSquaresAcross+1)*100, (NumberOfSquaresDown+1)*100, color1, color2, TileMode.CLAMP);
-		//		Paint paint = new Paint(); 
-		//		paint.setShader(shader); 
-		//		
-		//		g.drawRect(new RectF(100, 100, (NumberOfSquaresAcross+1)*100, (NumberOfSquaresDown+1)*100), paint); 
-
-
 		playBoard.paintBoard(g);
-
-		//paint.setColor(Color.BLUE);
-
-		// getHeight() and getWidth() size of screen
-
-		// paint.setShader(new LinearGradient(x, y, x+100, y+100, Color.BLACK, Color.WHITE, Shader.TileMode.MIRROR));
-
-		//g.drawRect(x,y,x+10,y+10, paint);
 
 	}
 
 	@Override
 	public boolean onTouch(View v, MotionEvent e) 
 	{		
-		if(Board.doneAnimating){
+		float x = (e.getX()-playBoard.getOffX())/(playBoard.tileSize);
+		float y = (e.getY()-playBoard.getOffY())/(playBoard.tileSize);
+
+		if(Board.doneAnimating && playBoard.isValid((int)x, (int)y)){
 			// check e.getAction() == MotionEvent.ACTION_DOWN
 			if (e.getAction() == MotionEvent.ACTION_DOWN){ //pressed
 				//Log.v("Pressed here: ", ""+e.getX()+ " "+e.getY()); //takes label and text
@@ -156,16 +107,15 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 				playBoard.removeHint();
 				
-				float x = (e.getX()-playBoard.getOffX())/(playBoard.tileSize);
-				float y = (e.getY()-playBoard.getOffY())/(playBoard.tileSize);
+				playBoard.setPressed(false);
 
-				if(playBoard.isUntouched((int)x,(int)y))
+				if(playBoard.isValid((int)x,(int)y))
 				{
 					playBoard.setPressedCords((int)x, (int)y);
 					playBoard.setPressed(true);
 					invalidate();
 				}
-				
+
 				float pressX = e.getX()-playBoard.getOffX();
 				float pressY = e.getY()-playBoard.getOffY();
 
@@ -182,15 +132,17 @@ public class DrawPanel extends View implements View.OnTouchListener {
 					x = pressX;
 					return true;
 				}
-//
-//				if ((x >= playBoard.getWidth() || y >= playBoard.getHeight()))
-//					return true;
-//
-//				if (e.getY() < 0)
-//					return true;
+				//
+				//				if ((x >= playBoard.getWidth() || y >= playBoard.getHeight()))
+				//					return true;
+				//
+				//				if (e.getY() < 0)
+				//					return true;
 
 				//playBoard.add((int)x, (int)y);
-				
+				//				}
+				//				else 
+				//					return true;
 			}
 			else if(e.getAction() == MotionEvent.ACTION_UP)
 			{//released
@@ -210,7 +162,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 					//					return true;
 
 
-					if(playBoard.isValid((int)x, (int)y)){
+					if(playBoard.isValid((int)x, (int)y) && playBoard.beingPressed){
 
 						if(gameOver)
 							resetGame();
@@ -227,7 +179,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 						}
 						if(playBoard.lose){
-
+							playBoard.setPressed(false);
 							bombAnimation();
 
 						}
@@ -244,8 +196,8 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 				if(playBoard.getZoom()>-5)
 				{
-					float x = (e.getX());
-					float y = (e.getY());
+					x = (e.getX());
+					y = (e.getY());
 
 					playBoard.setDiffX(playBoard.getOffX() - x);
 					playBoard.setDiffY(playBoard.getOffY() - y);

@@ -267,10 +267,13 @@ public class Board {
 	public boolean isUntouched(int x, int y)
 	{
 		boolean untouched = false;
-		
+		try{
 		if(!board[x][y].isOpened() && !board[x][y].isFlagged() && !board[x][y].isQuestionMarked() && !board[x][y].isWrong())
 			untouched = true;
-		
+		}
+		catch(Exception e){
+			
+		}
 		return untouched;
 	}
 	
@@ -1342,7 +1345,7 @@ public class Board {
 			ySpacing+= (tileSize);
 		}
 		
-		if(beingPressed&&!(game.getFlagMode())){
+		if(beingPressed&&!(game.getFlagMode())&&isUntouched(pressedCords[0],pressedCords[1])){
 			paint.setStyle(Paint.Style.FILL);
 			g.drawRect(pressedCords[0]*tileSize+offX, pressedCords[1]*tileSize+offY, pressedCords[0]*tileSize+offX+(tileSize), pressedCords[1]*tileSize+offY+(tileSize),gray);
 		}
@@ -1388,7 +1391,7 @@ public class Board {
 			paint.setStrokeWidth(tileSize/12);
 			paint.setStyle(Paint.Style.STROKE);
 
-			g.drawRect(getHint()[0]*(tileSize), getHint()[1]*(tileSize), getHint()[0]*(tileSize)+tileSize, getHint()[1]*(tileSize)+tileSize,paint);
+			g.drawRect(getHint()[0]*(tileSize)+offX, getHint()[1]*(tileSize)+offY, getHint()[0]*(tileSize)+tileSize+offX, getHint()[1]*(tileSize)+tileSize+offY,paint);
 		}
 
 		if(gameOver()){
