@@ -92,6 +92,7 @@ public class Board {
 
 	public Board(int width, int height, DrawPanel g){
 
+		
 		game = g;
 		this.width = width;
 		this.height = height;
@@ -100,7 +101,7 @@ public class Board {
 		tf = Typeface.create("Font Name",Typeface.BOLD);
 
 		adjustTiles();
-
+//		game.startTimer();
 		startup();
 	}
 
@@ -1361,12 +1362,13 @@ public class Board {
 		g.drawText("Time: "+timeCounter, (MainActivity.screenWidth*1)/9, height*tileSize + tileSize/2,paint);
 		g.drawText("Flags: "+getFlagCount(), (MainActivity.screenWidth*1)/2, height*tileSize + tileSize/2,paint);
 
-		g.drawText("___________________________________________________________________________________________________________________________________________________", 
-				0, (MainActivity.screenHeight*5)/7,paint);
-
-		g.drawText("Open Mode ", (MainActivity.screenWidth*1)/8, (MainActivity.screenHeight*6)/7,paint);
-		g.drawText("|: ", MainActivity.screenWidth/2, (MainActivity.screenHeight*6)/7,paint);
-		g.drawText("Flag Mode ", (MainActivity.screenWidth*5)/8, (MainActivity.screenHeight*6)/7,paint);
+		//g.drawText("Open Mode ", (MainActivity.screenWidth*1)/8, (MainActivity.screenHeight*6)/7,paint);
+		//g.drawText("|: ", MainActivity.screenWidth/2, (MainActivity.screenHeight*6)/7,paint);
+		
+		if(game.flagMode)
+			g.drawText("Flag Mode ", (MainActivity.screenWidth*5)/8, (MainActivity.screenHeight*6)/7,paint);
+		else 
+			g.drawText("Open Mode ", (MainActivity.screenWidth*5)/8, (MainActivity.screenHeight*6)/7,paint);
 
 		if(showCheck){
 

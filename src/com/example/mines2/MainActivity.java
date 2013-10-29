@@ -22,6 +22,9 @@ public class MainActivity extends Activity {
 	static MenuItem mens5;
 	static MenuItem mens6;
 	static MenuItem mens7;
+	static MenuItem mens8;
+	static MenuItem mens9;
+
 
 	static int screenWidth, screenHeight;
 
@@ -31,9 +34,11 @@ public class MainActivity extends Activity {
 		mens2 = menu.add(0, 2, 2,"Reset");
 		mens3 = menu.add(0, 3, 2, "Zoom In");
 		mens4 = menu.add(0, 4, 2,"Zoom Out");
-		mens2 = menu.add(0, 5, 2,"Easy");
-		mens3 = menu.add(0, 6, 2, "Meduim");
-		mens4 = menu.add(0, 7, 2,"Hard");
+		mens5 = menu.add(0, 5, 2,"Easy");
+		mens6 = menu.add(0, 6, 2, "Medium");
+		mens7 = menu.add(0, 7, 2,"Hard");
+		mens8 = menu.add(0, 8, 2,"Vibration");
+		mens9 = menu.add(0, 9, 2,"Flag Toggle");
 		return true;
 	}
 
@@ -44,7 +49,7 @@ public class MainActivity extends Activity {
 		           switch (keyCode) {
 		           case KeyEvent.KEYCODE_VOLUME_UP:
 		               if (action == KeyEvent.ACTION_UP) {
-		            	   drawView.setFlagMode(false);
+		            	   drawView.setFlagMode(!drawView.getFlagMode());
 		               }
 //		               if (action == KeyEvent.ACTION_DOWN) {
 //		                 iview.setImageDrawable(constants.open);
@@ -54,7 +59,7 @@ public class MainActivity extends Activity {
 		               return true;
 		           case KeyEvent.KEYCODE_VOLUME_DOWN:
 		             if (action == KeyEvent.ACTION_UP) {
-		            	   drawView.setFlagMode(true);
+		            	   drawView.setFlagMode(!drawView.getFlagMode());
 
 		             }
 //		               if (action == KeyEvent.ACTION_DOWN) {
@@ -72,11 +77,11 @@ public class MainActivity extends Activity {
 //		                 //if (Build.VERSION.SDK_INT>=11)
 //		             //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
 //		               }
-		               return true;
+//		               return true;
 		           
-		               //return super.dispatchKeyEvent(event);
+		               return super.dispatchKeyEvent(event);
 		           }
-	               return true;
+	               return super.dispatchKeyEvent(event);
 		       }
 	
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -119,6 +124,12 @@ public class MainActivity extends Activity {
 			drawView.setDifficulty("Hard");
 			drawView.playBoard.setTotalBombs(99);
 			startingUp();
+			return true;
+		case 8:
+			drawView.setVibration(!drawView.getVibration());
+			return true;
+		case 9:
+			drawView.setFlagMode(!drawView.getFlagMode());
 			return true;
 		}
 		return false;
