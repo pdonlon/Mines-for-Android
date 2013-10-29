@@ -1269,7 +1269,7 @@ public class Board {
 						g.drawRect(xSpacing+tileSize/3, ySpacing+(tileSize)/3, xSpacing+(tileSize*2)/3, ySpacing+(tileSize)/2, paint); //flag
 
 						paint.setColor(Color.BLACK);
-						paint.setStrokeWidth(3);
+						paint.setStrokeWidth(tileSize/23);
 						g.drawLine(xSpacing+(tileSize)/3, ySpacing+(tileSize)/3, xSpacing+(tileSize)/3, ySpacing+(tileSize*3)/4, paint); //flag pole
 
 						paint.setColor(Color.RED);
@@ -1300,7 +1300,7 @@ public class Board {
 						paint.setColor(Color.BLACK);
 						g.drawCircle(xSpacing+(tileSize/2), ySpacing+(tileSize/2), (tileSize/4),paint);
 
-						paint.setStrokeWidth(5);
+						paint.setStrokeWidth(tileSize/14);
 						paint.setStyle(Style.STROKE);
 						g.drawLine(xSpacing+(tileSize/4), ySpacing+(tileSize/4), xSpacing+tileSize-(tileSize/4), ySpacing+tileSize-(tileSize/4),paint); //top left/bottom right
 						g.drawLine(xSpacing+(tileSize/8), ySpacing+(tileSize/2), xSpacing+tileSize-(tileSize/8), ySpacing+(tileSize/2),paint);//mid 
