@@ -1159,42 +1159,6 @@ public class Board {
 					// draw inner square
 					g.drawRect(gap + xSpacing, gap + ySpacing, tileSize-gap + xSpacing, tileSize-gap + ySpacing, gray);
 
-
-					// cover up excess with white triangles
-					//g.drawRect((width+1)*100, 100, (width+1)*100 + 20, (height+1)*100, background);
-					//g.drawRect(100, (height+1)*100, (width+1)*100, (height+1)*100 + 20, background);
-
-					// gradient stuff
-					//					int color1 = Color.argb(0, 0, 0, 0);
-					//					int color2 = Color.argb(100, 0, 0, 0);
-					//
-					//					
-					//					Shader shader = new LinearGradient(0, 0, (width)*tileSize, (height)*tileSize, color1, color2, TileMode.CLAMP);
-					//					//Paint paint = new Paint(); 
-					//					paint.setShader(shader); 
-					//					
-					//					g.drawRect(new RectF(0, 0, (width)*tileSize, (height)*tileSize), paint); 
-
-					//					Paint lightGray = new Paint();
-					//					lightGray.setColor(android.graphics.Color.LTGRAY);
-					//					lightGray.setStyle(Paint.Style.FILL_AND_STROKE);
-					//
-					//					Paint darkGray = new Paint();
-					//					darkGray.setColor(android.graphics.Color.DKGRAY);
-					//					darkGray.setStyle(Paint.Style.FILL_AND_STROKE);
-					//					//lightGray.setStrokeWidth(3);
-					//					g.drawRect(xSpacing,  ySpacing, xSpacing+tileSize, ySpacing+tileSize, darkGray);
-					//
-					//					g.drawLine(xSpacing,  ySpacing, xSpacing+tileSize, ySpacing+tileSize, lightGray);
-					//					g.drawLine(xSpacing+tileSize, ySpacing, xSpacing,  ySpacing+tileSize, lightGray);
-
-
-
-					//					paint.setColor(Color.GRAY);
-					//					paint.setStyle(Paint.Style.FILL);
-					//					//g.drawRect(xSpacing+4, ySpacing+4, (tileSize)+(xSpacing), (tileSize)+(ySpacing),paint);
-					//					g.drawRect(xSpacing+tileSize/8, ySpacing+tileSize/8, (tileSize)+(xSpacing)-tileSize/8, (tileSize)+(ySpacing)-tileSize/8,paint);
-
 				}
 
 				else{
@@ -1255,11 +1219,14 @@ public class Board {
 						paint.setColor(Color.GRAY);
 						g.drawRect(xSpacing+1, ySpacing+1, (tileSize)+xSpacing+1, (tileSize)+ySpacing+1,paint);
 						paint.setColor(Color.WHITE);
-						//g.setFont(font);
-						if(compactMode)
-							g.drawText("X", xSpacing+8, ySpacing+17,paint);
-						else
-							g.drawText("X", xSpacing+11, ySpacing+19,paint);
+						
+						paint.setStrokeWidth(tileSize/14);
+						paint.setStyle(Style.STROKE);
+						
+						g.drawLine(xSpacing+(tileSize/4), ySpacing+(tileSize/4), xSpacing+tileSize-(tileSize/4), ySpacing+tileSize-(tileSize/4),paint); //top left/bottom right
+						g.drawLine(xSpacing+tileSize-(tileSize/4), ySpacing+(tileSize/4), xSpacing+(tileSize/4), ySpacing+tileSize-(tileSize/4),paint);//top right/bottom left
+
+						
 					}
 
 					else if(board[x][y].isFlagged()){
