@@ -159,7 +159,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 						else if(!playBoard.isOpen((int)x, (int)y)&&!flagMode)
 							playBoard.open((int)x, (int)y);
-						else if(!flagMode)
+						else if(playBoard.isOpen((int)x, (int)y))
 							playBoard.fastClick((int)x, (int)y);
 
 						if(!gameOver()&&flagMode){
@@ -236,7 +236,11 @@ public class DrawPanel extends View implements View.OnTouchListener {
 					Vibrator v = (Vibrator) mactivity.getSystemService(Context.VIBRATOR_SERVICE);
 					
 					v.vibrate(20);
-					playBoard.markFlagged((int)x,(int)y);
+					if(!flagMode)
+						playBoard.markFlagged((int)x,(int)y);
+					else
+						playBoard.open((int)x,(int)y);
+						
 					playBoard.setPressed(false);
 					justFlagged = true;
 					}
