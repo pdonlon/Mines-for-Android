@@ -3,8 +3,10 @@ package com.example.mines2;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -145,6 +147,23 @@ public class MainActivity extends Activity {
 		drawView.playBoard.adjustTiles();
 		runOnUiThread(new Runnable(){ public void run() {
 			drawView.invalidate();}});
+	}
+	
+	public int getActionBarHeight() {
+	    int actionBarHeight = getActionBar().getHeight();
+	    if (actionBarHeight != 0)
+	        return actionBarHeight;
+	    
+	  	return 0;
+	}
+	
+	public int getStatusBarHeight() {
+	      int result = 0;
+	      int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+	      if (resourceId > 0) {
+	          result = getResources().getDimensionPixelSize(resourceId);
+	      }
+	      return result;
 	}
 	
 	@Override

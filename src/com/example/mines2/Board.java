@@ -14,6 +14,7 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.Shader.TileMode;
 import android.graphics.Typeface;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 
@@ -26,7 +27,7 @@ public class Board {
 	//	exp 	30x16 	99		381
 
 	static Typeface tf;
-
+	
 	static boolean doneAnimating = true;
 	DrawPanel game;
 	CheckList pressed;
@@ -79,9 +80,12 @@ public class Board {
 
 	Timer timer;
 	TimerTask tt;
-
+	
 	int [] pressedCords = new int[2];
 
+	int barHeight = 120;
+	int actionAndStatus = -1;
+	float realBarHeight;
 	//Font font = new Font("SANS_SERIF", Font.BOLD,10);
 	//Font compactFont = new Font("SANS_SERIF", Font.BOLD,8);
 
@@ -97,7 +101,7 @@ public class Board {
 		this.width = width;
 		this.height = height;
 		bombs = new CheckList();
-
+		
 		tf = Typeface.create("Font Name",Typeface.BOLD);
 
 		adjustTiles();
@@ -179,7 +183,7 @@ public class Board {
 
 		lose = a;
 	}
-
+	
 	public boolean getFirstTurn(){
 
 		return firstTurn;
@@ -994,7 +998,6 @@ public class Board {
 					else if(board[x][y].getBombsSurrounding()==0){
 						openZeros(x, y);
 
-						// TODO this crashes and shouldn't instead should animate and shit
 						tileAnimation();
 
 					}
@@ -1014,6 +1017,18 @@ public class Board {
 
 		}
 
+	}
+	
+	public boolean lost(){
+		
+		for(int y=0; y<height; y++){
+			for(int x=0; x<width; x++){
+				
+				if(board[x][y].isBomb() && board[x][y].isOpened())
+					return true;
+			}
+		}
+		return false;
 	}
 
 	public int getOpenedBoxCount(){
@@ -1073,29 +1088,29 @@ public class Board {
 		return gameOver;
 	}
 
-	public String gameOverMessage(){
+	public String gameOverMessage(){ //TODO
 
-		String gameOver;
-
-		if(win)
-		{
-			if(!compactMode)
-				gameOver = "Game Over! You win! Time: "+timeCounter; //timer*1000;
-			else
-				gameOver = "Game over you win! Time: "+timeCounter; //timer*1000;
-		}
-		else
-		{
-			if(!compactMode)
-				gameOver = "Game Over! You Lose! "+timeCounter;
-			else
-				gameOver = "Game over you lose! Time: "+timeCounter; //timer*1000;
-		}
+		String gameOver = "";
+//
+//		if(win)
+//		{
+//			if(!compactMode)
+//				gameOver = "Game Over! You win! Time: "+timeCounter; //timer*1000;
+//			else
+//				gameOver = "Game over you win! Time: "+timeCounter; //timer*1000;
+//		}
+//		else
+//		{
+//			if(!compactMode)
+//				gameOver = "Game Over! You Lose! "+timeCounter;
+//			else
+//				gameOver = "Game over you lose! Time: "+timeCounter; //timer*1000;
+//		}
 
 		return gameOver;
 	}
 
-	public void zoomIn(int x, int y)
+	public void zoomIn(float x, float y)
 	{	
 		tileSize = tileSize*2;
 
@@ -1118,7 +1133,7 @@ public class Board {
 
 	}
 
-	public void zoomOut(int x, int y){
+	public void zoomOut(float x, float y){
 
 		tileSize = tileSize/2;
 
@@ -1142,8 +1157,7 @@ public class Board {
 	}
 
 	public void paintBoard(Canvas g){
-
-
+		
 		//		Paint pgray = new Paint();
 		//		pgray.setColor(android.graphics.Color.DKGRAY);
 		//		//g.drawRect(0, 0, (tileSize)*getWidth(), (tileSize*getHeight()), pgray);
@@ -1369,17 +1383,125 @@ public class Board {
 		//g.drawRect(0, getWindowY()-78, getWindowX(), 21,paint);
 		paint.setColor(Color.BLACK);
 		//g.setFont(new Font("Arial", Font.BOLD,13)); // like the little mermaid
-		g.drawText("Time: "+timeCounter, (MainActivity.screenWidth*1)/9, height*tileSize + tileSize/2,paint);
-		g.drawText("Flags: "+getFlagCount(), (MainActivity.screenWidth*1)/2, height*tileSize + tileSize/2,paint);
+		//g.drawText("Time: "+timeCounter, (MainActivity.screenWidth*1)/9, height*tileSize + tileSize/2,paint);
+		//g.drawText("Flags: "+getFlagCount(), (MainActivity.screenWidth*1)/2, height*tileSize + tileSize/2,paint);
 
 		//g.drawText("Open Mode ", (MainActivity.screenWidth*1)/8, (MainActivity.screenHeight*6)/7,paint);
 		//g.drawText("|: ", MainActivity.screenWidth/2, (MainActivity.screenHeight*6)/7,paint);
 
-		if(game.flagMode)
-			g.drawText("Flag Mode ", (MainActivity.screenWidth*5)/8, (MainActivity.screenHeight*6)/7,paint);
-		else 
-			g.drawText("Open Mode ", (MainActivity.screenWidth*5)/8, (MainActivity.screenHeight*6)/7,paint);
+//		if(game.flagMode)
+//			g.drawText("Flag Mode ", (MainActivity.screenWidth*5)/8, (MainActivity.screenHeight*6)/7,paint);
+//		else 
+//			g.drawText("Open Mode ", (MainActivity.screenWidth*5)/8, (MainActivity.screenHeight*6)/7,paint);
+		paint.setColor(Color.BLACK);
+		paint.setStyle(Style.FILL);
+		
+		if (actionAndStatus == -1)
+			actionAndStatus = game.mactivity.getActionBarHeight() + game.mactivity.getStatusBarHeight();
+		
+		realBarHeight = (MainActivity.screenHeight - actionAndStatus) - barHeight;
+		g.drawRect(0, realBarHeight, (MainActivity.screenWidth), (MainActivity.screenHeight),paint);
+		
+		paint.setColor(Color.WHITE);
+		g.drawLine((MainActivity.screenWidth*1)/5, realBarHeight, (MainActivity.screenWidth*1)/5, (MainActivity.screenHeight), paint);
+		g.drawLine((MainActivity.screenWidth*2)/5, realBarHeight, (MainActivity.screenWidth*2)/5, (MainActivity.screenHeight), paint);
+		g.drawLine((MainActivity.screenWidth*3)/5, realBarHeight, (MainActivity.screenWidth*3)/5, (MainActivity.screenHeight), paint);
+		g.drawLine((MainActivity.screenWidth*4)/5, realBarHeight, (MainActivity.screenWidth*4)/5, (MainActivity.screenHeight), paint);
 
+		//paint.setColor(Color.RED);
+		//g.drawLine((MainActivity.screenWidth*1)/10, realBarHeight, (MainActivity.screenWidth*1)/10, (MainActivity.screenHeight), paint);
+		//g.drawLine((MainActivity.screenWidth*7)/10, realBarHeight, (MainActivity.screenWidth*7)/10, (MainActivity.screenHeight), paint);
+		//g.drawLine((MainActivity.screenWidth*9)/10, realBarHeight, (MainActivity.screenWidth*9)/10, (MainActivity.screenHeight), paint);
+
+		paint.setStyle(Style.STROKE);
+		paint.setStrokeWidth(6);
+		//paint.setColor(Color.WHITE);
+		
+		//MAGNIFINE GLASSES
+		g.drawCircle((MainActivity.screenWidth*7)/10, realBarHeight+58, 24, paint);
+		g.drawLine((MainActivity.screenWidth*72)/100, realBarHeight+74, (MainActivity.screenWidth*76)/100, realBarHeight+99, paint);
+
+		g.drawCircle((MainActivity.screenWidth*9)/10, realBarHeight+58, 24, paint);
+		g.drawLine((MainActivity.screenWidth*92)/100, realBarHeight+74, (MainActivity.screenWidth*96)/100, realBarHeight+99, paint);
+		//PLUS
+		g.drawLine((MainActivity.screenWidth*9)/10, realBarHeight+46, (MainActivity.screenWidth*9)/10, realBarHeight+69, paint);
+		//MINUS
+		g.drawLine((MainActivity.screenWidth*7)/10-10, realBarHeight+58, (MainActivity.screenWidth*7)/10+10, realBarHeight+58, paint);
+		g.drawLine((MainActivity.screenWidth*9)/10-11, realBarHeight+58, (MainActivity.screenWidth*9)/10+11, realBarHeight+58, paint);
+
+		
+
+		
+		//FLAG
+		float bSize = 150;
+		float sX = ((MainActivity.screenWidth*3)/10)-75;
+		float sY = realBarHeight-20;
+		
+		paint.setStyle(Style.FILL);
+		paint.setTypeface(tf);
+		paint.setTextSize(bSize/5);
+		g.drawText(""+flagCount, sX+(bSize)/3+40, sY+(bSize*3)/4+10, paint); //count
+		g.drawRect(sX+bSize/3, sY+(bSize)/3, sX+(bSize*2)/3, sY+(bSize)/2, paint); //flag
+
+		paint.setStyle(Style.STROKE);
+		paint.setStrokeWidth(bSize/23);
+		g.drawLine(sX+(bSize)/3, sY+(bSize)/3-7, sX+(bSize)/3, sY+(bSize*3)/4, paint); //flag pole
+		
+		
+		//CLOCK
+		g.drawCircle((MainActivity.screenWidth*1)/10-20, realBarHeight+58, 32, paint);
+		paint.setStrokeWidth(bSize/40);
+		g.drawLine((MainActivity.screenWidth*1)/10-20, realBarHeight+40, (MainActivity.screenWidth*1)/10-20, realBarHeight+60, paint);
+		g.drawLine((MainActivity.screenWidth*1)/10-20, realBarHeight+60, (MainActivity.screenWidth*1)/10, realBarHeight+69, paint);
+		
+		paint.setStyle(Style.FILL);
+		paint.setTextSize(bSize/5);
+		sX = ((MainActivity.screenWidth*1)/10)-75;
+		int push = 15;
+		if(timeCounter>=10)
+			push = 8;
+		else if(timeCounter>=100)
+			push = 2;
+		else if(timeCounter>=1000)
+			timeCounter = 999;
+		g.drawText(""+timeCounter, sX+(bSize)/3+40+push, sY+(bSize*3)/4+10, paint); //count
+		
+		//MINE
+		if(!game.flagMode){
+				
+			float bombSize = 100;
+			float startingX = ((MainActivity.screenWidth*5)/10)-50;
+			float startingY = realBarHeight+10;
+			paint.setStyle(Style.FILL);
+			g.drawCircle(startingX+(bombSize/2), startingY+(bombSize/2), (bombSize/4),paint);
+			
+			paint.setStrokeWidth(bombSize/14);
+			paint.setStyle(Style.STROKE);
+			//top left/bottom right
+			g.drawLine(startingX+(bombSize/4), startingY+(bombSize/4), startingX+bombSize-(bombSize/4), startingY+bombSize-(bombSize/4),paint); 
+			//mid 
+			g.drawLine(startingX+(bombSize/8), startingY+(bombSize/2), startingX+bombSize-(bombSize/8), startingY+(bombSize/2),paint);
+			//top right/bottom left
+			g.drawLine(startingX+bombSize-(bombSize/4), startingY+(bombSize/4), startingX+(bombSize/4), startingY+bombSize-(bombSize/4),paint);
+			//top/down
+			g.drawLine(startingX+(bombSize/2), startingY+(bombSize/8), startingX+(bombSize/2), startingY+bombSize-(bombSize/8),paint);
+
+		}
+		//FLAG
+		else{
+			bSize = 150;
+			sX = ((MainActivity.screenWidth*5)/10)-68;
+			sY = realBarHeight-12;
+			
+			paint.setStyle(Style.FILL);
+			g.drawRect(sX+bSize/3, sY+(bSize)/3-2, sX+(bSize*2)/3, sY+(bSize)/2-2, paint); //flag
+
+			paint.setStyle(Style.STROKE);
+			paint.setStrokeWidth(bSize/23);
+			g.drawLine(sX+(bSize)/3, sY+(bSize)/3-7, sX+(bSize)/3, sY+(bSize*3)/4-3, paint); //flag pole
+		}
+			
+		
 		if(showCheck){
 
 			if(checkBoard())
@@ -1414,6 +1536,10 @@ public class Board {
 			//g.drawText(gameOverMessage(), 2, getWindowY()-63,paint);
 		}
 
+
+		//Log.v("RBH",""+realBarHeight);
+
+		//Log.v("hi",""+(MainActivity.screenWidth*5)/10);
 		//g.setColor(Color.);
 		//getwindowy -36
 	}

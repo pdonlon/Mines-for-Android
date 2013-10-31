@@ -37,7 +37,8 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	float pressX;
 	float pressY;
 	boolean justFlagged;
-
+	boolean justPressedBar;
+	
 	Timer timer;
 	TimerTask tt;
 	float timeCounter;
@@ -107,18 +108,36 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 	}
 
-	@Override
 	public boolean onTouch(View v, MotionEvent e) 
 	{		
 		float x = (e.getX()-playBoard.getOffX())/(playBoard.tileSize);
 		float y = (e.getY()-playBoard.getOffY())/(playBoard.tileSize);
 
+		float x2 = (e.getX());
+		float y2 = (e.getY());
+		
+		if (e.getAction() == MotionEvent.ACTION_DOWN && Board.doneAnimating && y2 >= playBoard.realBarHeight){
+							
+			justPressedBar = true;
+			
+				if(x2 >= (MainActivity.screenWidth*4)/5)
+					playBoard.zoomIn((float) playBoard.getHeight()/2, (float) playBoard.getWidth()/2);
+				else if(x2 >= (MainActivity.screenWidth*3)/5)
+					playBoard.zoomOut((float) playBoard.getHeight()/2, (float) playBoard.getWidth()/2);
+				else if(x2 >= (MainActivity.screenWidth*2)/5)
+					flagMode = !flagMode;
+				else
+					return true;
+				
+					return true;
+		}
+		
 		if(Board.doneAnimating && playBoard.isValid((int)x, (int)y)){
-			// check e.getAction() == MotionEvent.ACTION_DOWN
 
 			if (e.getAction() == MotionEvent.ACTION_DOWN){ //pressed
 				//Log.v("Pressed here: ", ""+e.getX()+ " "+e.getY()); //takes label and text
 
+				justPressedBar = false;
 				justFlagged = false;
 				timeCounter = 0;
 
@@ -147,7 +166,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			{//released
 				Log.v("Released: ", ""+timeCounter); //takes label and text
 
-				if(!dragging && !justFlagged){ 
+				if(!dragging && !justFlagged && !justPressedBar){ 
 
 					x = (int) playBoard.getPressedCords()[0];
 					y = (int) playBoard.getPressedCords()[1];
@@ -159,16 +178,16 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 						else if(!playBoard.isOpen((int)x, (int)y)&&!flagMode)
 							playBoard.open((int)x, (int)y);
+						
 						else if(playBoard.isOpen((int)x, (int)y))
 							playBoard.fastClick((int)x, (int)y);
 
-						//if(!gameOver()&&flagMode){
 						else if(!playBoard.isOpen((int)x, (int)y)&&flagMode){
 							playBoard.markFlagged((int)x, (int)y);
 							Log.v("Flagged here: ", ""+e.getX()+ " "+e.getY());
 						}
 						
-						if(playBoard.lose && !flagMode){
+						if(playBoard.lose){
 							playBoard.setPressed(false);
 							bombAnimation();
 
@@ -181,7 +200,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 					dragging = false;
 			}
 
-			else if(!justFlagged)
+			else if(!justFlagged && !justPressedBar)
 			{
 				x = (int) playBoard.getPressedCords()[0];
 				y = (int) playBoard.getPressedCords()[1];
