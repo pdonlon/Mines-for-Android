@@ -63,7 +63,7 @@ public class Board {
 	boolean touchedBomb = false;
 	boolean speedTrick = false;
 	boolean beingPressed = false;
-	
+
 	boolean checkBoard = false; 
 	boolean showHint = false; 
 	boolean hintColorYellow = false;
@@ -79,7 +79,7 @@ public class Board {
 
 	Timer timer;
 	TimerTask tt;
-	
+
 	int [] pressedCords = new int[2];
 
 	//Font font = new Font("SANS_SERIF", Font.BOLD,10);
@@ -92,7 +92,7 @@ public class Board {
 
 	public Board(int width, int height, DrawPanel g){
 
-		
+
 		game = g;
 		this.width = width;
 		this.height = height;
@@ -101,7 +101,7 @@ public class Board {
 		tf = Typeface.create("Font Name",Typeface.BOLD);
 
 		adjustTiles();
-//		game.startTimer();
+		//		game.startTimer();
 		startup();
 	}
 
@@ -124,12 +124,12 @@ public class Board {
 
 		height = a;
 	}
-	
+
 	public float getTileSize()
 	{
 		return tileSize;
 	}
-	
+
 	public int getZoom()
 	{
 		return zoom;
@@ -165,9 +165,19 @@ public class Board {
 		return win;
 	}
 
+	public void setWin(boolean a){
+
+		win = a;
+	}
+
 	public boolean getLose(){
 
 		return lose;
+	}
+
+	public void setLose(boolean a){
+
+		lose = a;
 	}
 
 	public boolean getFirstTurn(){
@@ -197,22 +207,22 @@ public class Board {
 	{
 		return offX;
 	}
-	
+
 	public void setOffX(float a)
 	{
 		offX = a;
 	}
-	
+
 	public float getDiffX()
 	{
 		return diffX;
 	}
-	
+
 	public void setDiffX(float a)
 	{
 		diffX = a;
 	}
-	
+
 	public float getOffY()
 	{
 		return offY;
@@ -222,17 +232,17 @@ public class Board {
 	{
 		offY = a;
 	}
-	
+
 	public float getDiffY()
 	{
 		return diffY;
 	}
-	
+
 	public void setDiffY(float a)
 	{
 		diffY = a;
 	}
-	
+
 	public void check(){
 
 		checkBoard = true;
@@ -269,15 +279,15 @@ public class Board {
 	{
 		boolean untouched = false;
 		try{
-		if(!board[x][y].isOpened() && !board[x][y].isFlagged() && !board[x][y].isQuestionMarked() && !board[x][y].isWrong())
-			untouched = true;
+			if(!board[x][y].isOpened() && !board[x][y].isFlagged() && !board[x][y].isQuestionMarked() && !board[x][y].isWrong())
+				untouched = true;
 		}
 		catch(Exception e){
-			
+
 		}
 		return untouched;
 	}
-	
+
 	public boolean alreadyThere(int x, int y){
 
 		if(pressed!= null)
@@ -299,29 +309,29 @@ public class Board {
 		pressed.enque(x, y);
 
 	}
-	
+
 	public void setPressedCords(int a, int b)
 	{
 		pressedCords[0] = a;
 		pressedCords[1] = b;
-		
+
 	}
-	
+
 	public int[] getPressedCords(){
-		
+
 		return pressedCords;  
-		
+
 	}
 
 	public boolean beingPressed(){
-		
+
 		return beingPressed;
 	}
-	
+
 	public void setPressed(boolean a){
 
 		beingPressed = a;
-		
+
 	}
 
 	public int getUnsafeBombCount(){
@@ -387,6 +397,14 @@ public class Board {
 
 		openBox(x,y);
 
+	}
+
+	public boolean isBomb(int x, int y)
+	{
+		if(board[x][y].isBomb())
+			return true;
+		else
+			return false;
 	}
 
 	public boolean bomb(int x, int y){ //Play can't access Mines so it is a double method
@@ -556,6 +574,8 @@ public class Board {
 							bombs.remove(x+j,y+i);
 							lose = true;
 							endOfGame();
+							game.setGameOver(true);
+							endTimer();
 						}
 						fast.enque(x+j, y+i);
 						fastCount++;
@@ -603,14 +623,21 @@ public class Board {
 	}
 
 	public void finishFlagging(){
+		
+		if(flagCount >=0){
 
-		for(int y=0; y<height; y++){
-			for(int x=0; x<width; x++){
+			for(int y=0; y<height; y++){
+				for(int x=0; x<width; x++){
 
-				if(!board[x][y].isOpened()&&!board[x][y].flagged)
-					board[x][y].setFlagged(true);
+					if(!board[x][y].isOpened()&&!board[x][y].flagged)
+						board[x][y].setFlagged(true);
+				}
 			}
+
 		}
+		
+		game.setGameOver(true);
+		endTimer();
 
 		flagCount = 0; 
 
@@ -904,20 +931,20 @@ public class Board {
 
 	}
 
-//	public boolean isEmpty(){
-//
-//		boolean empty = false;
-//
-//		try{
-//			if(pressed.getHead()==null)
-//				empty = true;
-//		}
-//		catch(Exception e){
-//
-//		}
-//
-//		return empty;
-//	}
+	//	public boolean isEmpty(){
+	//
+	//		boolean empty = false;
+	//
+	//		try{
+	//			if(pressed.getHead()==null)
+	//				empty = true;
+	//		}
+	//		catch(Exception e){
+	//
+	//		}
+	//
+	//		return empty;
+	//	}
 
 
 	public void openBox(int x, int y){
@@ -958,6 +985,8 @@ public class Board {
 						bombs.enque(x, y); //first to print
 
 						endOfGame();
+						game.setGameOver(true);
+						endTimer();
 
 
 					}
@@ -979,9 +1008,9 @@ public class Board {
 
 		if(getOpenedBoxCount() == totalBoxes - totalBombs){
 			win = true;
-			if(flagCount >=0){
-				finishFlagging();
-			}
+			//			if(flagCount >=0){
+			finishFlagging();
+			//}
 
 		}
 
@@ -1018,6 +1047,20 @@ public class Board {
 
 			}
 		}
+	}
+	
+	public void endOfGameSetWrong(){
+	
+		for(int i=0; i<height; i++){
+			for(int k=0; k<width; k++){
+
+				if(board[k][i].isFlagged()&&!board[k][i].isBomb()){
+					board[k][i].setWrong(true);
+				}
+
+			}
+		}
+		
 	}
 
 	public boolean gameOver(){
@@ -1072,7 +1115,7 @@ public class Board {
 		}
 
 		zoom++;
-		
+
 	}
 
 	public void zoomOut(int x, int y){
@@ -1093,9 +1136,9 @@ public class Board {
 			difference = MainActivity.screenHeight - (height*tileSize+offY);
 			offY = offY + difference/2;
 		}
-		
+
 		zoom--;
-		
+
 	}
 
 	public void paintBoard(Canvas g){
@@ -1219,14 +1262,14 @@ public class Board {
 						paint.setColor(Color.GRAY);
 						g.drawRect(xSpacing+1, ySpacing+1, (tileSize)+xSpacing+1, (tileSize)+ySpacing+1,paint);
 						paint.setColor(Color.WHITE);
-						
+
 						paint.setStrokeWidth(tileSize/14);
 						paint.setStyle(Style.STROKE);
-						
+
 						g.drawLine(xSpacing+(tileSize/4), ySpacing+(tileSize/4), xSpacing+tileSize-(tileSize/4), ySpacing+tileSize-(tileSize/4),paint); //top left/bottom right
 						g.drawLine(xSpacing+tileSize-(tileSize/4), ySpacing+(tileSize/4), xSpacing+(tileSize/4), ySpacing+tileSize-(tileSize/4),paint);//top right/bottom left
 
-						
+
 					}
 
 					else if(board[x][y].isFlagged()){
@@ -1312,7 +1355,7 @@ public class Board {
 			}
 			ySpacing+= (tileSize);
 		}
-		
+
 		if(beingPressed&&!(game.getFlagMode())&&isUntouched(pressedCords[0],pressedCords[1])){
 			paint.setStyle(Paint.Style.FILL);
 			g.drawRect(pressedCords[0]*tileSize+offX, pressedCords[1]*tileSize+offY, pressedCords[0]*tileSize+offX+(tileSize), pressedCords[1]*tileSize+offY+(tileSize),gray);
@@ -1331,7 +1374,7 @@ public class Board {
 
 		//g.drawText("Open Mode ", (MainActivity.screenWidth*1)/8, (MainActivity.screenHeight*6)/7,paint);
 		//g.drawText("|: ", MainActivity.screenWidth/2, (MainActivity.screenHeight*6)/7,paint);
-		
+
 		if(game.flagMode)
 			g.drawText("Flag Mode ", (MainActivity.screenWidth*5)/8, (MainActivity.screenHeight*6)/7,paint);
 		else 

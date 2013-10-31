@@ -130,6 +130,8 @@ public class MainActivity extends Activity {
 			return true;
 		case 9:
 			drawView.setFlagMode(!drawView.getFlagMode());
+			runOnUiThread(new Runnable(){ public void run() {
+				drawView.invalidate();}});
 			return true;
 		}
 		return false;

@@ -162,13 +162,13 @@ public class DrawPanel extends View implements View.OnTouchListener {
 						else if(playBoard.isOpen((int)x, (int)y))
 							playBoard.fastClick((int)x, (int)y);
 
-						if(!gameOver()&&flagMode){
-
+						//if(!gameOver()&&flagMode){
+						else if(!playBoard.isOpen((int)x, (int)y)&&flagMode){
 							playBoard.markFlagged((int)x, (int)y);
 							Log.v("Flagged here: ", ""+e.getX()+ " "+e.getY());
-
 						}
-						if(playBoard.lose){
+						
+						if(playBoard.lose && !flagMode){
 							playBoard.setPressed(false);
 							bombAnimation();
 
@@ -229,7 +229,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				
 				timeCounter+=.1;
 				
-				if(timeCounter > 2 && !dragging && playBoard.beingPressed){
+				if(timeCounter > 3.5 && !dragging && playBoard.beingPressed){
 					x = (int) playBoard.getPressedCords()[0];
 					y = (int) playBoard.getPressedCords()[1];
 					if(!playBoard.isOpen(x,y)){
@@ -243,6 +243,23 @@ public class DrawPanel extends View implements View.OnTouchListener {
 						
 					playBoard.setPressed(false);
 					justFlagged = true;
+					
+					if(flagMode && playBoard.isBomb(x, y) && Board.doneAnimating){
+						playBoard.bombs.remove(x, y);
+						playBoard.endOfGameSetWrong();
+						playBoard.setLose(true);
+						gameOver = true;
+						playBoard.endTimer();
+						bombAnimation();
+
+					} //TODO FIX WINNING AND LOSING FROM THIS SCREEN
+					else{
+						playBoard.checkWin();
+						if(playBoard.win){
+							gameOver = true;
+							playBoard.endTimer();
+						}
+					}
 					}
 				}
 				mactivity.runOnUiThread(new Runnable() {
@@ -265,6 +282,11 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			playBoard.endTimer();
 		}		
 		return gameOver;
+	}
+	
+	public void setGameOver(boolean a){
+		
+		gameOver = a;
 	}
 
 	public void resetGame(){
