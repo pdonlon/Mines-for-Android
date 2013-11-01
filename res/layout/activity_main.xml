@@ -2,15 +2,31 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-    <SurfaceView 
+    android:layout_height="fill_parent" xmlns:app="http://schemas.android.com/apk/lib/com.google.ads">
+    <RelativeLayout 
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/surface_home"/>
-    <Button
-        android:id="@+id/add_new"
-        android:layout_width="wrap_content"
+    
+   <RelativeLayout
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <com.google.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
+        android:id="@+id/ad"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="144px"
+        ads:backgroundColor="#000000"
+        ads:primaryTextColor="#FFFFFF"
+        ads:secondaryTextColor="#CCCCCC"
+        app:adSize="BANNER"
+        app:adUnitId="7f4b6aa604824d54" >
+    </com.google.ads.AdView>
+
+</RelativeLayout>
+	
 </RelativeLayout>

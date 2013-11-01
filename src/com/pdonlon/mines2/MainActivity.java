@@ -1,6 +1,11 @@
 package com.pdonlon.mines2;
 
+import com.google.ads.AdRequest;
+import com.google.ads.AdSize;
+import com.google.ads.AdView;
+
 import android.app.Activity;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Build;
@@ -11,7 +16,9 @@ import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 
 public class MainActivity extends Activity {
@@ -45,47 +52,47 @@ public class MainActivity extends Activity {
 	}
 
 	public boolean dispatchKeyEvent(KeyEvent event) {
-		       int action = event.getAction();
-		       int keyCode = event.getKeyCode();
-		 
-		           switch (keyCode) {
-		           case KeyEvent.KEYCODE_VOLUME_UP:
-		               if (action == KeyEvent.ACTION_UP) {
-		            	   drawView.setFlagMode(!drawView.getFlagMode());
-		               }
-//		               if (action == KeyEvent.ACTION_DOWN) {
-//		                 iview.setImageDrawable(constants.open);
-//		                 //if (Build.VERSION.SDK_INT>=11)
-//		             //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
-//		               }
-		               return true;
-		           case KeyEvent.KEYCODE_VOLUME_DOWN:
-		             if (action == KeyEvent.ACTION_UP) {
-		            	   drawView.setFlagMode(!drawView.getFlagMode());
+		int action = event.getAction();
+		int keyCode = event.getKeyCode();
 
-		             }
-//		               if (action == KeyEvent.ACTION_DOWN) {
-//		                 iview.setImageDrawable(constants.open);
-//		                 //if (Build.VERSION.SDK_INT>=11)
-//		             //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
-//		               }
-//		               return true;
-//		           case KeyEvent.KEYCODE_CAMERA:
-//		               if (action == KeyEvent.ACTION_UP) {
-//		                 iview.setImageDrawable(constants.closed);
-//		               }
-//		               if (action == KeyEvent.ACTION_DOWN) {
-//		                 iview.setImageDrawable(constants.open);
-//		                 //if (Build.VERSION.SDK_INT>=11)
-//		             //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
-//		               }
-//		               return true;
-		           
-		               return super.dispatchKeyEvent(event);
-		           }
-	               return super.dispatchKeyEvent(event);
-		       }
-	
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_VOLUME_UP:
+			if (action == KeyEvent.ACTION_UP) {
+				drawView.setFlagMode(!drawView.getFlagMode());
+			}
+			//		               if (action == KeyEvent.ACTION_DOWN) {
+				//		                 iview.setImageDrawable(constants.open);
+			//		                 //if (Build.VERSION.SDK_INT>=11)
+			//		             //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+			//		               }
+			return true;
+		case KeyEvent.KEYCODE_VOLUME_DOWN:
+			if (action == KeyEvent.ACTION_UP) {
+				drawView.setFlagMode(!drawView.getFlagMode());
+
+			}
+			//		               if (action == KeyEvent.ACTION_DOWN) {
+			//		                 iview.setImageDrawable(constants.open);
+			//		                 //if (Build.VERSION.SDK_INT>=11)
+			//		             //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+			//		               }
+			//		               return true;
+			//		           case KeyEvent.KEYCODE_CAMERA:
+			//		               if (action == KeyEvent.ACTION_UP) {
+			//		                 iview.setImageDrawable(constants.closed);
+			//		               }
+			//		               if (action == KeyEvent.ACTION_DOWN) {
+			//		                 iview.setImageDrawable(constants.open);
+			//		                 //if (Build.VERSION.SDK_INT>=11)
+			//		             //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+			//		               }
+			//		               return true;
+
+			return super.dispatchKeyEvent(event);
+		}
+		return super.dispatchKeyEvent(event);
+	}
+
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case 1:
@@ -148,24 +155,34 @@ public class MainActivity extends Activity {
 		runOnUiThread(new Runnable(){ public void run() {
 			drawView.invalidate();}});
 	}
-	
+
 	public int getActionBarHeight() {
-	    int actionBarHeight = getActionBar().getHeight();
-	    if (actionBarHeight != 0)
-	        return actionBarHeight;
-	    
-	  	return 0;
+
+		int actionBarHeight;
+
+		try
+		{
+			actionBarHeight = getActionBar().getHeight(); //TODO
+			if (actionBarHeight != 0)
+				return actionBarHeight;
+		}
+		catch(NoSuchMethodError e)
+		{
+			return getStatusBarHeight();
+		}
+
+		return 0;
 	}
-	
+
 	public int getStatusBarHeight() {
-	      int result = 0;
-	      int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-	      if (resourceId > 0) {
-	          result = getResources().getDimensionPixelSize(resourceId);
-	      }
-	      return result;
+		int result = 0;
+		int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+		if (resourceId > 0) {
+			result = getResources().getDimensionPixelSize(resourceId);
+		}
+		return result;
 	}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -178,7 +195,25 @@ public class MainActivity extends Activity {
 
 		drawView = new DrawPanel(this, this);
 		drawView.setBackgroundColor(Color.LTGRAY);
-		setContentView(drawView);
+		
+		setContentView(R.layout.activity_main);
+		
+		RelativeLayout layout2 = (RelativeLayout)findViewById(R.id.surface_home); 
+		
+		layout2.addView(drawView);	
+
+		 // Create the adView     
+		AdView adView = new AdView(this, AdSize.BANNER, "7f4b6aa604824d54");     
+		// Lookup your RelativeLayoutLayout assuming it's been given     
+		// the attribute android:id="@+id/ad"     
+		RelativeLayout layout = (RelativeLayout)findViewById(R.id.ad); 	
+		
+		// Add the adView to it
+		layout.addView(adView);  
+		
+
+		// Initiate a generic request to load it with an ad     
+		adView.loadAd(new AdRequest());
 
 
 

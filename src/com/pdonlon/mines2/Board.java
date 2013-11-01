@@ -1,5 +1,5 @@
 package com.pdonlon.mines2;
- 
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -27,7 +27,7 @@ public class Board {
 	//	exp 	30x16 	99		381
 
 	static Typeface tf;
-	
+
 	static boolean doneAnimating = true;
 	DrawPanel game;
 	CheckList pressed;
@@ -70,8 +70,8 @@ public class Board {
 	boolean hintColorYellow = false;
 	boolean showCheck = false;
 	boolean questionMarks = false;
-	boolean compactMode = false;
 
+	
 	int timeCounter;
 
 	int windowSizeY = 1100;
@@ -80,7 +80,7 @@ public class Board {
 
 	Timer timer;
 	TimerTask tt;
-	
+
 	int [] pressedCords = new int[2];
 
 	int barHeight = 120;
@@ -101,7 +101,7 @@ public class Board {
 		this.width = width;
 		this.height = height;
 		bombs = new CheckList();
-		
+
 		tf = Typeface.create("Font Name",Typeface.BOLD);
 
 		adjustTiles();
@@ -183,7 +183,7 @@ public class Board {
 
 		lose = a;
 	}
-	
+
 	public boolean getFirstTurn(){
 
 		return firstTurn;
@@ -627,7 +627,7 @@ public class Board {
 	}
 
 	public void finishFlagging(){
-		
+
 		if(flagCount >=0){
 
 			for(int y=0; y<height; y++){
@@ -639,7 +639,7 @@ public class Board {
 			}
 
 		}
-		
+
 		game.setGameOver(true);
 		endTimer();
 
@@ -822,16 +822,6 @@ public class Board {
 		board[x][y].setQuestionMarked(false);
 	}
 
-	public boolean compactModeEnabled(){
-
-		return compactMode;
-
-	}
-
-	public void setCompactMode(boolean a){
-
-		compactMode = a;
-	}
 
 	public void setTileSize(int a){
 
@@ -1018,12 +1008,12 @@ public class Board {
 		}
 
 	}
-	
+
 	public boolean lost(){
-		
+
 		for(int y=0; y<height; y++){
 			for(int x=0; x<width; x++){
-				
+
 				if(board[x][y].isBomb() && board[x][y].isOpened())
 					return true;
 			}
@@ -1063,9 +1053,9 @@ public class Board {
 			}
 		}
 	}
-	
+
 	public void endOfGameSetWrong(){
-	
+
 		for(int i=0; i<height; i++){
 			for(int k=0; k<width; k++){
 
@@ -1075,7 +1065,7 @@ public class Board {
 
 			}
 		}
-		
+
 	}
 
 	public boolean gameOver(){
@@ -1091,21 +1081,21 @@ public class Board {
 	public String gameOverMessage(){ //TODO
 
 		String gameOver = "";
-//
-//		if(win)
-//		{
-//			if(!compactMode)
-//				gameOver = "Game Over! You win! Time: "+timeCounter; //timer*1000;
-//			else
-//				gameOver = "Game over you win! Time: "+timeCounter; //timer*1000;
-//		}
-//		else
-//		{
-//			if(!compactMode)
-//				gameOver = "Game Over! You Lose! "+timeCounter;
-//			else
-//				gameOver = "Game over you lose! Time: "+timeCounter; //timer*1000;
-//		}
+		//
+		//		if(win)
+		//		{
+		//			if(!compactMode)
+		//				gameOver = "Game Over! You win! Time: "+timeCounter; //timer*1000;
+		//			else
+		//				gameOver = "Game over you win! Time: "+timeCounter; //timer*1000;
+		//		}
+		//		else
+		//		{
+		//			if(!compactMode)
+		//				gameOver = "Game Over! You Lose! "+timeCounter;
+		//			else
+		//				gameOver = "Game over you lose! Time: "+timeCounter; //timer*1000;
+		//		}
 
 		return gameOver;
 	}
@@ -1157,7 +1147,7 @@ public class Board {
 	}
 
 	public void paintBoard(Canvas g){
-		
+
 		//		Paint pgray = new Paint();
 		//		pgray.setColor(android.graphics.Color.DKGRAY);
 		//		//g.drawRect(0, 0, (tileSize)*getWidth(), (tileSize*getHeight()), pgray);
@@ -1189,7 +1179,11 @@ public class Board {
 		else
 			speedTrick = true;
 
+		//FAST DRAW
+		g.drawRect(offX, offY, tileSize*width + offX, tileSize*height + offY, darkGray);
 
+		thickDarkGray.setStrokeWidth(tileSize/6);				
+		
 		float ySpacing = offY; 
 
 		for(int y=0; y<height; y++){
@@ -1199,12 +1193,6 @@ public class Board {
 			for(int x=0; x<width; x++){
 
 				if(!board[x][y].isOpened()&&!board[x][y].isWrong()){
-
-					// set width of thick cheese lines
-					thickDarkGray.setStrokeWidth(tileSize/6);				
-
-					// draw background square
-					g.drawRect(xSpacing, ySpacing, tileSize + xSpacing, tileSize + ySpacing, darkGray);
 
 					// draw cheese rectangles
 					g.drawRect(xSpacing, ySpacing, gap + xSpacing, tileSize + ySpacing, lightGray);
@@ -1304,15 +1292,6 @@ public class Board {
 
 					}
 
-					else if(board[x][y].isQuestionMarked()){
-						paint.setColor(Color.WHITE);
-						//g.setFont(font);
-						if(compactMode)
-							g.drawText("?", xSpacing+8, ySpacing+16,paint);
-						else
-							g.drawText("?", xSpacing+11, ySpacing+19,paint);
-					}
-
 				}
 				else{
 
@@ -1389,19 +1368,21 @@ public class Board {
 		//g.drawText("Open Mode ", (MainActivity.screenWidth*1)/8, (MainActivity.screenHeight*6)/7,paint);
 		//g.drawText("|: ", MainActivity.screenWidth/2, (MainActivity.screenHeight*6)/7,paint);
 
-//		if(game.flagMode)
-//			g.drawText("Flag Mode ", (MainActivity.screenWidth*5)/8, (MainActivity.screenHeight*6)/7,paint);
-//		else 
-//			g.drawText("Open Mode ", (MainActivity.screenWidth*5)/8, (MainActivity.screenHeight*6)/7,paint);
+		//		if(game.flagMode)
+		//			g.drawText("Flag Mode ", (MainActivity.screenWidth*5)/8, (MainActivity.screenHeight*6)/7,paint);
+		//		else 
+		//			g.drawText("Open Mode ", (MainActivity.screenWidth*5)/8, (MainActivity.screenHeight*6)/7,paint);
 		paint.setColor(Color.BLACK);
 		paint.setStyle(Style.FILL);
-		
+
 		if (actionAndStatus == -1)
 			actionAndStatus = game.mactivity.getActionBarHeight() + game.mactivity.getStatusBarHeight();
-		
+
+		if (actionAndStatus > 0)
+		{
 		realBarHeight = (MainActivity.screenHeight - actionAndStatus) - barHeight;
 		g.drawRect(0, realBarHeight, (MainActivity.screenWidth), (MainActivity.screenHeight),paint);
-		
+
 		paint.setColor(Color.WHITE);
 		g.drawLine((MainActivity.screenWidth*1)/5, realBarHeight, (MainActivity.screenWidth*1)/5, (MainActivity.screenHeight), paint);
 		g.drawLine((MainActivity.screenWidth*2)/5, realBarHeight, (MainActivity.screenWidth*2)/5, (MainActivity.screenHeight), paint);
@@ -1415,8 +1396,8 @@ public class Board {
 
 		paint.setStyle(Style.STROKE);
 		paint.setStrokeWidth(6);
-		//paint.setColor(Color.WHITE);
 		
+		paint.setColor(Color.argb(255, 190, 190, 190));
 		//MAGNIFINE GLASSES
 		g.drawCircle((MainActivity.screenWidth*7)/10, realBarHeight+58, 24, paint);
 		g.drawLine((MainActivity.screenWidth*72)/100, realBarHeight+74, (MainActivity.screenWidth*76)/100, realBarHeight+99, paint);
@@ -1429,14 +1410,13 @@ public class Board {
 		g.drawLine((MainActivity.screenWidth*7)/10-10, realBarHeight+58, (MainActivity.screenWidth*7)/10+10, realBarHeight+58, paint);
 		g.drawLine((MainActivity.screenWidth*9)/10-11, realBarHeight+58, (MainActivity.screenWidth*9)/10+11, realBarHeight+58, paint);
 
-		
 
-		
+
 		//FLAG
 		float bSize = 150;
 		float sX = ((MainActivity.screenWidth*3)/10)-75;
 		float sY = realBarHeight-20;
-		
+
 		paint.setStyle(Style.FILL);
 		paint.setTypeface(tf);
 		paint.setTextSize(bSize/5);
@@ -1446,14 +1426,14 @@ public class Board {
 		paint.setStyle(Style.STROKE);
 		paint.setStrokeWidth(bSize/23);
 		g.drawLine(sX+(bSize)/3, sY+(bSize)/3-7, sX+(bSize)/3, sY+(bSize*3)/4, paint); //flag pole
-		
-		
+
+
 		//CLOCK
 		g.drawCircle((MainActivity.screenWidth*1)/10-20, realBarHeight+58, 32, paint);
 		paint.setStrokeWidth(bSize/40);
 		g.drawLine((MainActivity.screenWidth*1)/10-20, realBarHeight+40, (MainActivity.screenWidth*1)/10-20, realBarHeight+60, paint);
 		g.drawLine((MainActivity.screenWidth*1)/10-20, realBarHeight+60, (MainActivity.screenWidth*1)/10, realBarHeight+69, paint);
-		
+
 		paint.setStyle(Style.FILL);
 		paint.setTextSize(bSize/5);
 		sX = ((MainActivity.screenWidth*1)/10)-75;
@@ -1465,16 +1445,16 @@ public class Board {
 		else if(timeCounter>=1000)
 			timeCounter = 999;
 		g.drawText(""+timeCounter, sX+(bSize)/3+40+push, sY+(bSize*3)/4+10, paint); //count
-		
+
 		//MINE
 		if(!game.flagMode){
-				
+
 			float bombSize = 100;
 			float startingX = ((MainActivity.screenWidth*5)/10)-50;
 			float startingY = realBarHeight+10;
 			paint.setStyle(Style.FILL);
 			g.drawCircle(startingX+(bombSize/2), startingY+(bombSize/2), (bombSize/4),paint);
-			
+
 			paint.setStrokeWidth(bombSize/14);
 			paint.setStyle(Style.STROKE);
 			//top left/bottom right
@@ -1492,7 +1472,7 @@ public class Board {
 			bSize = 150;
 			sX = ((MainActivity.screenWidth*5)/10)-68;
 			sY = realBarHeight-12;
-			
+
 			paint.setStyle(Style.FILL);
 			g.drawRect(sX+bSize/3, sY+(bSize)/3-2, sX+(bSize*2)/3, sY+(bSize)/2-2, paint); //flag
 
@@ -1500,8 +1480,9 @@ public class Board {
 			paint.setStrokeWidth(bSize/23);
 			g.drawLine(sX+(bSize)/3, sY+(bSize)/3-7, sX+(bSize)/3, sY+(bSize*3)/4-3, paint); //flag pole
 		}
-			
-		
+		}
+
+
 		if(showCheck){
 
 			if(checkBoard())

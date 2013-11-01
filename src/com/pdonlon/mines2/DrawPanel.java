@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.graphics.Shader;
 
@@ -107,7 +108,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		playBoard.paintBoard(g);
 
 	}
-
+	
 	public boolean onTouch(View v, MotionEvent e) 
 	{		
 		float x = (e.getX()-playBoard.getOffX())/(playBoard.tileSize);
@@ -129,7 +130,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				else
 					return true;
 				
-					return true;
+			return true;
 		}
 		
 		if(Board.doneAnimating && playBoard.isValid((int)x, (int)y)){
