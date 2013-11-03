@@ -130,6 +130,8 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				else
 					return true;
 				
+				invalidate();
+				
 			return true;
 		}
 		
@@ -248,7 +250,9 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			public void run() {
 				
 				timeCounter+=.1;
-				
+				if(gameOver){
+					return;
+				}
 				if(timeCounter > 3.5 && !dragging && playBoard.beingPressed){
 					x = (int) playBoard.getPressedCords()[0];
 					y = (int) playBoard.getPressedCords()[1];
@@ -271,6 +275,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 						gameOver = true;
 						playBoard.endTimer();
 						bombAnimation();
+						
 
 					} //TODO FIX WINNING AND LOSING FROM THIS SCREEN
 					else{
@@ -278,6 +283,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 						if(playBoard.win){
 							gameOver = true;
 							playBoard.endTimer();
+							invalidate();
 						}
 					}
 					}
@@ -312,7 +318,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	public void resetGame(){
 
 		if(playBoard.doneAnimating())
-		{
+		{	
 			playBoard.startup();
 			playBoard.wipeBoard();
 			gameOver = false;
