@@ -33,7 +33,7 @@ public class MainActivity extends Activity {
 	static MenuItem mens5;
 	static MenuItem mens6;
 	static MenuItem mens7;
-	//static MenuItem mens8;
+	static MenuItem mens8;
 	//static MenuItem mens9;
 
 
@@ -43,11 +43,12 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		mens1 = menu.add(0, 1, 2, "Hint");
 		mens2 = menu.add(0, 2, 2,"Reset");
-		mens5 = menu.add(0, 5, 2,"Easy");
-		mens6 = menu.add(0, 6, 2, "Medium");
-		mens7 = menu.add(0, 7, 2,"Hard");
-		//mens8 = menu.add(0, 8, 2,"Hide Gold");
-		//mens9 = menu.add(0, 9, 2,"Manual Adjust");
+		mens3 = menu.add(0, 3, 2,"Easy");
+		mens4 = menu.add(0, 4, 2, "Medium");
+		mens5 = menu.add(0, 5, 2,"Hard");
+		//mens6 = menu.add(0, 6, 2,"Hide Gold");
+		//mens7 = menu.add(0, 7, 2,"Manual Adjust");
+		mens8 = menu.add(0, 8, 2,"High Scores");
 		
 		return true;
 	}
@@ -107,7 +108,7 @@ public class MainActivity extends Activity {
 			drawView.resetGame();
 			return true;
 
-		case 5:
+		case 3:
 			drawView.playBoard.setWidth(9);
 			drawView.playBoard.setHeight(9);
 			drawView.setDifficulty("Easy");
@@ -115,7 +116,7 @@ public class MainActivity extends Activity {
 			startingUp();
 			drawView.playBoard.readjust();
 			return true;
-		case 6:
+		case 4:
 			drawView.playBoard.setWidth(16);
 			drawView.playBoard.setHeight(16);
 			drawView.setDifficulty("Medium");
@@ -123,7 +124,7 @@ public class MainActivity extends Activity {
 			startingUp();
 			drawView.playBoard.readjust();
 			return true;
-		case 7:
+		case 5:
 			drawView.playBoard.setWidth(16);
 			drawView.playBoard.setHeight(30);
 			drawView.setDifficulty("Hard");
@@ -131,7 +132,7 @@ public class MainActivity extends Activity {
 			startingUp();
 			drawView.playBoard.readjust();
 			return true;
-//		case 8:
+//		case 6:
 //			if(Board.pro)
 //				mens8.setTitle("Show Gold");
 //			else
@@ -141,6 +142,9 @@ public class MainActivity extends Activity {
 //			runOnUiThread(new Runnable(){ public void run() {
 //				drawView.invalidate();}});
 
+		case 8:
+			drawView.showAllHighScores();
+			return true;
 		}
 
 	}

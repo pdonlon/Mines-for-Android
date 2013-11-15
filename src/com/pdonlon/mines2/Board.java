@@ -74,7 +74,6 @@ public class Board {
 	boolean showCheck = false;
 	boolean questionMarks = false;
 
-
 	int timeCounter;
 
 	int windowSizeY = 1100;
@@ -89,8 +88,6 @@ public class Board {
 	int barHeight = 120;
 	int actionAndStatus = -1;
 	float realBarHeight;
-	//Font font = new Font("SANS_SERIF", Font.BOLD,10);
-	//Font compactFont = new Font("SANS_SERIF", Font.BOLD,8);
 
 	public Mine[][] getBoard(){
 
@@ -118,6 +115,12 @@ public class Board {
 
 	}
 
+	public int getTimeCounter(){
+		
+		return timeCounter;
+	}
+
+	
 	public void readjust(){
 		offX = 0;
 		offY = 0;
@@ -590,7 +593,7 @@ public class Board {
 
 
 						if(board[x+j][y+i].isBomb()){
-							bombs.remove(x+j,y+i);
+							//bombs.remove(x+j,y+i);
 							lose = true;
 							endOfGame();
 							game.setGameOver(true);
@@ -990,7 +993,7 @@ public class Board {
 						touchedBomb = true;
 						lose = true;
 
-						bombs.remove(x,y); //so it won't print twice
+						bombs.remove(x,y); //so it won't print twice TODO
 						bombs.enque(x, y); //first to print
 
 						endOfGame();
@@ -1012,14 +1015,19 @@ public class Board {
 		checkWin();
 	}
 
-	public void checkWin(){
-
+	public void checkWin()
+	{
+		if(lose)
+			return;
+			
 		if(getOpenedBoxCount() == totalBoxes - totalBombs){
 			win = true;
-			//			if(flagCount >=0){
-			finishFlagging();
-			//}
 
+			game.updateScores(timeCounter);
+			Log.v("highScores", ""+game.getScore());
+			
+			finishFlagging();
+			
 		}
 		checkBoard();
 

@@ -4,7 +4,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
@@ -23,6 +25,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.graphics.Shader;
+import android.content.SharedPreferences;
 
 public class DrawPanel extends View implements View.OnTouchListener {
 	Paint paint = new Paint();
@@ -39,18 +42,20 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	float pressY;
 	boolean justFlagged;
 	boolean justPressedBar;
-	
+
 	Timer timer;
 	TimerTask tt;
 	float timeCounter;
+	boolean showNewHighScore = false;
 
 	Context ctx;
+	public static Context context;
 
 	public boolean getFlagMode()
 	{
 		return flagMode;
 	}
-
+	
 	public void setFlagMode(boolean a)
 	{	
 		flagMode = a;
@@ -108,7 +113,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		playBoard.paintBoard(g);
 
 	}
-	
+
 	public boolean onTouch(View v, MotionEvent e) 
 	{		
 		float x = (e.getX()-playBoard.getOffX())/(playBoard.tileSize);
@@ -116,25 +121,25 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 		float x2 = (e.getX());
 		float y2 = (e.getY());
-		
+
 		if (e.getAction() == MotionEvent.ACTION_DOWN && Board.doneAnimating && y2 >= playBoard.realBarHeight){
-							
+
 			justPressedBar = true;
-			
-				if(x2 >= (MainActivity.screenWidth*4)/5)
-					playBoard.zoomIn((float) playBoard.getHeight()/2, (float) playBoard.getWidth()/2);
-				else if(x2 >= (MainActivity.screenWidth*3)/5)
-					playBoard.zoomOut((float) playBoard.getHeight()/2, (float) playBoard.getWidth()/2);
-				else if(x2 >= (MainActivity.screenWidth*2)/5)
-					flagMode = !flagMode;
-				else
-					return true;
-				
-				invalidate();
-				
+
+			if(x2 >= (MainActivity.screenWidth*4)/5)
+				playBoard.zoomIn((float) playBoard.getHeight()/2, (float) playBoard.getWidth()/2);
+			else if(x2 >= (MainActivity.screenWidth*3)/5)
+				playBoard.zoomOut((float) playBoard.getHeight()/2, (float) playBoard.getWidth()/2);
+			else if(x2 >= (MainActivity.screenWidth*2)/5)
+				flagMode = !flagMode;
+			else
+				return true;
+
+			invalidate();
+
 			return true;
 		}
-		
+
 		if(Board.doneAnimating && playBoard.isValid((int)x, (int)y)){
 
 			if (e.getAction() == MotionEvent.ACTION_DOWN){ //pressed
@@ -181,7 +186,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 						else if(!playBoard.isOpen((int)x, (int)y)&&!flagMode)
 							playBoard.open((int)x, (int)y);
-						
+
 						else if(playBoard.isOpen((int)x, (int)y))
 							playBoard.fastClick((int)x, (int)y);
 
@@ -189,7 +194,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 							playBoard.markFlagged((int)x, (int)y);
 							Log.v("Flagged here: ", ""+e.getX()+ " "+e.getY());
 						}
-						
+
 						if(playBoard.lose){
 							playBoard.setPressed(false);
 							bombAnimation();
@@ -241,6 +246,54 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			return true;
 	}
 
+	public void updateScores(int score)
+	{
+		//setting preferences
+		//int keyNumber = generateKeyNumber(difficulty);
+
+		SharedPreferences scores = mactivity.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+		if(score < scores.getInt(difficulty, 0) || scores.getInt(difficulty, 0) == 0)
+		{
+			showNewHighScore = true;
+			Editor editor = scores.edit();
+			editor.putInt(difficulty, score);
+			editor.commit();
+		}
+	}
+
+	public int getScore()
+	{
+		//getting preferences
+		//int keyNumber = generateKeyNumber(difficulty);
+
+		SharedPreferences scores = mactivity.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+		int highScore = scores.getInt(difficulty, 0); //0 is the default value
+
+		return highScore;
+	}
+
+	public void showNewHighScore()
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder(mactivity);
+		builder.setMessage(playBoard.getTimeCounter()+" seconds").setTitle("New High Score!");
+
+		// 3. Get the AlertDialog from create()
+		AlertDialog dialog = builder.create();
+		dialog.show();
+		showNewHighScore = false;
+	}
+
+	public void showAllHighScores()
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder(mactivity);
+		SharedPreferences scores = mactivity.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+		builder.setMessage("Easy: "+ scores.getInt("Easy", 0)+" seconds\n\n"+"Medium: "+scores.getInt("Medium", 0)+" seconds\n\n"+"Hard: "+ scores.getInt("Hard", 0)+" seconds").setTitle("High Scores");
+
+		AlertDialog dialog = builder.create();
+		dialog.show();
+	}
+	
 	public void startTimer(){
 
 		timer = new Timer();
@@ -248,7 +301,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
-				
+
 				timeCounter+=.1;
 				if(gameOver){
 					return;
@@ -257,40 +310,42 @@ public class DrawPanel extends View implements View.OnTouchListener {
 					x = (int) playBoard.getPressedCords()[0];
 					y = (int) playBoard.getPressedCords()[1];
 					if(!playBoard.isOpen(x,y)){
-					Vibrator v = (Vibrator) mactivity.getSystemService(Context.VIBRATOR_SERVICE);
-					
-					v.vibrate(20);
-					if(!flagMode)
-						playBoard.markFlagged((int)x,(int)y);
-					else
-						playBoard.open((int)x,(int)y);
-						
-					playBoard.setPressed(false);
-					justFlagged = true;
-					
-					if(flagMode && playBoard.isBomb(x, y) && Board.doneAnimating){
-						playBoard.bombs.remove(x, y);
-						playBoard.endOfGameSetWrong();
-						playBoard.setLose(true);
-						gameOver = true;
-						playBoard.endTimer();
-						bombAnimation();
-						
+						Vibrator v = (Vibrator) mactivity.getSystemService(Context.VIBRATOR_SERVICE);
 
-					} //TODO FIX WINNING AND LOSING FROM THIS SCREEN
-					else{
-						playBoard.checkWin();
-						if(playBoard.win){
+						v.vibrate(20);
+						if(!flagMode)
+							playBoard.markFlagged((int)x,(int)y);
+						else
+							playBoard.open((int)x,(int)y);
+
+						playBoard.setPressed(false);
+						justFlagged = true;
+
+						if(flagMode && playBoard.isBomb(x, y) && Board.doneAnimating){
+							playBoard.bombs.remove(x, y); 
+							playBoard.endOfGameSetWrong();
+							playBoard.setLose(true);
 							gameOver = true;
 							playBoard.endTimer();
-							invalidate();
+							bombAnimation();
+
+
+						} //TODO FIX WINNING AND LOSING FROM THIS SCREEN
+						else{
+							playBoard.checkWin();
+							if(playBoard.win){
+								gameOver = true;
+								playBoard.endTimer();
+								invalidate();
+							}
 						}
-					}
 					}
 				}
 				mactivity.runOnUiThread(new Runnable() {
 					public void run() {
 						invalidate();
+						if(showNewHighScore)
+							showNewHighScore();
 					}
 				});
 			}
@@ -304,14 +359,17 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		if(playBoard.getWin() || playBoard.getLose())
 		{
 			gameOver = true;
-			Log.v("Pressed here: ", "WIN"); //takes label and text
+			
+			if(showNewHighScore)
+				showNewHighScore();
+			
 			playBoard.endTimer();
 		}		
 		return gameOver;
 	}
-	
+
 	public void setGameOver(boolean a){
-		
+
 		gameOver = a;
 	}
 
