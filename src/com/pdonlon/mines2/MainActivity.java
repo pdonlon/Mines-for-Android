@@ -171,7 +171,7 @@ public class MainActivity extends Activity {
 		}
 		catch(NoSuchMethodError e)
 		{
-			return getStatusBarHeight();
+			return (int) (getStatusBarHeight());
 		}
 
 		return 0;
@@ -213,6 +213,12 @@ public class MainActivity extends Activity {
 		// Lookup your RelativeLayoutLayout assuming it's been given     
 		// the attribute android:id="@+id/ad"     
 		RelativeLayout layout = (RelativeLayout)findViewById(R.id.ad); 	
+		
+		RelativeLayout.LayoutParams lp=(RelativeLayout.LayoutParams)layout.getLayoutParams();
+		int barHeight = (int) (.1*MainActivity.screenHeight);
+
+		lp.bottomMargin = barHeight ; //+ (int) (.01*MainActivity.screenHeight); 
+		layout.setLayoutParams(lp);
 		
 		// Add the adView to it
 		layout.addView(adView);  

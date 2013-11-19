@@ -42,7 +42,8 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	float pressY;
 	boolean justFlagged;
 	boolean justPressedBar;
-
+	boolean longPressed = false;
+	
 	Timer timer;
 	TimerTask tt;
 	float timeCounter;
@@ -55,9 +56,9 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	{
 		return flagMode;
 	}
-	
+
 	public void setFlagMode(boolean a)
-	{	
+	{        
 		flagMode = a;
 	}
 
@@ -67,7 +68,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	}
 
 	public void setVibration(boolean a)
-	{	
+	{        
 		vibration = a;
 	}
 
@@ -115,7 +116,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	}
 
 	public boolean onTouch(View v, MotionEvent e) 
-	{		
+	{                
 		float x = (e.getX()-playBoard.getOffX())/(playBoard.tileSize);
 		float y = (e.getY()-playBoard.getOffY())/(playBoard.tileSize);
 
@@ -293,23 +294,27 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		AlertDialog dialog = builder.create();
 		dialog.show();
 	}
-	
+
 	public void startTimer(){
 
 		timer = new Timer();
 
-		timer.scheduleAtFixedRate(new TimerTask() {
+		timer.scheduleAtFixedRate(new TimerTask() 
+		{
 			@Override
-			public void run() {
+			public void run() 
+			{
 
 				timeCounter+=.1;
 				if(gameOver){
 					return;
 				}
-				if(timeCounter > 3.5 && !dragging && playBoard.beingPressed){
+				if(timeCounter > 3.5 && !dragging && playBoard.beingPressed)
+				{
 					x = (int) playBoard.getPressedCords()[0];
 					y = (int) playBoard.getPressedCords()[1];
-					if(!playBoard.isOpen(x,y)){
+					if(!playBoard.isOpen(x,y))
+					{
 						Vibrator v = (Vibrator) mactivity.getSystemService(Context.VIBRATOR_SERVICE);
 
 						v.vibrate(20);
@@ -321,7 +326,8 @@ public class DrawPanel extends View implements View.OnTouchListener {
 						playBoard.setPressed(false);
 						justFlagged = true;
 
-						if(flagMode && playBoard.isBomb(x, y) && Board.doneAnimating){
+						if(flagMode && playBoard.isBomb(x, y) && Board.doneAnimating)
+						{
 							playBoard.bombs.remove(x, y); 
 							playBoard.endOfGameSetWrong();
 							playBoard.setLose(true);
@@ -333,17 +339,22 @@ public class DrawPanel extends View implements View.OnTouchListener {
 						} //TODO FIX WINNING AND LOSING FROM THIS SCREEN
 						else{
 							playBoard.checkWin();
-							if(playBoard.win){
+							if(playBoard.win)
+							{
 								gameOver = true;
 								playBoard.endTimer();
 								invalidate();
 							}
 						}
 					}
+					mactivity.runOnUiThread(new Runnable() {
+						public void run() {
+							invalidate();
+						}
+					});
 				}
 				mactivity.runOnUiThread(new Runnable() {
 					public void run() {
-						invalidate();
 						if(showNewHighScore)
 							showNewHighScore();
 					}
@@ -359,12 +370,12 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		if(playBoard.getWin() || playBoard.getLose())
 		{
 			gameOver = true;
-			
+
 			if(showNewHighScore)
 				showNewHighScore();
-			
+
 			playBoard.endTimer();
-		}		
+		}                
 		return gameOver;
 	}
 
@@ -376,7 +387,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	public void resetGame(){
 
 		if(playBoard.doneAnimating())
-		{	
+		{        
 			playBoard.startup();
 			playBoard.wipeBoard();
 			gameOver = false;
@@ -435,6 +446,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 		playBoard.openBomb();
 		this.mactivity.runOnUiThread(new Runnable(){ public void run() {
-			invalidate();}});	}
+			invalidate();}});        }
 
 }
