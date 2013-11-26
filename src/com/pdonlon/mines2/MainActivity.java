@@ -34,14 +34,21 @@ public class MainActivity extends Activity {
 	static MenuItem mens6;
 	static MenuItem mens7;
 	static MenuItem mens8;
-	//static MenuItem mens9;
+	static MenuItem mens9;
 
 
 	static int screenWidth, screenHeight;
 
-
+	protected void onPause(){
+		super.onPause();
+		
+		//call pause function (stops timer and dims screen)
+		//same thing for pressing the clock
+		
+	}
+	
 	public boolean onCreateOptionsMenu(Menu menu) {
-		mens1 = menu.add(0, 1, 2, "Hint");
+		mens1 = menu.add(0, 1, 2, "Settings");
 		mens2 = menu.add(0, 2, 2,"Reset");
 		mens3 = menu.add(0, 3, 2,"Easy");
 		mens4 = menu.add(0, 4, 2, "Medium");
@@ -99,10 +106,13 @@ public class MainActivity extends Activity {
 		switch (item.getItemId()) {
 		default:
 			return false;
-		case 1:
-			drawView.playBoard.hint();
-			runOnUiThread(new Runnable(){ public void run() {
-				drawView.invalidate();}});	
+//		case 1:
+//			drawView.playBoard.hint();
+//			runOnUiThread(new Runnable(){ public void run() {
+//				drawView.invalidate();}});	
+//			return true;
+		case 1: 
+			drawView.showSettings();
 			return true;
 		case 2:
 			drawView.resetGame();

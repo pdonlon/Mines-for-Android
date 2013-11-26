@@ -1,11 +1,14 @@
 package com.pdonlon.mines2;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -43,13 +46,16 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	boolean justFlagged;
 	boolean justPressedBar;
 	boolean longPressed = false;
-	
+
 	Timer timer;
 	TimerTask tt;
 	float timeCounter;
 	boolean showNewHighScore = false;
 
 	Context ctx;
+	ArrayList<Integer> mSelectedItems;
+	boolean[] selected;
+	String[] myStringArray = {"Vibration","Hints"};
 	public static Context context;
 
 	public boolean getFlagMode()
@@ -99,6 +105,9 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 		}
 		playBoard.setUp();
+		
+		selected = getSettings();
+		mSelectedItems = getInitialSelectedItems(); 
 
 		this.playBoard.initializeBoard();
 
@@ -261,6 +270,29 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			editor.commit();
 		}
 	}
+	
+	public boolean[] getSettings()
+	{
+		SharedPreferences settings = mactivity.getSharedPreferences("settings", Context.MODE_PRIVATE);
+		
+		boolean[] chosen = new boolean[myStringArray.length];
+		for (int i=0; i<myStringArray.length; i++)
+			chosen[i] = settings.getBoolean(myStringArray[i], (i==0)? true : false); //ternary statement
+		
+		return chosen;
+	}
+	
+	public ArrayList<Integer> getInitialSelectedItems()
+	{
+		ArrayList<Integer> theChosen = new ArrayList<Integer>();
+		
+		for (int i=0; i<selected.length; i++)
+			if (selected[i])
+				theChosen.add(i);
+			
+		return theChosen;
+		
+	}
 
 	public int getScore()
 	{
@@ -271,6 +303,92 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		int highScore = scores.getInt(difficulty, 0); //0 is the default value
 
 		return highScore;
+	}
+
+//	public boolean getConvertSelectedItems(int index)
+//	{	
+//		boolean [] copy = new boolean[2];
+//
+//		if(mSelectedItems == null){
+//			copy[0] = true;
+//			copy[1] = false;
+//		}
+//		else{
+//			copy[0] = getSelectedBoolean(0);
+//			copy[1] = getSelectedBoolean(1);
+//		}
+//		return copy[index];
+//	}
+
+//	public boolean getSelectedBoolean(int index)
+//	{
+//		Log.v("TEST", ""+mSelectedItems.get(index));
+//		if((Boolean) mSelectedItems.get(index) == true)
+//
+//			return true;
+//
+//		else
+//			return false;
+//	}
+
+	public void saveChecks()
+	{
+		SharedPreferences settings = mactivity.getSharedPreferences("settings", Context.MODE_PRIVATE);
+		Editor editor = settings.edit();
+		for (int i=0; i<selected.length; i++)
+			editor.putBoolean(myStringArray[i], selected[i]);
+		editor.commit();
+
+	}
+
+	public void showSettings()
+	{
+		// converted selected		
+		
+		for (int i=0; i<selected.length; i++)
+			selected[i] = false;
+		
+		for (Integer e : mSelectedItems)
+			selected[e.intValue()] = true;
+		
+	    AlertDialog.Builder builder = new AlertDialog.Builder(mactivity);
+	    // Set the dialog title
+	    builder.setTitle("settings")
+	    // Specify the list array, the items to be selected by default (null for none),
+	    // and the listener through which to receive callbacks when items are selected
+	           .setMultiChoiceItems(myStringArray, selected,
+	                      new DialogInterface.OnMultiChoiceClickListener() {
+	               @Override
+	               public void onClick(DialogInterface dialog, int which,
+	                       boolean isChecked) {
+	                   if (isChecked) {
+	                       // If the user checked the item, add it to the selected items
+	                       mSelectedItems.add(which);
+	                   } else if (mSelectedItems.contains(which)) {
+	                       // Else, if the item is already in the array, remove it 
+	                       mSelectedItems.remove(Integer.valueOf(which));
+	                   }
+	               }
+	           })
+	    // Set the action buttons
+	           .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+	               @Override
+	               public void onClick(DialogInterface dialog, int id) {
+	                   // User clicked OK, so save the mSelectedItems results somewhere
+	                   // or return them to the component that opened the dialog
+	            	   saveChecks();
+	                  // ...
+	               }
+	           })
+	           .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+	               @Override
+	               public void onClick(DialogInterface dialog, int id) {
+	                   //...
+	               }
+	           });
+
+		builder.show();
+		//return builder.create();
 	}
 
 	public void showNewHighScore()

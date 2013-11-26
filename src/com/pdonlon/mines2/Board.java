@@ -377,9 +377,9 @@ public class Board {
 	public void adjustTiles(){
 
 		if (MainActivity.screenWidth < MainActivity.screenHeight)
-			tileSize = MainActivity.screenWidth / width;
+			tileSize = (float) (MainActivity.screenWidth / width);
 		else
-			tileSize = (MainActivity.screenHeight-200) / height;
+			tileSize = (float) ((MainActivity.screenHeight-200) / height);
 
 	}
 
