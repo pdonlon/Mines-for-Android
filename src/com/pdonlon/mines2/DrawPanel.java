@@ -51,6 +51,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	TimerTask tt;
 	float timeCounter;
 	boolean showNewHighScore = false;
+	boolean hints;
 
 	Context ctx;
 	ArrayList<Integer> mSelectedItems;
@@ -80,7 +81,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 	public DrawPanel(Context context, MainActivity mactivity) 
 	{
-
 		super(context);      
 		setOnTouchListener(this);
 		ctx = context;
@@ -110,7 +110,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		mSelectedItems = getInitialSelectedItems(); 
 
 		this.playBoard.initializeBoard();
-
+		updateSettings();
 	}
 
 	public void setDifficulty(String a){
@@ -338,7 +338,12 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		for (int i=0; i<selected.length; i++)
 			editor.putBoolean(myStringArray[i], selected[i]);
 		editor.commit();
-
+	}
+	
+	public void updateSettings()
+	{
+		vibration = selected[0];
+		hints = selected[1];
 	}
 
 	public void showSettings()
@@ -377,6 +382,8 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	                   // User clicked OK, so save the mSelectedItems results somewhere
 	                   // or return them to the component that opened the dialog
 	            	   saveChecks();
+	            	   updateSettings();
+	            	   
 	                  // ...
 	               }
 	           })

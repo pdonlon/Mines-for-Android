@@ -227,12 +227,11 @@ public class MainActivity extends Activity {
 		RelativeLayout.LayoutParams lp=(RelativeLayout.LayoutParams)layout.getLayoutParams();
 		int barHeight = (int) (.1*MainActivity.screenHeight);
 
-		lp.bottomMargin = barHeight ; //+ (int) (.01*MainActivity.screenHeight); 
+		lp.bottomMargin = barHeight; //+ (int) (.01*MainActivity.screenHeight); 
 		layout.setLayoutParams(lp);
 		
 		// Add the adView to it
 		layout.addView(adView);  
-		
 
 		// Initiate a generic request to load it with an ad     
 		adView.loadAd(new AdRequest());
