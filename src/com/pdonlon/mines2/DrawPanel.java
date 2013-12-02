@@ -51,13 +51,15 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	TimerTask tt;
 	float timeCounter;
 	boolean showNewHighScore = false;
-	boolean hints;
+	boolean winMessage = false;
+	boolean animations = true;
 
 	Context ctx;
 	ArrayList<Integer> mSelectedItems;
 	boolean[] selected;
-	String[] myStringArray = {"Vibration","Hints"};
+	String[] myStringArray = {"Vibration","Animations"};
 	public static Context context;
+	boolean paused;
 
 	public boolean getFlagMode()
 	{
@@ -69,14 +71,9 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		flagMode = a;
 	}
 
-	public boolean getVibration()
-	{
-		return vibration;
-	}
-
-	public void setVibration(boolean a)
+	public void setWinMessage(boolean a)
 	{        
-		vibration = a;
+		winMessage = a;
 	}
 
 	public DrawPanel(Context context, MainActivity mactivity) 
@@ -105,7 +102,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 		}
 		playBoard.setUp();
-		
+
 		selected = getSettings();
 		mSelectedItems = getInitialSelectedItems(); 
 
@@ -125,23 +122,26 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	}
 
 	public boolean onTouch(View v, MotionEvent e) 
-	{                
+	{ 
 		float x = (e.getX()-playBoard.getOffX())/(playBoard.tileSize);
 		float y = (e.getY()-playBoard.getOffY())/(playBoard.tileSize);
 
 		float x2 = (e.getX());
 		float y2 = (e.getY());
 
-		if (e.getAction() == MotionEvent.ACTION_DOWN && Board.doneAnimating && y2 >= playBoard.realBarHeight){
+		if (e.getAction() == MotionEvent.ACTION_DOWN && Board.doneAnimating && y2 >= playBoard.realBarHeight)
+		{
 
 			justPressedBar = true;
 
 			if(x2 >= (MainActivity.screenWidth*4)/5)
-				playBoard.zoomIn((float) playBoard.getHeight()/2, (float) playBoard.getWidth()/2);
+				playBoard.zoomIn((float) playBoard.getWidth()/2, (float) playBoard.getHeight()/2);
 			else if(x2 >= (MainActivity.screenWidth*3)/5)
-				playBoard.zoomOut((float) playBoard.getHeight()/2, (float) playBoard.getWidth()/2);
+				playBoard.zoomOut((float) playBoard.getWidth()/2, (float) playBoard.getHeight()/2);
 			else if(x2 >= (MainActivity.screenWidth*2)/5)
 				flagMode = !flagMode;
+			else if(x2 < (MainActivity.screenWidth*1)/5)
+				pauseGame();
 			else
 				return true;
 
@@ -150,9 +150,17 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			return true;
 		}
 
-		if(Board.doneAnimating && playBoard.isValid((int)x, (int)y)){
+		if (e.getAction() == MotionEvent.ACTION_DOWN && Board.doneAnimating && paused)
+		{
+			resumeGame();
+			return true;
+		}
 
-			if (e.getAction() == MotionEvent.ACTION_DOWN){ //pressed
+		if(Board.doneAnimating && playBoard.isValid((int)x, (int)y))
+		{
+
+			if (e.getAction() == MotionEvent.ACTION_DOWN)
+			{ //pressed
 				//Log.v("Pressed here: ", ""+e.getX()+ " "+e.getY()); //takes label and text
 
 				justPressedBar = false;
@@ -180,6 +188,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				float pressY = e.getY()-playBoard.getOffY();
 
 			}
+
 			else if(e.getAction() == MotionEvent.ACTION_UP)
 			{//released
 				Log.v("Released: ", ""+timeCounter); //takes label and text
@@ -270,28 +279,30 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			editor.commit();
 		}
 	}
-	
+
 	public boolean[] getSettings()
 	{
 		SharedPreferences settings = mactivity.getSharedPreferences("settings", Context.MODE_PRIVATE);
-		
+
 		boolean[] chosen = new boolean[myStringArray.length];
 		for (int i=0; i<myStringArray.length; i++)
-			chosen[i] = settings.getBoolean(myStringArray[i], (i==0)? true : false); //ternary statement
-		
+			chosen[i] = settings.getBoolean(myStringArray[i], (i<2)? true : false); //ternary statement
+
+		//chosen[i] = settings.getBoolean(myStringArray[i], (i==0)? true : false); //ternary statement
+
 		return chosen;
 	}
-	
+
 	public ArrayList<Integer> getInitialSelectedItems()
 	{
 		ArrayList<Integer> theChosen = new ArrayList<Integer>();
-		
+
 		for (int i=0; i<selected.length; i++)
 			if (selected[i])
 				theChosen.add(i);
-			
+
 		return theChosen;
-		
+
 	}
 
 	public int getScore()
@@ -305,31 +316,31 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		return highScore;
 	}
 
-//	public boolean getConvertSelectedItems(int index)
-//	{	
-//		boolean [] copy = new boolean[2];
-//
-//		if(mSelectedItems == null){
-//			copy[0] = true;
-//			copy[1] = false;
-//		}
-//		else{
-//			copy[0] = getSelectedBoolean(0);
-//			copy[1] = getSelectedBoolean(1);
-//		}
-//		return copy[index];
-//	}
+	//	public boolean getConvertSelectedItems(int index)
+	//	{	
+	//		boolean [] copy = new boolean[2];
+	//
+	//		if(mSelectedItems == null){
+	//			copy[0] = true;
+	//			copy[1] = false;
+	//		}
+	//		else{
+	//			copy[0] = getSelectedBoolean(0);
+	//			copy[1] = getSelectedBoolean(1);
+	//		}
+	//		return copy[index];
+	//	}
 
-//	public boolean getSelectedBoolean(int index)
-//	{
-//		Log.v("TEST", ""+mSelectedItems.get(index));
-//		if((Boolean) mSelectedItems.get(index) == true)
-//
-//			return true;
-//
-//		else
-//			return false;
-//	}
+	//	public boolean getSelectedBoolean(int index)
+	//	{
+	//		Log.v("TEST", ""+mSelectedItems.get(index));
+	//		if((Boolean) mSelectedItems.get(index) == true)
+	//
+	//			return true;
+	//
+	//		else
+	//			return false;
+	//	}
 
 	public void saveChecks()
 	{
@@ -339,69 +350,123 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			editor.putBoolean(myStringArray[i], selected[i]);
 		editor.commit();
 	}
-	
+
 	public void updateSettings()
 	{
 		vibration = selected[0];
-		hints = selected[1];
+		animations = selected[1];
+	}
+
+	public void pauseMenu()
+	{
+		if(playBoard.getTimeCounter() > 0 && !gameOver){ //NOT TESTED TODO
+			paused = true;
+			AlertDialog.Builder builder = new AlertDialog.Builder(mactivity);
+			// Set the dialog title
+			builder.setTitle("Paused")
+
+			.setPositiveButton("Resume", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int id) {
+					resumeGame();
+				}
+			})
+			.setNegativeButton("Reset", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int id) {
+					resetGame();
+				}
+			});
+
+			builder.setCancelable(false);
+			builder.show();
+		}
+		//return builder.create();
 	}
 
 	public void showSettings()
 	{
-		// converted selected		
-		
+		pauseGame();		
+
 		for (int i=0; i<selected.length; i++)
 			selected[i] = false;
-		
+
 		for (Integer e : mSelectedItems)
 			selected[e.intValue()] = true;
-		
-	    AlertDialog.Builder builder = new AlertDialog.Builder(mactivity);
-	    // Set the dialog title
-	    builder.setTitle("settings")
-	    // Specify the list array, the items to be selected by default (null for none),
-	    // and the listener through which to receive callbacks when items are selected
-	           .setMultiChoiceItems(myStringArray, selected,
-	                      new DialogInterface.OnMultiChoiceClickListener() {
-	               @Override
-	               public void onClick(DialogInterface dialog, int which,
-	                       boolean isChecked) {
-	                   if (isChecked) {
-	                       // If the user checked the item, add it to the selected items
-	                       mSelectedItems.add(which);
-	                   } else if (mSelectedItems.contains(which)) {
-	                       // Else, if the item is already in the array, remove it 
-	                       mSelectedItems.remove(Integer.valueOf(which));
-	                   }
-	               }
-	           })
-	    // Set the action buttons
-	           .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-	               @Override
-	               public void onClick(DialogInterface dialog, int id) {
-	                   // User clicked OK, so save the mSelectedItems results somewhere
-	                   // or return them to the component that opened the dialog
-	            	   saveChecks();
-	            	   updateSettings();
-	            	   
-	                  // ...
-	               }
-	           })
-	           .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-	               @Override
-	               public void onClick(DialogInterface dialog, int id) {
-	                   //...
-	               }
-	           });
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(mactivity);
+		// Set the dialog title
+		builder.setTitle("settings")
+		// Specify the list array, the items to be selected by default (null for none),
+		// and the listener through which to receive callbacks when items are selected
+		.setMultiChoiceItems(myStringArray, selected,
+				new DialogInterface.OnMultiChoiceClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which,
+					boolean isChecked) {
+				if (isChecked) {
+					// If the user checked the item, add it to the selected items
+					mSelectedItems.add(which);
+				} else if (mSelectedItems.contains(which)) {
+					// Else, if the item is already in the array, remove it 
+					mSelectedItems.remove(Integer.valueOf(which));
+				}
+			}
+		})
+		// Set the action buttons
+		.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int id) {
+				// User clicked OK, so save the mSelectedItems results somewhere
+				// or return them to the component that opened the dialog
+				saveChecks();
+				updateSettings();
+
+				// ...
+			}
+		})
+		.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int id) {
+				//...
+			}
+		});
 
 		builder.show();
 		//return builder.create();
 	}
 
+	public void pauseGame()
+	{
+		playBoard.endTimer();
+		pauseMenu();
+		invalidate();
+	}
+
+	public void resumeGame()
+	{
+		playBoard.startTimer();
+		paused = false;
+		invalidate();
+	}
+
 	public void showNewHighScore()
 	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(mactivity);
-		builder.setMessage(playBoard.getTimeCounter()+" seconds").setTitle("New High Score!");
+		builder.setMessage(playBoard.getTimeCounter()+" seconds").setTitle("New High Score!")
+
+		.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int id) {
+
+			}
+		});
+//		.setNegativeButton("Reset", new DialogInterface.OnClickListener() {
+//			@Override
+//			public void onClick(DialogInterface dialog, int id) {
+//				resetGame();
+//			}
+//		});
 
 		// 3. Get the AlertDialog from create()
 		AlertDialog dialog = builder.create();
@@ -409,12 +474,45 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		showNewHighScore = false;
 	}
 
+	public void winMessage()
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder(mactivity);
+		builder.setMessage(playBoard.getTimeCounter()+" seconds").setTitle("You Win!")
+
+		.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int id) {
+
+			}
+		})
+		.setNegativeButton("Reset", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int id) {
+				resetGame();
+			}
+		});
+
+		// 3. Get the AlertDialog from create()
+		AlertDialog dialog = builder.create();
+		dialog.show();
+		winMessage = false;
+	}
+
 	public void showAllHighScores()
 	{
+		pauseGame();		
+
 		AlertDialog.Builder builder = new AlertDialog.Builder(mactivity);
 		SharedPreferences scores = mactivity.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
 
-		builder.setMessage("Easy: "+ scores.getInt("Easy", 0)+" seconds\n\n"+"Medium: "+scores.getInt("Medium", 0)+" seconds\n\n"+"Hard: "+ scores.getInt("Hard", 0)+" seconds").setTitle("High Scores");
+		builder.setMessage("Easy: "+ scores.getInt("Easy", 0)+" seconds\n\n"+"Medium: "+scores.getInt("Medium", 0)+" seconds\n\n"+"Hard: "+ scores.getInt("Hard", 0)+" seconds").setTitle("High Scores")
+
+		.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int id) {
+				//...
+			}
+		});
 
 		AlertDialog dialog = builder.create();
 		dialog.show();
@@ -423,7 +521,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	public void startTimer(){
 
 		timer = new Timer();
-
+		
 		timer.scheduleAtFixedRate(new TimerTask() 
 		{
 			@Override
@@ -480,8 +578,13 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				}
 				mactivity.runOnUiThread(new Runnable() {
 					public void run() {
-						if(showNewHighScore)
+						boolean temp = false;
+						if(showNewHighScore){
 							showNewHighScore();
+							temp = true;
+						}
+						else if(!temp && winMessage)
+							winMessage();
 					}
 				});
 			}
@@ -518,17 +621,22 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			gameOver = false;
 
 			playBoard.endTimer();
+			paused = false;
+			playBoard.readjust();
 			invalidate();
 		}
 	}
 
-	public void bombAnimation(){
-
+	public void bombAnimation()
+	{
 		final String tempDifficulty = difficulty;
 
 		int vibrationTime; 
 
-		if(tempDifficulty.contains("Easy"))
+		//TODO
+		if(!animations)
+			vibrationTime = 0;
+		else if(tempDifficulty.contains("Easy"))
 			vibrationTime = 50;
 		else if(tempDifficulty.contains("Medium"))
 			vibrationTime = 25;
@@ -556,8 +664,12 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 					explosion();
 					// Vibration in milliseconds
-					if(vibration)
+					if(vibration){
 						v.vibrate(tempVibration);
+						if(!animations)
+							v.vibrate(100);
+
+					}
 					bombsLeft--;
 				}
 				Board.doneAnimating = true;

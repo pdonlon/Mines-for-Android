@@ -42,6 +42,7 @@ public class MainActivity extends Activity {
 	protected void onPause(){
 		super.onPause();
 		
+		drawView.pauseGame();
 		//call pause function (stops timer and dims screen)
 		//same thing for pressing the clock
 		

@@ -74,6 +74,15 @@ public class Board {
 	boolean showCheck = false;
 	boolean questionMarks = false;
 
+	Shader shader;
+	Shader shaderPause;
+	Paint paint;
+	int color1 =Color.argb(128,140,140,140);
+	int color2 = Color.argb(128,39,39,39);
+	int color3 = Color.argb(127,200,200,200);;
+
+	int colors1 = Color.argb(0, 0, 0, 0);
+	int colors2 = Color.argb(100, 0, 0, 0);
 	int timeCounter;
 
 	int windowSizeY = 1100;
@@ -103,8 +112,11 @@ public class Board {
 		this.height = height;
 		bombs = new CheckList();
 
+		//paint = new Paint();
 		tf = Typeface.create("Font Name",Typeface.BOLD);
-
+		shader = new LinearGradient(offX, offY, (width)*tileSize+offX, (height)*tileSize+offY, colors1, colors2, TileMode.CLAMP);
+		shaderPause = new LinearGradient(offX, offY, (width)*tileSize+offX, (height)*tileSize+offY, Color.RED, Color.RED, TileMode.CLAMP);
+		
 		adjustTiles();
 		//		game.startTimer();
 		startup();
@@ -458,9 +470,26 @@ public class Board {
 		placeBombs();
 		placeBombsSurrounding();
 
-
 		timer = new Timer();
+		startTimer();
+	}
 
+
+	public void endTimer()
+	{
+		if(timer != null)
+		{
+			timer.cancel();
+			timer.purge();
+		}
+	}
+
+	public void startTimer()
+	{
+		if(timer != null)
+		{
+		timer = new Timer();
+		
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
@@ -474,18 +503,9 @@ public class Board {
 			}
 
 		}, 0, 1000);
-	}
-
-
-	public void endTimer()
-	{
-		if(timer != null)
-		{
-			timer.cancel();
-			timer.purge();
 		}
 	}
-
+	
 	public void placeBombs(){
 
 		//bombs = new CheckList();
@@ -616,7 +636,10 @@ public class Board {
 			public void run(){
 
 				int acceleration = 25;
-
+				
+				if(!game.animations)
+					acceleration = 0;
+				
 				while(fastCount>0){
 					try {
 						Thread.sleep(acceleration);
@@ -723,6 +746,9 @@ public class Board {
 				doneAnimating = false;
 
 				int acceleration = 2;
+				
+				if(!game.animations)
+					acceleration = 0;
 
 				while(zeroCount>0){
 
@@ -1027,6 +1053,7 @@ public class Board {
 
 			game.updateScores(timeCounter);
 			Log.v("highScores", ""+game.getScore());
+			game.setWinMessage(true);
 			
 			finishFlagging();
 			
@@ -1187,6 +1214,8 @@ public class Board {
 		//		pgray.setColor(android.graphics.Color.DKGRAY);
 		//		//g.drawRect(0, 0, (tileSize)*getWidth(), (tileSize*getHeight()), pgray);
 
+		
+		
 		Paint black = new Paint();
 		black.setColor(Color.BLACK);
 
@@ -1213,7 +1242,8 @@ public class Board {
 
 		float gap = tileSize/6; //originally 15
 
-		Paint paint = new Paint();
+		paint = new Paint();
+		
 		paint.setColor(Color.BLACK);
 		paint.setTypeface(tf);
 		paint.setTextSize(tileSize/3);
@@ -1269,19 +1299,10 @@ public class Board {
 		g.drawRect((width)*tileSize+offX, 0+offY, (width)*tileSize+tileSize/5+offX, (height)*tileSize+offY, background);
 		g.drawRect(0+offX, (height)*tileSize+offY, (width)*tileSize+offX, (height)*tileSize+tileSize/5+offY, background);
 
-		int color1 =Color.argb(128,140,140,140);
-		int color2 = Color.argb(128,39,39,39);
-		int color3 = Color.argb(127,200,200,200);;
-
-
-		int colors1 = Color.argb(0, 0, 0, 0);
-
-		int colors2 = Color.argb(100, 0, 0, 0);
 		if (pro)
 			colors2 = Color.argb(0, 0, 0, 0);
-
-
-		Shader shader = new LinearGradient(offX, offY, (width)*tileSize+offX, (height)*tileSize+offY, colors1, colors2, TileMode.CLAMP);
+		
+		//Shader shader = new LinearGradient(offX, offY, (width)*tileSize+offX, (height)*tileSize+offY, colors1, colors2, TileMode.CLAMP);
 		//Paint paint = new Paint(); 
 		paint.setShader(shader); 
 
@@ -1571,6 +1592,22 @@ public class Board {
 		//Log.v("hi",""+(MainActivity.screenWidth*5)/10);
 		//g.setColor(Color.);
 		//getwindowy -36
+		
+		if(game.paused){
+				
+			paint.setColor(Color.argb(190, 0, 0, 0));
+			
+			//MainActivity.screenWidth
+			
+			//g.drawRect(new RectF(0, 0, MainActivity.screenWidth, MainActivity.screenHeight), paint);
+			//paint.setShader(shaderPause); 
+			paint.setStyle(Style.FILL);
+			g.drawRect(0, 0, MainActivity.screenWidth, MainActivity.screenHeight-(MainActivity.screenHeight-realBarHeight), paint);
+			
+			//Log.v("",""+MainActivity.screenWidth);
+			paint.setShader(null);
+			
+		}
 	}
 }
 
