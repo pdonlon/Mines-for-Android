@@ -123,6 +123,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 	public boolean onTouch(View v, MotionEvent e) 
 	{ 
+		
 		float x = (e.getX()-playBoard.getOffX())/(playBoard.tileSize);
 		float y = (e.getY()-playBoard.getOffY())/(playBoard.tileSize);
 
@@ -198,7 +199,8 @@ public class DrawPanel extends View implements View.OnTouchListener {
 					x = (int) playBoard.getPressedCords()[0];
 					y = (int) playBoard.getPressedCords()[1];
 
-					if(playBoard.isValid((int)x, (int)y) && playBoard.beingPressed){
+					if(playBoard.isValid((int)x, (int)y) && playBoard.beingPressed)
+					{
 
 						if(gameOver)
 							resetGame();
@@ -209,19 +211,37 @@ public class DrawPanel extends View implements View.OnTouchListener {
 						else if(playBoard.isOpen((int)x, (int)y))
 							playBoard.fastClick((int)x, (int)y);
 
-						else if(!playBoard.isOpen((int)x, (int)y)&&flagMode){
+						else if(!playBoard.isOpen((int)x, (int)y)&&flagMode)
+						{
 							playBoard.markFlagged((int)x, (int)y);
 							Log.v("Flagged here: ", ""+e.getX()+ " "+e.getY());
 						}
+						
+						playBoard.checkWin();
+						
+						if(playBoard.win){
+							if(showNewHighScore)
+							showNewHighScore();
+						if(winMessage)
+							winMessage();
 
+						}
+						
 						if(playBoard.lose){
 							playBoard.setPressed(false);
 							bombAnimation();
 
 						}
+						
+//						if(showNewHighScore)
+//							showNewHighScore();
+//						if(winMessage)
+//							winMessage();
+						
 					}
 					playBoard.setPressed(false);
 					invalidate();
+
 				}
 				else
 					dragging = false;
@@ -527,7 +547,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			@Override
 			public void run() 
 			{
-
 				timeCounter+=.1;
 				if(gameOver){
 					return;
@@ -560,31 +579,37 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 
 						} //TODO FIX WINNING AND LOSING FROM THIS SCREEN
-						else{
-							playBoard.checkWin();
-							if(playBoard.win)
-							{
-								gameOver = true;
-								playBoard.endTimer();
-								invalidate();
-							}
+						else if(flagMode && playBoard.win){
+
+							//winMessage();
+
+							//playBoard.checkWin();
+//							if(playBoard.win)
+//							{
+//								gameOver = true;
+//								playBoard.endTimer();
+//								invalidate();
+//							}
 						}
 					}
 					mactivity.runOnUiThread(new Runnable() {
 						public void run() {
 							invalidate();
+							if(showNewHighScore)
+							showNewHighScore();
+							if(winMessage)
+							winMessage();
 						}
 					});
 				}
 				mactivity.runOnUiThread(new Runnable() {
 					public void run() {
-						boolean temp = false;
-						if(showNewHighScore){
-							showNewHighScore();
-							temp = true;
-						}
-						else if(!temp && winMessage)
-							winMessage();
+//						
+//						
+//						if(showNewHighScore)
+//							showNewHighScore();
+//						if(winMessage)
+//							winMessage();
 					}
 				});
 			}
@@ -599,8 +624,11 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		{
 			gameOver = true;
 
-			if(showNewHighScore)
-				showNewHighScore();
+//			if(winMessage)
+//				winMessage();
+//			
+//			if(showNewHighScore)
+//				showNewHighScore();
 
 			playBoard.endTimer();
 		}                
