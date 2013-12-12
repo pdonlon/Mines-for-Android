@@ -53,6 +53,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	boolean showNewHighScore = false;
 	boolean winMessage = false;
 	boolean animations = true;
+	
 
 	Context ctx;
 	ArrayList<Integer> mSelectedItems;
@@ -107,6 +108,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		mSelectedItems = getInitialSelectedItems(); 
 
 		this.playBoard.initializeBoard();
+		updateFlagMode();
 		updateSettings();
 	}
 
@@ -140,7 +142,10 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			else if(x2 >= (MainActivity.screenWidth*3)/5)
 				playBoard.zoomOut((float) playBoard.getWidth()/2, (float) playBoard.getHeight()/2);
 			else if(x2 >= (MainActivity.screenWidth*2)/5)
+			{
 				flagMode = !flagMode;
+				saveFlagMode();
+			}
 			else if(x2 < (MainActivity.screenWidth*1)/5)
 				pauseGame();
 			else
@@ -299,6 +304,24 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			editor.commit();
 		}
 	}
+	
+	public void saveFlagMode()
+	{
+		SharedPreferences flags = mactivity.getSharedPreferences("flags", Context.MODE_PRIVATE);
+
+		Editor editor = flags.edit();
+		editor.putBoolean("flagMode", flagMode); // string is where it is stored
+		editor.commit();
+		
+	}
+	
+	public void updateFlagMode()
+	{
+		SharedPreferences flags = mactivity.getSharedPreferences("flags", Context.MODE_PRIVATE);
+
+		 flagMode = flags.getBoolean("flagMode", false); //false is the default value
+
+	}
 
 	public boolean[] getSettings()
 	{
@@ -416,7 +439,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(mactivity);
 		// Set the dialog title
-		builder.setTitle("settings")
+		builder.setTitle("Settings")
 		// Specify the list array, the items to be selected by default (null for none),
 		// and the listener through which to receive callbacks when items are selected
 		.setMultiChoiceItems(myStringArray, selected,
@@ -458,9 +481,12 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 	public void pauseGame()
 	{
+		if(!paused)
+		{
 		playBoard.endTimer();
 		pauseMenu();
 		invalidate();
+		}
 	}
 
 	public void resumeGame()
@@ -650,7 +676,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 			playBoard.endTimer();
 			paused = false;
-			playBoard.readjust();
+			//playBoard.readjust();
 			invalidate();
 		}
 	}

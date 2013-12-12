@@ -376,8 +376,8 @@ public class Board {
 		return unsafeBombCount;
 	}
 
-	public void wipeBoard(){
-
+	public void wipeBoard()
+	{
 		for(int y=0; y<height; y++ ){
 			for(int x=0; x<width; x++){
 
@@ -420,8 +420,8 @@ public class Board {
 
 	}
 
-	public boolean flagged(int x, int y){
-
+	public boolean flagged(int x, int y)
+	{
 		boolean flag = false;
 		if(board[x][y].isFlagged())
 			flag = true;
@@ -430,8 +430,8 @@ public class Board {
 
 	}
 
-	public void open(int x, int y){ //Play can't access Mines so it is a double method
-
+	public void open(int x, int y)
+	{ //Play can't access Mines so it is a double method
 		openBox(x,y);
 
 	}
@@ -503,8 +503,8 @@ public class Board {
 					public void run() 
 					{
 						game.invalidate();
-						if(justFinishedFastClick)
-						{
+//						if(justFinishedFastClick)
+//						{
 //							justFinishedFastClick= false;
 //							checkWin();
 //							if(game.showNewHighScore)
@@ -513,7 +513,7 @@ public class Board {
 //									game.winMessage();	
 //								
 						}
-					}
+//					}
 				});
 			}
 
@@ -667,7 +667,21 @@ public class Board {
 					tileOpen();
 					fastCount--;
 				}
-//				justFinishedFastClick = true;
+				game.mactivity.runOnUiThread(new Runnable() {
+					  public void run() {
+						
+							checkWin();
+							if(win){
+								if(game.showNewHighScore)
+									game.showNewHighScore();
+							if(game.winMessage)
+								game.winMessage();
+
+							}
+						  
+					  }
+					});
+
 				//TODO NOT RUNNING OFF THE SAME TIME AS MAIN SO CHECKWIN HAS TO BE FA
 			}
 		});

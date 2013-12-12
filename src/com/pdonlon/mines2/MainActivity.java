@@ -117,6 +117,7 @@ public class MainActivity extends Activity {
 			return true;
 		case 2:
 			drawView.resetGame();
+			drawView.playBoard.readjust();
 			return true;
 
 		case 3:
