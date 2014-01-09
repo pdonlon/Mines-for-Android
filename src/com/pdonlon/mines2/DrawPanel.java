@@ -52,8 +52,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	float timeCounter;
 	boolean showNewHighScore = false;
 	boolean winMessage = false;
-	boolean animations = true;
-	
+	boolean animations = true;	
 
 	Context ctx;
 	ArrayList<Integer> mSelectedItems;
@@ -86,21 +85,21 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 		startTimer();
 
-		if(difficulty.contains("Easy")){
+		if(difficulty.contains("Easy"))
+		{
 			playBoard = new Board(9,9,this);
 			playBoard.setTotalBombs(10);
-
 		}
-
-		else if(difficulty.contains("Medium")){
+		else if(difficulty.contains("Medium"))
+		{
 			playBoard = new Board(16,16,this);
 			playBoard.setTotalBombs(40);
 		}
 
-		else if(difficulty.contains("Hard")){
+		else if(difficulty.contains("Hard"))
+		{
 			playBoard = new Board(30,16,this);
 			playBoard.setTotalBombs(99);
-
 		}
 		playBoard.setUp();
 
@@ -146,6 +145,10 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				flagMode = !flagMode;
 				saveFlagMode();
 			}
+			
+			//else if(x2 >= (MainActivity.screenWidth*1)/5)
+				//playBoard.fastClickWholeBoard();
+			
 			else if(x2 < (MainActivity.screenWidth*1)/5)
 				pauseGame();
 			else
@@ -295,13 +298,40 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		//setting preferences
 		//int keyNumber = generateKeyNumber(difficulty);
 
-		SharedPreferences scores = mactivity.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+		SharedPreferences scores = mactivity.getSharedPreferences("scores", Context.MODE_PRIVATE);
 		if(score < scores.getInt(difficulty, 0) || scores.getInt(difficulty, 0) == 0)
 		{
 			showNewHighScore = true;
 			Editor editor = scores.edit();
 			editor.putInt(difficulty, score);
 			editor.commit();
+		}
+	}
+	
+	public void saveGame()
+	{
+		SharedPreferences bombsSurrounding = mactivity.getSharedPreferences("game", Context.MODE_PRIVATE); //number of bombs surrounding
+		SharedPreferences cellStatus = mactivity.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE); //opened, not opened, flagged
+		
+		Editor bsEditor = bombsSurrounding.edit();
+		Editor csEditor = cellStatus.edit();
+		int counter = 0;
+		
+		for(int y=0; y<playBoard.getHeight(); y++)
+			for(int x=0; x<playBoard.getWidth(); x++)
+			{
+				bsEditor.putInt(counter+"",playBoard.getBombsSurrounding(x,y));
+				bsEditor.commit();
+				//csEditor.putInt(counter+"",); //lookup
+				counter++;
+			}	
+	}
+	
+	public void loadGame()
+	{
+		for(int x=0; x<playBoard.getWidth(); x++)
+		{
+			
 		}
 	}
 	
@@ -345,7 +375,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				theChosen.add(i);
 
 		return theChosen;
-
 	}
 
 	public int getScore()
@@ -353,7 +382,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		//getting preferences
 		//int keyNumber = generateKeyNumber(difficulty);
 
-		SharedPreferences scores = mactivity.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+		SharedPreferences scores = mactivity.getSharedPreferences("scores", Context.MODE_PRIVATE);
 		int highScore = scores.getInt(difficulty, 0); //0 is the default value
 
 		return highScore;
@@ -549,7 +578,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		pauseGame();		
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(mactivity);
-		SharedPreferences scores = mactivity.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+		SharedPreferences scores = mactivity.getSharedPreferences("scores", Context.MODE_PRIVATE);
 
 		builder.setMessage("Easy: "+ scores.getInt("Easy", 0)+" seconds\n\n"+"Medium: "+scores.getInt("Medium", 0)+" seconds\n\n"+"Hard: "+ scores.getInt("Hard", 0)+" seconds").setTitle("High Scores")
 

@@ -25,7 +25,7 @@ public class Board {
 	//	beg 	8x8 	10		54
 	//	med 	16x16 	40		216
 	//	exp 	30x16 	99		381
-
+	public static boolean noAds = true;
 	public static boolean pro = false;
 	public static boolean readjust = false;
 
@@ -192,28 +192,28 @@ public class Board {
 		return touchedBomb;
 	}
 
-	public int getFlagCount(){ //Let's play access flags
-
+	public int getFlagCount()
+	{ 
 		return flagCount;
 	}
 
-	public boolean getWin(){
-
+	public boolean getWin()
+	{
 		return win;
 	}
 
-	public void setWin(boolean a){
-
+	public void setWin(boolean a)
+	{
 		win = a;
 	}
 
-	public boolean getLose(){
-
+	public boolean getLose()
+	{
 		return lose;
 	}
 
-	public void setLose(boolean a){
-
+	public void setLose(boolean a)
+	{
 		lose = a;
 	}
 
@@ -222,18 +222,18 @@ public class Board {
 		return firstTurn;
 	}
 
-	public int getStartX(){
-
+	public int getStartX()
+	{
 		return startX;
 	}
 
-	public int getStartY(){
-
+	public int getStartY()
+	{
 		return startY;
 	}
 
-	public void setUp(){
-
+	public void setUp()
+	{
 		flagCount = totalBombs;
 		unsafeBombCount = totalBombs;
 		flagLimit=flagCount;
@@ -286,6 +286,11 @@ public class Board {
 
 	}
 
+	public int getBombsSurrounding(int x, int y)
+	{
+		return board[x][y].getBombsSurrounding();
+	}
+	
 	public boolean doneAnimating()
 	{
 		return doneAnimating;
@@ -613,6 +618,17 @@ public class Board {
 
 		return unopened;
 	}
+	
+	public void fastClickWholeBoard()
+	{
+		for(int y=0; y<height; y++){
+			for(int x=0; x<width; x++){
+				
+				if(flagsSurrounding(x,y) == board[x][y].getBombsSurrounding())
+					fastClick(x,y); //causes error -- needs to be called with seprate threads
+			}
+		}
+	}
 
 	public void fastClick(int x, int y){
 
@@ -642,6 +658,8 @@ public class Board {
 				}
 			}
 		}
+		else
+			return;
 		fastAnimation();
 		checkWin();
 	}
@@ -1246,10 +1264,12 @@ public class Board {
 		if(pro)
 			darkGray.setColor(Color.argb(255, 218, 165, 32)); //goldenrod - darkest
 		Paint thickDarkGray = new Paint();
+		
 		thickDarkGray.setColor(Color.argb(255, 100, 100, 100));
 		if(pro)
 			thickDarkGray.setColor(Color.argb(255, 218, 165, 32)); //goldenrod - darkest
 		Paint lightGray = new Paint();
+		
 		lightGray.setColor(Color.argb(255, 170, 170, 170));
 		if(pro)
 			lightGray.setColor(Color.argb(255, 240, 230, 140)); //khaki - lightest
@@ -1316,8 +1336,11 @@ public class Board {
 
 		if (pro)
 			colors2 = Color.argb(0, 0, 0, 0);
+		else
+			colors2 = Color.argb(100, 0, 0, 0);
+
+		shader = new LinearGradient(offX, offY, (width)*tileSize+offX, (height)*tileSize+offY, colors1, colors2, TileMode.CLAMP);
 		
-		//Shader shader = new LinearGradient(offX, offY, (width)*tileSize+offX, (height)*tileSize+offY, colors1, colors2, TileMode.CLAMP);
 		//Paint paint = new Paint(); 
 		paint.setShader(shader); 
 

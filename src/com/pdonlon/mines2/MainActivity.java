@@ -1,5 +1,4 @@
 package com.pdonlon.mines2;
-
 import com.google.ads.AdRequest;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;
@@ -35,19 +34,19 @@ public class MainActivity extends Activity {
 	static MenuItem mens7;
 	static MenuItem mens8;
 	static MenuItem mens9;
-
-
+	static boolean pro = false;
+	
 	static int screenWidth, screenHeight;
 
-	protected void onPause(){
+	protected void onPause()
+	{
 		super.onPause();
 		
 		drawView.pauseGame();
 		//call pause function (stops timer and dims screen)
 		//same thing for pressing the clock
-		
 	}
-	
+
 	public boolean onCreateOptionsMenu(Menu menu) {
 		mens1 = menu.add(0, 1, 2, "Settings");
 		mens2 = menu.add(0, 2, 2,"Reset");
@@ -56,8 +55,11 @@ public class MainActivity extends Activity {
 		mens5 = menu.add(0, 5, 2,"Hard");
 		//mens6 = menu.add(0, 6, 2,"Hide Gold");
 		//mens7 = menu.add(0, 7, 2,"Manual Adjust");
-		mens8 = menu.add(0, 8, 2,"High Scores");
-		
+		mens6 = menu.add(0, 6, 2,"High Scores");
+		if(pro)
+		mens7 = menu.add(0, 7, 2,"Gold Toggle");
+
+
 		return true;
 	}
 
@@ -71,7 +73,7 @@ public class MainActivity extends Activity {
 				drawView.setFlagMode(!drawView.getFlagMode());
 			}
 			//		               if (action == KeyEvent.ACTION_DOWN) {
-				//		                 iview.setImageDrawable(constants.open);
+			//		                 iview.setImageDrawable(constants.open);
 			//		                 //if (Build.VERSION.SDK_INT>=11)
 			//		             //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
 			//		               }
@@ -107,11 +109,11 @@ public class MainActivity extends Activity {
 		switch (item.getItemId()) {
 		default:
 			return false;
-//		case 1:
-//			drawView.playBoard.hint();
-//			runOnUiThread(new Runnable(){ public void run() {
-//				drawView.invalidate();}});	
-//			return true;
+			//		case 1:
+			//			drawView.playBoard.hint();
+			//			runOnUiThread(new Runnable(){ public void run() {
+			//				drawView.invalidate();}});	
+			//			return true;
 		case 1: 
 			drawView.showSettings();
 			return true;
@@ -144,17 +146,14 @@ public class MainActivity extends Activity {
 			startingUp();
 			drawView.playBoard.readjust();
 			return true;
-//		case 6:
-//			if(Board.pro)
-//				mens8.setTitle("Show Gold");
-//			else
-//				mens8.setTitle("Hide Gold");
-//
-//			Board.proToggle();
-//			runOnUiThread(new Runnable(){ public void run() {
-//				drawView.invalidate();}});
+		case 7:
 
-		case 8:
+			Board.proToggle();
+			runOnUiThread(new Runnable(){ public void run() {
+				drawView.invalidate();}});
+			return true;
+
+		case 6:
 			drawView.showAllHighScores();
 			return true;
 		}
@@ -210,34 +209,36 @@ public class MainActivity extends Activity {
 
 		drawView = new DrawPanel(this, this);
 		drawView.setBackgroundColor(Color.LTGRAY);
-		
+
 		setContentView(R.layout.activity_main);
-		
+
 		RelativeLayout layout2 = (RelativeLayout)findViewById(R.id.surface_home); 
-		
+
 		layout2.addView(drawView);
-		
-		if (Board.pro)
+
+		if (pro) //gold font
 			getActionBar().setTitle(Html.fromHtml("<font color=\"#FFD700\">"+ getString(R.string.app_name)+"</font>"));
 
-		 // Create the adView     
-		AdView adView = new AdView(this, AdSize.BANNER, "7f4b6aa604824d54");     
-		// Lookup your RelativeLayoutLayout assuming it's been given     
-		// the attribute android:id="@+id/ad"     
-		RelativeLayout layout = (RelativeLayout)findViewById(R.id.ad); 	
-		
-		RelativeLayout.LayoutParams lp=(RelativeLayout.LayoutParams)layout.getLayoutParams();
-		int barHeight = (int) (.1*MainActivity.screenHeight);
+		if(!pro)
+		{
+			// Create the adView     
+			AdView adView = new AdView(this, AdSize.BANNER, "7f4b6aa604824d54");     
+			// Lookup your RelativeLayoutLayout assuming it's been given     
+			// the attribute android:id="@+id/ad"     
+			RelativeLayout layout = (RelativeLayout)findViewById(R.id.ad); 	
 
-		lp.bottomMargin = barHeight; //+ (int) (.01*MainActivity.screenHeight); 
-		layout.setLayoutParams(lp);
-		
-		// Add the adView to it
-		layout.addView(adView);  
+			RelativeLayout.LayoutParams lp=(RelativeLayout.LayoutParams)layout.getLayoutParams();
+			int barHeight = (int) (.1*MainActivity.screenHeight);
 
-		// Initiate a generic request to load it with an ad     
-		adView.loadAd(new AdRequest());
+			lp.bottomMargin = barHeight; //+ (int) (.01*MainActivity.screenHeight); 
+			layout.setLayoutParams(lp);
 
+			// Add the adView to it
+			layout.addView(adView);  
+
+			// Initiate a generic request to load it with an ad     
+			adView.loadAd(new AdRequest());
+		}
 
 
 
