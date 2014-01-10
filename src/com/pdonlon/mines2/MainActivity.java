@@ -43,7 +43,6 @@ public class MainActivity extends Activity {
 	protected void onPause()
 	{
 		super.onPause();
-
 		drawView.pauseGame();
 		//call pause function (stops timer and dims screen)
 		//same thing for pressing the clock
@@ -52,7 +51,7 @@ public class MainActivity extends Activity {
 	{
 		super.onResume();
 
-		if(drawView.paused)
+		if(drawView.paused && !drawView.pauseAlertDialogUp)
 			drawView.pauseMenu();
 		//call pause function (stops timer and dims screen)
 		//same thing for pressing the clock
@@ -96,11 +95,12 @@ public class MainActivity extends Activity {
 				
 			}
 
-//		case KeyEvent.KEYCODE_BACK:
-//			if(action == KeyEvent.ACTION_DOWN)
-//			{
-//				drawView.saveGame();
-//			}
+		case KeyEvent.KEYCODE_BACK:
+			if(action == KeyEvent.ACTION_DOWN)
+			{
+				drawView.quitMenu();
+				//drawView.saveGame();
+			}
 			
 			//		               if (action == KeyEvent.ACTION_DOWN) {
 			//		                 iview.setImageDrawable(constants.open);

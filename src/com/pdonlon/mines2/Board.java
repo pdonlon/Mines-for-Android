@@ -71,7 +71,7 @@ public class Board {
 	boolean showHint = false; 
 	boolean hintColorYellow = false;
 	boolean showCheck = false;
-	boolean questionMarks = false;
+	boolean timerTicking = false;
 
 	Shader shader;
 	Shader shaderPause;
@@ -468,13 +468,13 @@ public class Board {
 
 		//if loading game
 		//game.loadGame();
-				for(int y=0; y<height; y++){
-					for(int x=0; x<width; x++){
-		
-						board[x][y] = new Mine (false, 0, false, false, false); 
-		
-					}
-				}
+		for(int y=0; y<height; y++){
+			for(int x=0; x<width; x++){
+
+				board[x][y] = new Mine (false, 0, false, false, false); 
+
+			}
+		}
 	}
 
 
@@ -496,6 +496,7 @@ public class Board {
 	{
 		if(timer != null)
 		{
+			timerTicking = false;
 			timer.cancel();
 			timer.purge();
 		}
@@ -506,6 +507,7 @@ public class Board {
 		if(timer != null)
 		{
 			timer = new Timer();
+			timerTicking = true;
 
 			timer.scheduleAtFixedRate(new TimerTask() 
 			{
@@ -896,19 +898,8 @@ public class Board {
 		}
 	}
 
-	public void setQuestionMarks(boolean a){
-
-		questionMarks = a;
-	}
-
-	public boolean questionMarksEnabled(){
-
-		return questionMarks;
-
-	}
-
-	public void setTileSize(int a){
-
+	public void setTileSize(int a)
+	{
 		tileSize = a;
 	}
 
