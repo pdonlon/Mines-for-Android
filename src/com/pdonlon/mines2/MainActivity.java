@@ -5,6 +5,7 @@ import com.google.ads.AdView;
 import com.pdonlon.mines2.R;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -20,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 
 public class MainActivity extends Activity {
@@ -34,19 +36,28 @@ public class MainActivity extends Activity {
 	static MenuItem mens7;
 	static MenuItem mens8;
 	static MenuItem mens9;
-	static boolean pro = false;
-	
+	static boolean pro = true;
+
 	static int screenWidth, screenHeight;
 
 	protected void onPause()
 	{
 		super.onPause();
-		
+
 		drawView.pauseGame();
 		//call pause function (stops timer and dims screen)
 		//same thing for pressing the clock
 	}
+	protected void onResume()
+	{
+		super.onResume();
 
+		if(drawView.paused)
+			drawView.pauseMenu();
+		//call pause function (stops timer and dims screen)
+		//same thing for pressing the clock
+	}
+	
 	public boolean onCreateOptionsMenu(Menu menu) {
 		mens1 = menu.add(0, 1, 2, "Settings");
 		mens2 = menu.add(0, 2, 2,"Reset");
@@ -57,7 +68,7 @@ public class MainActivity extends Activity {
 		//mens7 = menu.add(0, 7, 2,"Manual Adjust");
 		mens6 = menu.add(0, 6, 2,"High Scores");
 		if(pro)
-		mens7 = menu.add(0, 7, 2,"Gold Toggle");
+			mens7 = menu.add(0, 7, 2,"Gold Toggle");
 
 
 		return true;
@@ -81,8 +92,16 @@ public class MainActivity extends Activity {
 		case KeyEvent.KEYCODE_VOLUME_DOWN:
 			if (action == KeyEvent.ACTION_UP) {
 				drawView.setFlagMode(!drawView.getFlagMode());
-
+				//drawView.saveGame();
+				
 			}
+
+//		case KeyEvent.KEYCODE_BACK:
+//			if(action == KeyEvent.ACTION_DOWN)
+//			{
+//				drawView.saveGame();
+//			}
+			
 			//		               if (action == KeyEvent.ACTION_DOWN) {
 			//		                 iview.setImageDrawable(constants.open);
 			//		                 //if (Build.VERSION.SDK_INT>=11)

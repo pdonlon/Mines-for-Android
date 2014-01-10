@@ -25,9 +25,8 @@ public class Board {
 	//	beg 	8x8 	10		54
 	//	med 	16x16 	40		216
 	//	exp 	30x16 	99		381
-	public static boolean noAds = true;
-	public static boolean pro = false;
-	public static boolean readjust = false;
+	static boolean pro = MainActivity.pro;
+	static boolean readjust = false;
 
 	static Typeface tf;
 
@@ -89,12 +88,12 @@ public class Board {
 	float offX;
 	float offY;
 	boolean justFinishedFastClick = false;
-	
-	
+
+
 	Timer timer;
 	TimerTask tt;
-	
-	
+
+
 	int [] pressedCords = new int[2];
 
 	int barHeight = 120;
@@ -118,7 +117,7 @@ public class Board {
 		tf = Typeface.create("Font Name",Typeface.BOLD);
 		shader = new LinearGradient(offX, offY, (width)*tileSize+offX, (height)*tileSize+offY, colors1, colors2, TileMode.CLAMP);
 		shaderPause = new LinearGradient(offX, offY, (width)*tileSize+offX, (height)*tileSize+offY, Color.RED, Color.RED, TileMode.CLAMP);
-		
+
 		adjustTiles();
 		//		game.startTimer();
 		startup();
@@ -131,11 +130,11 @@ public class Board {
 	}
 
 	public int getTimeCounter(){
-		
+
 		return timeCounter;
 	}
 
-	
+
 	public void readjust(){
 		offX = 0;
 		offY = 0;
@@ -290,7 +289,7 @@ public class Board {
 	{
 		return board[x][y].getBombsSurrounding();
 	}
-	
+
 	public boolean doneAnimating()
 	{
 		return doneAnimating;
@@ -321,7 +320,7 @@ public class Board {
 	{
 		boolean untouched = false;
 		try{
-			if(!board[x][y].isOpened() && !board[x][y].isFlagged() && !board[x][y].isQuestionMarked() && !board[x][y].isWrong())
+			if(!board[x][y].isOpened() && !board[x][y].isFlagged() && !board[x][y].isWrong())
 				untouched = true;
 		}
 		catch(Exception e){
@@ -386,7 +385,7 @@ public class Board {
 		for(int y=0; y<height; y++ ){
 			for(int x=0; x<width; x++){
 
-				board[x][y] = new Mine (false, 0, false, false, false, false, false);
+				board[x][y] = new Mine (false, 0, false, false, false);
 
 			}
 		}
@@ -454,17 +453,28 @@ public class Board {
 		return board[x][y].isBomb();
 	}
 
+	public void createMine(int x, int y, int bombsSurrounding, int cellType)
+	{
+		if(cellType == 1)
+			board[x][y] = new Mine (true, bombsSurrounding, false, false, false); //opened
+		else if(cellType == 2)
+			board[x][y] = new Mine (false, bombsSurrounding, false, false, false); //unopened
+		if(cellType == 3)
+			board[x][y] = new Mine (false, bombsSurrounding, false, false, false); //flagged
+
+	}
+
 	public void initializeBoard(){
 
-		for(int y=0; y<height; y++){
-			for(int x=0; x<width; x++){
-
-				board[x][y] = new Mine (false, 0, false, false, false, false, false); 
-
-			}
-		}
-
-
+		//if loading game
+		//game.loadGame();
+				for(int y=0; y<height; y++){
+					for(int x=0; x<width; x++){
+		
+						board[x][y] = new Mine (false, 0, false, false, false); 
+		
+					}
+				}
 	}
 
 
@@ -495,37 +505,37 @@ public class Board {
 	{
 		if(timer != null)
 		{
-		timer = new Timer();
-		
-		timer.scheduleAtFixedRate(new TimerTask() 
-		{
-			@Override
-			public void run() 
-			{
-				timeCounter++;
-				game.mactivity.runOnUiThread(new Runnable() 
-				{
-					public void run() 
-					{
-						game.invalidate();
-//						if(justFinishedFastClick)
-//						{
-//							justFinishedFastClick= false;
-//							checkWin();
-//							if(game.showNewHighScore)
-//								game.showNewHighScore();
-//								if(game.winMessage)
-//									game.winMessage();	
-//								
-						}
-//					}
-				});
-			}
+			timer = new Timer();
 
-		}, 0, 1000);
+			timer.scheduleAtFixedRate(new TimerTask() 
+			{
+				@Override
+				public void run() 
+				{
+					timeCounter++;
+					game.mactivity.runOnUiThread(new Runnable() 
+					{
+						public void run() 
+						{
+							game.invalidate();
+							//						if(justFinishedFastClick)
+							//						{
+							//							justFinishedFastClick= false;
+							//							checkWin();
+							//							if(game.showNewHighScore)
+							//								game.showNewHighScore();
+							//								if(game.winMessage)
+							//									game.winMessage();	
+							//								
+						}
+						//					}
+					});
+				}
+
+			}, 0, 1000);
 		}
 	}
-	
+
 	public void placeBombs(){
 
 		//bombs = new CheckList();
@@ -618,12 +628,12 @@ public class Board {
 
 		return unopened;
 	}
-	
+
 	public void fastClickWholeBoard()
 	{
 		for(int y=0; y<height; y++){
 			for(int x=0; x<width; x++){
-				
+
 				if(flagsSurrounding(x,y) == board[x][y].getBombsSurrounding())
 					fastClick(x,y); //causes error -- needs to be called with seprate threads
 			}
@@ -670,10 +680,10 @@ public class Board {
 			public void run()
 			{
 				int acceleration = 25;
-				
+
 				if(!game.animations)
 					acceleration = 0;
-				
+
 				while(fastCount>0)
 				{
 					try {
@@ -686,26 +696,26 @@ public class Board {
 					fastCount--;
 				}
 				game.mactivity.runOnUiThread(new Runnable() {
-					  public void run() {
-						
-							checkWin();
-							if(win){
-								if(game.showNewHighScore)
-									game.showNewHighScore();
+					public void run() {
+
+						checkWin();
+						if(win){
+							if(game.showNewHighScore)
+								game.showNewHighScore();
 							if(game.winMessage)
 								game.winMessage();
 
-							}
-						  
-					  }
-					});
+						}
+
+					}
+				});
 
 				//TODO NOT RUNNING OFF THE SAME TIME AS MAIN SO CHECKWIN HAS TO BE FA
 			}
 		});
 
 		f.start();
-//
+		//
 	}
 
 	public void tileOpen(){
@@ -797,7 +807,7 @@ public class Board {
 				doneAnimating = false;
 
 				int acceleration = 2;
-				
+
 				if(!game.animations)
 					acceleration = 0;
 
@@ -841,17 +851,6 @@ public class Board {
 			if(board[x][y].isFlagged()){
 
 				removeFlag(x,y);
-				if(questionMarks)
-					questionMark(x,y);
-				else
-					removeQuestionMark(x,y);
-
-			}
-
-			else if(board[x][y].isQuestionMarked()&& questionMarks){
-
-				removeQuestionMark(x,y);
-
 			}
 
 			else{ //flagCount>0 && 
@@ -907,18 +906,6 @@ public class Board {
 		return questionMarks;
 
 	}
-
-	public void questionMark(int x, int y){
-
-		board[x][y].setQuestionMarked(true);
-
-	}
-
-	public void removeQuestionMark(int x, int y){
-
-		board[x][y].setQuestionMarked(false);
-	}
-
 
 	public void setTileSize(int a){
 
@@ -1078,16 +1065,16 @@ public class Board {
 	{
 		if(lose)
 			return;
-			
+
 		if(getOpenedBoxCount() == totalBoxes - totalBombs)
 		{
 			win = true;
 
 			game.updateScores(timeCounter);
-			
+
 			Log.v("highScores", ""+game.getScore());
 			game.setWinMessage(true);
-			
+
 			finishFlagging();
 			endTimer();
 		}
@@ -1188,8 +1175,8 @@ public class Board {
 
 	public void zoomIn(float x, float y) //zoom according to amount of zooms not tilesize
 	{	
-//		if(tileSize*2 > 250)
-//			return;
+		//		if(tileSize*2 > 250)
+		//			return;
 		tileSize = tileSize*2;
 
 		offX = -tileSize*x/2;
@@ -1247,8 +1234,8 @@ public class Board {
 		//		pgray.setColor(android.graphics.Color.DKGRAY);
 		//		//g.drawRect(0, 0, (tileSize)*getWidth(), (tileSize*getHeight()), pgray);
 
-		
-		
+
+
 		Paint black = new Paint();
 		black.setColor(Color.BLACK);
 
@@ -1264,12 +1251,12 @@ public class Board {
 		if(pro)
 			darkGray.setColor(Color.argb(255, 218, 165, 32)); //goldenrod - darkest
 		Paint thickDarkGray = new Paint();
-		
+
 		thickDarkGray.setColor(Color.argb(255, 100, 100, 100));
 		if(pro)
 			thickDarkGray.setColor(Color.argb(255, 218, 165, 32)); //goldenrod - darkest
 		Paint lightGray = new Paint();
-		
+
 		lightGray.setColor(Color.argb(255, 170, 170, 170));
 		if(pro)
 			lightGray.setColor(Color.argb(255, 240, 230, 140)); //khaki - lightest
@@ -1278,7 +1265,7 @@ public class Board {
 		float gap = tileSize/6; //originally 15
 
 		paint = new Paint();
-		
+
 		paint.setColor(Color.BLACK);
 		paint.setTypeface(tf);
 		paint.setTextSize(tileSize/3);
@@ -1294,7 +1281,7 @@ public class Board {
 
 		thickDarkGray.setStrokeWidth(tileSize/6);				
 		//paint.setStrokeWidth(tileSize/20);
-		
+
 		float ySpacing = offY; 
 
 		for(int y=0; y<height; y++){
@@ -1340,7 +1327,7 @@ public class Board {
 			colors2 = Color.argb(100, 0, 0, 0);
 
 		shader = new LinearGradient(offX, offY, (width)*tileSize+offX, (height)*tileSize+offY, colors1, colors2, TileMode.CLAMP);
-		
+
 		//Paint paint = new Paint(); 
 		paint.setShader(shader); 
 
@@ -1479,124 +1466,124 @@ public class Board {
 			actionAndStatus = game.mactivity.getActionBarHeight() + game.mactivity.getStatusBarHeight();
 
 
-			barHeight = (int) (.1*MainActivity.screenHeight);
-			realBarHeight = (MainActivity.screenHeight - actionAndStatus) - barHeight;
-			g.drawRect(0, realBarHeight, (MainActivity.screenWidth), (MainActivity.screenHeight),paint);
-			//		if(win){
-			//			paint.setColor(color3);
-			//			g.drawRect(0, realBarHeight, (MainActivity.screenWidth), (MainActivity.screenHeight),paint);
+		barHeight = (int) (.1*MainActivity.screenHeight);
+		realBarHeight = (MainActivity.screenHeight - actionAndStatus) - barHeight;
+		g.drawRect(0, realBarHeight, (MainActivity.screenWidth), (MainActivity.screenHeight),paint);
+		//		if(win){
+		//			paint.setColor(color3);
+		//			g.drawRect(0, realBarHeight, (MainActivity.screenWidth), (MainActivity.screenHeight),paint);
 
-			//}
+		//}
 
 
-			paint.setStrokeWidth((MainActivity.screenWidth)/720); //TODO ADJUST
+		paint.setStrokeWidth((MainActivity.screenWidth)/720); //TODO ADJUST
 
-			paint.setColor(Color.WHITE);
-			g.drawLine((MainActivity.screenWidth*1)/5, realBarHeight, (MainActivity.screenWidth*1)/5, (MainActivity.screenHeight), paint);
-			g.drawLine((MainActivity.screenWidth*2)/5, realBarHeight, (MainActivity.screenWidth*2)/5, (MainActivity.screenHeight), paint);
-			g.drawLine((MainActivity.screenWidth*3)/5, realBarHeight, (MainActivity.screenWidth*3)/5, (MainActivity.screenHeight), paint);
-			g.drawLine((MainActivity.screenWidth*4)/5, realBarHeight, (MainActivity.screenWidth*4)/5, (MainActivity.screenHeight), paint);
+		paint.setColor(Color.WHITE);
+		g.drawLine((MainActivity.screenWidth*1)/5, realBarHeight, (MainActivity.screenWidth*1)/5, (MainActivity.screenHeight), paint);
+		g.drawLine((MainActivity.screenWidth*2)/5, realBarHeight, (MainActivity.screenWidth*2)/5, (MainActivity.screenHeight), paint);
+		g.drawLine((MainActivity.screenWidth*3)/5, realBarHeight, (MainActivity.screenWidth*3)/5, (MainActivity.screenHeight), paint);
+		g.drawLine((MainActivity.screenWidth*4)/5, realBarHeight, (MainActivity.screenWidth*4)/5, (MainActivity.screenHeight), paint);
 
-			//paint.setColor(Color.RED);
-			//g.drawLine((MainActivity.screenWidth*1)/10, realBarHeight, (MainActivity.screenWidth*1)/10, (MainActivity.screenHeight), paint);
-			//g.drawLine((MainActivity.screenWidth*7)/10, realBarHeight, (MainActivity.screenWidth*7)/10, (MainActivity.screenHeight), paint);
-			//g.drawLine((MainActivity.screenWidth*9)/10, realBarHeight, (MainActivity.screenWidth*9)/10, (MainActivity.screenHeight), paint);
+		//paint.setColor(Color.RED);
+		//g.drawLine((MainActivity.screenWidth*1)/10, realBarHeight, (MainActivity.screenWidth*1)/10, (MainActivity.screenHeight), paint);
+		//g.drawLine((MainActivity.screenWidth*7)/10, realBarHeight, (MainActivity.screenWidth*7)/10, (MainActivity.screenHeight), paint);
+		//g.drawLine((MainActivity.screenWidth*9)/10, realBarHeight, (MainActivity.screenWidth*9)/10, (MainActivity.screenHeight), paint);
 
+		paint.setStyle(Style.STROKE);
+		paint.setStrokeWidth((MainActivity.screenWidth)/120); //TODO ADJUST
+
+		Log.v("",""+tileSize);
+
+		//			Log.v("SCREEN WIDTH",""+MainActivity.screenWidth);
+		//			Log.v("SCREEN HEIGHT",""+realBarHeight);
+
+
+		paint.setColor(Color.argb(255, 190, 190, 190));
+		if(win)
+			paint.setColor(Color.GREEN);
+		else if(pro)
+			paint.setColor(Color.argb(255,255,215,0));
+
+		//MAGNIFINE GLASSES
+		g.drawCircle((MainActivity.screenWidth*7)/10, (float) (realBarHeight+realBarHeight/17.5), (MainActivity.screenWidth)/30, paint);
+		g.drawLine((MainActivity.screenWidth*72)/100, (float) (realBarHeight+realBarHeight/13.7), (float) ((MainActivity.screenWidth*76)/100), (float) (realBarHeight+realBarHeight/10.25), paint);
+
+		g.drawCircle((MainActivity.screenWidth*9)/10, (float) (realBarHeight+realBarHeight/17.5), (MainActivity.screenWidth)/30, paint);
+		g.drawLine((MainActivity.screenWidth*92)/100, (float) (realBarHeight+realBarHeight/13.7), (MainActivity.screenWidth*96)/100, (float) (realBarHeight+realBarHeight/10.25), paint);
+		//PLUS
+		g.drawLine((MainActivity.screenWidth*9)/10, (float) (realBarHeight+realBarHeight/22), (MainActivity.screenWidth*9)/10, (float) (realBarHeight+realBarHeight/14.69), paint);
+		//MINUS
+		g.drawLine((MainActivity.screenWidth*7)/10-MainActivity.screenWidth/72, (float) (realBarHeight+realBarHeight/17.5), (MainActivity.screenWidth*7)/10+MainActivity.screenWidth/72, (float) (realBarHeight+realBarHeight/17.5), paint);
+		g.drawLine((MainActivity.screenWidth*9)/10-MainActivity.screenWidth/65, (float) (realBarHeight+realBarHeight/17.5), (MainActivity.screenWidth*9)/10+MainActivity.screenWidth/65, (float) (realBarHeight+realBarHeight/17.5), paint);
+
+		//FLAG
+		float bSize = (float) (MainActivity.screenWidth/4.8); 
+		float sX = (float) (((MainActivity.screenWidth*3)/10)-(MainActivity.screenWidth/9.6));
+		float sY = (float) (realBarHeight-realBarHeight/50.7);
+
+		paint.setStyle(Style.FILL);
+		paint.setTypeface(tf);
+		paint.setTextSize(bSize/5);
+		g.drawText(""+flagCount, sX+(bSize)/3+(MainActivity.screenWidth/18), (float) (sY+(bSize*3)/4+realBarHeight/101.4), paint); //count
+		g.drawRect(sX+bSize/3, sY+(bSize)/3, sX+(bSize*2)/3, sY+(bSize)/2, paint); //flag
+
+		paint.setStyle(Style.STROKE);
+		paint.setStrokeWidth(bSize/23);
+		g.drawLine(sX+(bSize)/3, (float) (sY+(bSize)/3-realBarHeight/144.85), sX+(bSize)/3, sY+(bSize*3)/4, paint); //flag pole
+
+
+		//CLOCK
+		g.drawCircle((MainActivity.screenWidth*1)/10-(MainActivity.screenWidth/36), (float) (realBarHeight+realBarHeight/17.5), (float) (MainActivity.screenWidth/22.5), paint);
+		paint.setStrokeWidth(bSize/40);
+		g.drawLine((MainActivity.screenWidth*1)/10-(MainActivity.screenWidth/36), (float)(realBarHeight+realBarHeight/25.35), (MainActivity.screenWidth*1)/10-(MainActivity.screenWidth/36), (float) (realBarHeight+realBarHeight/16.9), paint);
+		g.drawLine((MainActivity.screenWidth*1)/10-(MainActivity.screenWidth/36), (float)(realBarHeight+realBarHeight/16.9), (MainActivity.screenWidth*1)/10, (float) (realBarHeight+realBarHeight/14.7), paint);
+
+		paint.setStyle(Style.FILL);
+		paint.setTextSize(bSize/5);
+		sX = (float) (((MainActivity.screenWidth*1)/10)-((MainActivity.screenWidth)/9.6));
+		float push = ((MainActivity.screenWidth)/48);
+		if(timeCounter>=10)
+			push = ((MainActivity.screenWidth)/90);
+		else if(timeCounter>=100)
+			push = ((MainActivity.screenWidth)/360);
+		else if(timeCounter>=1000)
+			timeCounter = 999;
+		g.drawText(""+timeCounter, sX+(bSize)/3+((MainActivity.screenWidth)/18)+push, (float) (sY+(bSize*3)/4+((MainActivity.screenWidth)/101.4)), paint); //count
+
+		//MINE
+		if(!game.flagMode){
+
+			float bombSize = (float) ((MainActivity.screenWidth)/7.2);
+			float startingX = (float) (((MainActivity.screenWidth*5)/10)-((MainActivity.screenWidth)/14.4));
+			float startingY = (float) (realBarHeight+realBarHeight/101.4);
+			paint.setStyle(Style.FILL);
+			g.drawCircle(startingX+(bombSize/2), startingY+(bombSize/2), (bombSize/4),paint);
+
+			paint.setStrokeWidth(bombSize/14);
 			paint.setStyle(Style.STROKE);
-			paint.setStrokeWidth((MainActivity.screenWidth)/120); //TODO ADJUST
+			//top left/bottom right
+			g.drawLine(startingX+(bombSize/4), startingY+(bombSize/4), startingX+bombSize-(bombSize/4), startingY+bombSize-(bombSize/4),paint); 
+			//mid 
+			g.drawLine(startingX+(bombSize/8), startingY+(bombSize/2), startingX+bombSize-(bombSize/8), startingY+(bombSize/2),paint);
+			//top right/bottom left
+			g.drawLine(startingX+bombSize-(bombSize/4), startingY+(bombSize/4), startingX+(bombSize/4), startingY+bombSize-(bombSize/4),paint);
+			//top/down
+			g.drawLine(startingX+(bombSize/2), startingY+(bombSize/8), startingX+(bombSize/2), startingY+bombSize-(bombSize/8),paint);
 
-			Log.v("",""+tileSize);
-			
-//			Log.v("SCREEN WIDTH",""+MainActivity.screenWidth);
-//			Log.v("SCREEN HEIGHT",""+realBarHeight);
-
-			
-			paint.setColor(Color.argb(255, 190, 190, 190));
-			if(win)
-				paint.setColor(Color.GREEN);
-			else if(pro)
-				paint.setColor(Color.argb(255,255,215,0));
-
-			//MAGNIFINE GLASSES
-			g.drawCircle((MainActivity.screenWidth*7)/10, (float) (realBarHeight+realBarHeight/17.5), (MainActivity.screenWidth)/30, paint);
-			g.drawLine((MainActivity.screenWidth*72)/100, (float) (realBarHeight+realBarHeight/13.7), (float) ((MainActivity.screenWidth*76)/100), (float) (realBarHeight+realBarHeight/10.25), paint);
-
-			g.drawCircle((MainActivity.screenWidth*9)/10, (float) (realBarHeight+realBarHeight/17.5), (MainActivity.screenWidth)/30, paint);
-			g.drawLine((MainActivity.screenWidth*92)/100, (float) (realBarHeight+realBarHeight/13.7), (MainActivity.screenWidth*96)/100, (float) (realBarHeight+realBarHeight/10.25), paint);
-			//PLUS
-			g.drawLine((MainActivity.screenWidth*9)/10, (float) (realBarHeight+realBarHeight/22), (MainActivity.screenWidth*9)/10, (float) (realBarHeight+realBarHeight/14.69), paint);
-			//MINUS
-			g.drawLine((MainActivity.screenWidth*7)/10-MainActivity.screenWidth/72, (float) (realBarHeight+realBarHeight/17.5), (MainActivity.screenWidth*7)/10+MainActivity.screenWidth/72, (float) (realBarHeight+realBarHeight/17.5), paint);
-			g.drawLine((MainActivity.screenWidth*9)/10-MainActivity.screenWidth/65, (float) (realBarHeight+realBarHeight/17.5), (MainActivity.screenWidth*9)/10+MainActivity.screenWidth/65, (float) (realBarHeight+realBarHeight/17.5), paint);
-
-			//FLAG
-			float bSize = (float) (MainActivity.screenWidth/4.8); 
-			float sX = (float) (((MainActivity.screenWidth*3)/10)-(MainActivity.screenWidth/9.6));
-			float sY = (float) (realBarHeight-realBarHeight/50.7);
+		}
+		//FLAG
+		else{
+			bSize = (float) ((MainActivity.screenWidth)/4.8);
+			sX = (float) (((MainActivity.screenWidth*5)/10)-(MainActivity.screenWidth)/10.58);
+			sY = (float) (realBarHeight-realBarHeight/84.5);
 
 			paint.setStyle(Style.FILL);
-			paint.setTypeface(tf);
-			paint.setTextSize(bSize/5);
-			g.drawText(""+flagCount, sX+(bSize)/3+(MainActivity.screenWidth/18), (float) (sY+(bSize*3)/4+realBarHeight/101.4), paint); //count
-			g.drawRect(sX+bSize/3, sY+(bSize)/3, sX+(bSize*2)/3, sY+(bSize)/2, paint); //flag
+			g.drawRect(sX+bSize/3, sY+(bSize)/3-realBarHeight/507, sX+(bSize*2)/3, sY+(bSize)/2-realBarHeight/507, paint); //flag
 
 			paint.setStyle(Style.STROKE);
 			paint.setStrokeWidth(bSize/23);
-			g.drawLine(sX+(bSize)/3, (float) (sY+(bSize)/3-realBarHeight/144.85), sX+(bSize)/3, sY+(bSize*3)/4, paint); //flag pole
-
-
-			//CLOCK
-			g.drawCircle((MainActivity.screenWidth*1)/10-(MainActivity.screenWidth/36), (float) (realBarHeight+realBarHeight/17.5), (float) (MainActivity.screenWidth/22.5), paint);
-			paint.setStrokeWidth(bSize/40);
-			g.drawLine((MainActivity.screenWidth*1)/10-(MainActivity.screenWidth/36), (float)(realBarHeight+realBarHeight/25.35), (MainActivity.screenWidth*1)/10-(MainActivity.screenWidth/36), (float) (realBarHeight+realBarHeight/16.9), paint);
-			g.drawLine((MainActivity.screenWidth*1)/10-(MainActivity.screenWidth/36), (float)(realBarHeight+realBarHeight/16.9), (MainActivity.screenWidth*1)/10, (float) (realBarHeight+realBarHeight/14.7), paint);
-
-			paint.setStyle(Style.FILL);
-			paint.setTextSize(bSize/5);
-			sX = (float) (((MainActivity.screenWidth*1)/10)-((MainActivity.screenWidth)/9.6));
-			float push = ((MainActivity.screenWidth)/48);
-			if(timeCounter>=10)
-				push = ((MainActivity.screenWidth)/90);
-			else if(timeCounter>=100)
-				push = ((MainActivity.screenWidth)/360);
-			else if(timeCounter>=1000)
-				timeCounter = 999;
-			g.drawText(""+timeCounter, sX+(bSize)/3+((MainActivity.screenWidth)/18)+push, (float) (sY+(bSize*3)/4+((MainActivity.screenWidth)/101.4)), paint); //count
-
-			//MINE
-			if(!game.flagMode){
-
-				float bombSize = (float) ((MainActivity.screenWidth)/7.2);
-				float startingX = (float) (((MainActivity.screenWidth*5)/10)-((MainActivity.screenWidth)/14.4));
-				float startingY = (float) (realBarHeight+realBarHeight/101.4);
-				paint.setStyle(Style.FILL);
-				g.drawCircle(startingX+(bombSize/2), startingY+(bombSize/2), (bombSize/4),paint);
-
-				paint.setStrokeWidth(bombSize/14);
-				paint.setStyle(Style.STROKE);
-				//top left/bottom right
-				g.drawLine(startingX+(bombSize/4), startingY+(bombSize/4), startingX+bombSize-(bombSize/4), startingY+bombSize-(bombSize/4),paint); 
-				//mid 
-				g.drawLine(startingX+(bombSize/8), startingY+(bombSize/2), startingX+bombSize-(bombSize/8), startingY+(bombSize/2),paint);
-				//top right/bottom left
-				g.drawLine(startingX+bombSize-(bombSize/4), startingY+(bombSize/4), startingX+(bombSize/4), startingY+bombSize-(bombSize/4),paint);
-				//top/down
-				g.drawLine(startingX+(bombSize/2), startingY+(bombSize/8), startingX+(bombSize/2), startingY+bombSize-(bombSize/8),paint);
-
-			}
-			//FLAG
-			else{
-				bSize = (float) ((MainActivity.screenWidth)/4.8);
-				sX = (float) (((MainActivity.screenWidth*5)/10)-(MainActivity.screenWidth)/10.58);
-				sY = (float) (realBarHeight-realBarHeight/84.5);
-
-				paint.setStyle(Style.FILL);
-				g.drawRect(sX+bSize/3, sY+(bSize)/3-realBarHeight/507, sX+(bSize*2)/3, sY+(bSize)/2-realBarHeight/507, paint); //flag
-
-				paint.setStyle(Style.STROKE);
-				paint.setStrokeWidth(bSize/23);
-				g.drawLine(sX+(bSize)/3, (float) (sY+(bSize)/3-realBarHeight/144.85), sX+(bSize)/3, sY+(bSize*3)/4-realBarHeight/338, paint); //flag pole
-			}
+			g.drawLine(sX+(bSize)/3, (float) (sY+(bSize)/3-realBarHeight/144.85), sX+(bSize)/3, sY+(bSize*3)/4-realBarHeight/338, paint); //flag pole
+		}
 
 		if(showCheck){
 
@@ -1630,21 +1617,21 @@ public class Board {
 		//Log.v("hi",""+(MainActivity.screenWidth*5)/10);
 		//g.setColor(Color.);
 		//getwindowy -36
-		
+
 		if(game.paused){
-				
+
 			paint.setColor(Color.argb(190, 0, 0, 0));
-			
+
 			//MainActivity.screenWidth
-			
+
 			//g.drawRect(new RectF(0, 0, MainActivity.screenWidth, MainActivity.screenHeight), paint);
 			//paint.setShader(shaderPause); 
 			paint.setStyle(Style.FILL);
 			g.drawRect(0, 0, MainActivity.screenWidth, MainActivity.screenHeight-(MainActivity.screenHeight-realBarHeight), paint);
-			
+
 			//Log.v("",""+MainActivity.screenWidth);
 			paint.setShader(null);
-			
+
 		}
 	}
 }

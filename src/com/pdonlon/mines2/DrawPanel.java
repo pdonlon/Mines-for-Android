@@ -60,6 +60,8 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	String[] myStringArray = {"Vibration","Animations"};
 	public static Context context;
 	boolean paused;
+	AlertDialog.Builder builder;
+	
 
 	public boolean getFlagMode()
 	{
@@ -150,7 +152,10 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				//playBoard.fastClickWholeBoard();
 			
 			else if(x2 < (MainActivity.screenWidth*1)/5)
+			{
 				pauseGame();
+				pauseMenu();
+			}
 			else
 				return true;
 
@@ -310,11 +315,15 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	
 	public void saveGame()
 	{
-		SharedPreferences bombsSurrounding = mactivity.getSharedPreferences("game", Context.MODE_PRIVATE); //number of bombs surrounding
-		SharedPreferences cellStatus = mactivity.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE); //opened, not opened, flagged
+
+		makeToast("Saving Game");
+		SharedPreferences bombsSurrounding = mactivity.getSharedPreferences("bombsSurrounding", Context.MODE_PRIVATE); //number of bombs surrounding
+		SharedPreferences cellStatus = mactivity.getSharedPreferences("cellStatus", Context.MODE_PRIVATE); //opened, not opened, flagged
+		SharedPreferences save = mactivity.getSharedPreferences("save", Context.MODE_PRIVATE); //opened, not opened, flagged
 		
 		Editor bsEditor = bombsSurrounding.edit();
 		Editor csEditor = cellStatus.edit();
+		Editor saveEditor = save.edit();
 		int counter = 0;
 		
 		for(int y=0; y<playBoard.getHeight(); y++)
@@ -323,16 +332,27 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				bsEditor.putInt(counter+"",playBoard.getBombsSurrounding(x,y));
 				bsEditor.commit();
 				//csEditor.putInt(counter+"",); //lookup
+				saveEditor.putBoolean("save", true);
+				saveEditor.commit();
 				counter++;
-			}	
+			}
 	}
 	
 	public void loadGame()
 	{
-		for(int x=0; x<playBoard.getWidth(); x++)
-		{
-			
-		}
+		makeToast("Loading Game");
+		int counter = 0;
+		SharedPreferences bombsSurrounding = mactivity.getSharedPreferences("bombsSurrounding", Context.MODE_PRIVATE); //number of bombs surrounding
+		for(int y=0; y<playBoard.getHeight(); y++)
+			for(int x=0; x<playBoard.getWidth(); x++)
+			{
+				String key = counter+"";
+				int cell = bombsSurrounding.getInt(key, 0);
+				playBoard.createMine(x,y,cell,1);
+				//csEditor.putInt(counter+"",); //lookup
+				counter++;
+			}
+		invalidate();
 	}
 	
 	public void saveFlagMode()
@@ -429,11 +449,15 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		animations = selected[1];
 	}
 
+	
+
+	
 	public void pauseMenu()
 	{
-		if(playBoard.getTimeCounter() > 0 && !gameOver){ //NOT TESTED TODO
+		if(playBoard.getTimeCounter() > 0 && !gameOver)
+		{ 
 			paused = true;
-			AlertDialog.Builder builder = new AlertDialog.Builder(mactivity);
+			builder = new AlertDialog.Builder(mactivity);
 			// Set the dialog title
 			builder.setTitle("Paused")
 
@@ -452,9 +476,11 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 			builder.setCancelable(false);
 			builder.show();
+			
 		}
 		//return builder.create();
 	}
+	
 
 	public void showSettings()
 	{
@@ -493,17 +519,16 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				// or return them to the component that opened the dialog
 				saveChecks();
 				updateSettings();
-
-				// ...
+				resumeGame();
 			}
 		})
 		.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int id) {
-				//...
-			}
+				resumeGame();			}
 		});
-
+		
+		builder.setCancelable(false);
 		builder.show();
 		//return builder.create();
 	}
@@ -513,8 +538,8 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		if(!paused)
 		{
 		playBoard.endTimer();
-		pauseMenu();
 		invalidate();
+		paused = true;
 		}
 	}
 
@@ -585,14 +610,25 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int id) {
-				//...
-			}
+				resumeGame();
+				}
 		});
 
 		AlertDialog dialog = builder.create();
 		dialog.show();
 	}
 
+	public void makeToast(String message)
+	{
+		Context context = mactivity.getApplicationContext();
+		CharSequence text = message;
+		int duration = Toast.LENGTH_SHORT;
+
+		Toast toast = Toast.makeText(context, text, duration);
+		//toast.setGravity(Gravity.TOP|Gravity.LEFT, 0, 0); //position of toast
+		toast.show();
+	}
+	
 	public void startTimer(){
 
 		timer = new Timer();
@@ -737,8 +773,8 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 				int bombsLeft = playBoard.getUnsafeBombCount()-1;
 
-				while(bombsLeft>0){
-
+				while(bombsLeft>0)
+				{
 					try {
 						Thread.sleep(tempVibration);
 					} catch(InterruptedException ex) {

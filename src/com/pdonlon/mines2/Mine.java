@@ -21,15 +21,13 @@ public class Mine {
 	int flagCount;
 	int openedCount;
 
-	public Mine(boolean opened, int bs, boolean flagged, boolean bomb, boolean explode, boolean wrong, boolean questionMarked){
+	public Mine(boolean opened, int bs, boolean flagged, boolean bomb, boolean wrong){
 
 		this.opened = opened;
 		this.bombsSurrounding = bs;
 		this.flagged = flagged;
 		this.bomb = bomb;
-		this.explode = explode;
 		this.wrong = wrong;
-		this.questionMarked = questionMarked;
 
 	}
 
@@ -92,16 +90,6 @@ public class Mine {
 	public void setWrong(boolean a){
 
 		wrong = a;
-	}
-	
-	public boolean isQuestionMarked(){
-		
-		return questionMarked;
-	}
-
-	public void setQuestionMarked(boolean a){
-		
-		questionMarked = a;
 	}
 	
 	public int determineColor(){
