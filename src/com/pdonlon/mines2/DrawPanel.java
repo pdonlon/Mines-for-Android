@@ -360,6 +360,9 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	{
 		makeToast("Loading Game");
 		int counter = 0;
+		
+		playBoard.setTimeCounter(save.getInt("time", 0));
+		
 		for(int y=0; y<playBoard.getHeight(); y++)
 			for(int x=0; x<playBoard.getWidth(); x++)
 			{
@@ -374,6 +377,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				counter++;
 			}
 		invalidate();
+		
 	}
 
 	public void initializeSharedPreferences()
@@ -558,7 +562,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 	public void pauseGame()
 	{
-		if(!paused && playBoard.timerTicking)
+		if(!paused && playBoard.getTimeCounter() > 0)
 		{
 			playBoard.endTimer();
 			paused = true;

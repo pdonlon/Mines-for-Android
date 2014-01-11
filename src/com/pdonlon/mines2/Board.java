@@ -71,7 +71,6 @@ public class Board {
 	boolean showHint = false; 
 	boolean hintColorYellow = false;
 	boolean showCheck = false;
-	boolean timerTicking = false;
 
 	Shader shader;
 	Shader shaderPause;
@@ -120,6 +119,8 @@ public class Board {
 		adjustTiles();
 		//		game.startTimer();
 		startup();
+		timer = new Timer();
+
 	}
 
 	public static void proToggle(){
@@ -130,6 +131,11 @@ public class Board {
 	public int getTimeCounter(){
 
 		return timeCounter;
+	}
+	
+	public void setTimeCounter(int time){
+
+		timeCounter = time;
 	}
 
 
@@ -478,7 +484,6 @@ public class Board {
 		placeBombs();
 		placeBombsSurrounding();
 
-		timer = new Timer();
 		startTimer();
 	}
 
@@ -487,7 +492,6 @@ public class Board {
 	{
 		if(timer != null)
 		{
-			timerTicking = false;
 			timer.cancel();
 			timer.purge();
 		}
@@ -498,7 +502,6 @@ public class Board {
 		if(timer != null)
 		{
 			timer = new Timer();
-			timerTicking = true;
 
 			timer.scheduleAtFixedRate(new TimerTask() 
 			{

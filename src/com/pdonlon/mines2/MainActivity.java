@@ -257,8 +257,13 @@ public class MainActivity extends Activity {
 			// Initiate a generic request to load it with an ad     
 			adView.loadAd(new AdRequest());
 		}
-
-
+		if(drawView.save.getBoolean("saveGame",false))
+		{
+			drawView.pauseGame();
+			runOnUiThread(new Runnable(){ public void run() {
+				drawView.invalidate();}});
+			drawView.pauseMenu();
+		}
 
 	}
 }
