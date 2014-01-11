@@ -578,6 +578,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			playBoard.startTimer();
 			paused = false;
 			invalidate();
+
 		}
 	}
 
@@ -755,6 +756,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 		if(playBoard.doneAnimating())
 		{        
+			playBoard.setTimeCounter(0);
 			playBoard.startup();
 			playBoard.wipeBoard();
 			gameOver = false;

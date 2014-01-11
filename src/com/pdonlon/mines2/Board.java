@@ -89,7 +89,7 @@ public class Board {
 	boolean justFinishedFastClick = false;
 
 
-	Timer timer;
+	public static Timer timer;
 	TimerTask tt;
 
 
@@ -119,8 +119,6 @@ public class Board {
 		adjustTiles();
 		//		game.startTimer();
 		startup();
-		timer = new Timer();
-
 	}
 
 	public static void proToggle(){
@@ -484,6 +482,10 @@ public class Board {
 		placeBombs();
 		placeBombsSurrounding();
 
+		if(timer == null)
+			timer = new Timer();
+		else
+			endTimer();
 		startTimer();
 	}
 
