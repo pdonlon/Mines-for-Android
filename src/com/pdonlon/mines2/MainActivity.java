@@ -166,7 +166,6 @@ public class MainActivity extends Activity {
 			drawView.playBoard.readjust();
 			return true;
 		case 7:
-
 			Board.proToggle();
 			runOnUiThread(new Runnable(){ public void run() {
 				drawView.invalidate();}});

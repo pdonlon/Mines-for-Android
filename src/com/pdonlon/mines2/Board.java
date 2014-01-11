@@ -125,7 +125,6 @@ public class Board {
 	public static void proToggle(){
 
 		pro = !pro;
-
 	}
 
 	public int getTimeCounter(){
@@ -439,12 +438,17 @@ public class Board {
 
 	}
 
-	public boolean isBomb(int x, int y)
+	public boolean isThis(int x, int y, String type)
 	{
-		if(board[x][y].isBomb())
-			return true;
-		else
-			return false;
+		boolean yes = false;
+		if(type.contains("bomb"))
+			yes = board[x][y].isBomb();
+		else if(type.contains("flag"))
+			yes = board[x][y].isFlagged();
+		else if(type.contains("open"))
+			yes = board[x][y].isOpened();
+		
+			return yes;
 	}
 
 	public boolean bomb(int x, int y){ //Play can't access Mines so it is a double method
@@ -452,28 +456,16 @@ public class Board {
 		return board[x][y].isBomb();
 	}
 
-	public void createMine(int x, int y, int bombsSurrounding, int cellType)
+	public void createMine(int x, int y, int bombsSurrounding, boolean opened, boolean bomb, boolean flagged)
 	{
-		if(cellType == 1)
-			board[x][y] = new Mine (true, bombsSurrounding, false, false, false); //opened
-		else if(cellType == 2)
-			board[x][y] = new Mine (false, bombsSurrounding, false, false, false); //unopened
-		if(cellType == 3)
-			board[x][y] = new Mine (false, bombsSurrounding, false, false, false); //flagged
-
+		board[x][y] = new Mine (opened, bombsSurrounding, flagged, bomb, false); //opened
 	}
 
 	public void initializeBoard(){
 
-		//if loading game
-		//game.loadGame();
-		for(int y=0; y<height; y++){
-			for(int x=0; x<width; x++){
-
+		for(int y=0; y<height; y++)
+			for(int x=0; x<width; x++)
 				board[x][y] = new Mine (false, 0, false, false, false); 
-
-			}
-		}
 	}
 
 
@@ -586,16 +578,6 @@ public class Board {
 
 		}
 		return valid;
-	}
-
-	public boolean isOpen(int x,int y){
-
-		boolean open = false;
-
-		if(board[x][y].isOpened())
-			open = true;
-
-		return open;
 	}
 
 	public boolean unopenedAround(int x, int y){

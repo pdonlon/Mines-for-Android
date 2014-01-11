@@ -67,6 +67,10 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	SharedPreferences cellStatus;
 	SharedPreferences save;
 	SharedPreferences settings;
+	SharedPreferences cellFlag;
+	SharedPreferences cellBomb;
+	SharedPreferences cellOpen;
+
 	boolean pauseAlertDialogUp = false;
 
 	public boolean getFlagMode()
@@ -92,6 +96,12 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		this.mactivity = mactivity;
 
 		initializeSharedPreferences();
+		if(save.getBoolean("save", false))
+		{
+			difficulty = save.getString("difficulty", "Easy");
+			if(!save.getBoolean("gold", true))
+				playBoard.proToggle();
+		}
 		startTimer();
 
 		if(difficulty.contains("Easy"))
@@ -115,7 +125,11 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		selected = getSettings();
 		mSelectedItems = getInitialSelectedItems(); 
 
-		this.playBoard.initializeBoard();
+		if(!save.getBoolean("saveGame", false))
+			this.playBoard.initializeBoard();
+		else
+			loadGame();
+
 		updateFlagMode();
 		updateSettings();
 	}
@@ -183,8 +197,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				justFlagged = false;
 				timeCounter = 0;
 
-				Log.v("Pressed: ", ""+timeCounter); //takes label and text
-
 				dragging = false;
 				pressX = (e.getX()) - playBoard.getOffX();
 				pressY = (e.getY()) - playBoard.getOffY();
@@ -207,7 +219,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 			else if(e.getAction() == MotionEvent.ACTION_UP)
 			{//released
-				Log.v("Released: ", ""+timeCounter); //takes label and text
 
 				if(!dragging && !justFlagged && !justPressedBar){ 
 
@@ -219,13 +230,13 @@ public class DrawPanel extends View implements View.OnTouchListener {
 						if(gameOver)
 							resetGame();
 
-						else if(!playBoard.isOpen((int)x, (int)y)&&!flagMode)
+						else if(!playBoard.isThis((int)x, (int)y,"open")&&!flagMode)
 							playBoard.open((int)x, (int)y);
 
-						else if(playBoard.isOpen((int)x, (int)y))
+						else if(playBoard.isThis((int)x, (int)y,"open"))
 							playBoard.fastClick((int)x, (int)y);
 
-						else if(!playBoard.isOpen((int)x, (int)y)&&flagMode)
+						else if(!playBoard.isThis((int)x, (int)y,"open")&&flagMode)
 						{
 							playBoard.markFlagged((int)x, (int)y);
 							Log.v("Flagged here: ", ""+e.getX()+ " "+e.getY());
@@ -260,8 +271,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 				if(playBoard.getZoom()>-5)
 				{
-					Log.v("dragging: ", ""+timeCounter); //takes label and text
-
 					x = (e.getX());
 					y = (e.getY());
 
@@ -306,24 +315,45 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 	public void saveGame()
 	{
+		Editor saveEditor = save.edit();
+		saveEditor.putString("difficulty", difficulty);
+		saveEditor.putBoolean("gold", playBoard.pro);
+		saveEditor.putInt("time", playBoard.getTimeCounter());
 
+		if(gameOver || !(playBoard.getTimeCounter()>0))
+		{
+			saveEditor.putBoolean("saveGame", false);
+			saveEditor.commit();
+			return;
+		}
 		makeToast("Saving Game");
+		saveEditor.putBoolean("saveGame", true);
 
 		Editor bsEditor = bombsSurrounding.edit();
-		Editor csEditor = cellStatus.edit();
-		Editor saveEditor = save.edit();
+		Editor coEditor = cellOpen.edit();
+		Editor cbEditor = cellBomb.edit();
+		Editor cfEditor = cellFlag.edit();
+
 		int counter = 0;
+		saveEditor.putBoolean("save", true);
+		saveEditor.putInt("total bombs", playBoard.getTotalBombs());
 
 		for(int y=0; y<playBoard.getHeight(); y++)
 			for(int x=0; x<playBoard.getWidth(); x++)
 			{
 				bsEditor.putInt(counter+"",playBoard.getBombsSurrounding(x,y));
-				bsEditor.commit();
-				//csEditor.putInt(counter+"",); //lookup
-				saveEditor.putBoolean("save", true);
-				saveEditor.commit();
+				cbEditor.putBoolean(counter+"",playBoard.isThis(x, y,"bomb"));
+				coEditor.putBoolean(counter+"",playBoard.isThis(x, y,"open"));
+				cfEditor.putBoolean(counter+"",playBoard.isThis(x, y,"flag"));
+
 				counter++;
 			}
+		bsEditor.commit();
+		coEditor.commit();
+		cbEditor.commit();
+		cfEditor.commit();
+		saveEditor.commit();
+
 	}
 
 	public void loadGame()
@@ -334,8 +364,12 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			for(int x=0; x<playBoard.getWidth(); x++)
 			{
 				String key = counter+"";
-				int cell = bombsSurrounding.getInt(key, 0);
-				playBoard.createMine(x,y,cell,1);
+				int bs = bombsSurrounding.getInt(key, 0);
+				boolean open = cellOpen.getBoolean(key,false);
+				boolean bomb = cellBomb.getBoolean(key,false);
+				boolean flagged = cellFlag.getBoolean(key,false);
+
+				playBoard.createMine(x,y,bs,open,bomb,flagged);
 				//csEditor.putInt(counter+"",); //lookup
 				counter++;
 			}
@@ -345,6 +379,10 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	public void initializeSharedPreferences()
 	{
 		flags = mactivity.getSharedPreferences("flags", Context.MODE_PRIVATE);
+		cellFlag = mactivity.getSharedPreferences("flag", Context.MODE_PRIVATE);
+		cellOpen = mactivity.getSharedPreferences("open", Context.MODE_PRIVATE);
+		cellBomb = mactivity.getSharedPreferences("bomb", Context.MODE_PRIVATE);
+
 		bombsSurrounding = mactivity.getSharedPreferences("bombsSurrounding", Context.MODE_PRIVATE); //number of bombs surrounding
 		settings = mactivity.getSharedPreferences("settings", Context.MODE_PRIVATE);
 		scores = mactivity.getSharedPreferences("scores", Context.MODE_PRIVATE);
@@ -416,6 +454,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	public void pauseMenu()
 	{
 		pauseGame();
+		pauseAlertDialogUp = true;
 		builder = new AlertDialog.Builder(mactivity);
 		// Set the dialog title
 		builder.setTitle("Paused")
@@ -635,7 +674,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				{
 					x = (int) playBoard.getPressedCords()[0];
 					y = (int) playBoard.getPressedCords()[1];
-					if(!playBoard.isOpen(x,y))
+					if(!playBoard.isThis(x,y,"open"))
 					{
 						Vibrator v = (Vibrator) mactivity.getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -648,7 +687,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 						playBoard.setPressed(false);
 						justFlagged = true;
 
-						if(flagMode && playBoard.isBomb(x, y) && Board.doneAnimating)
+						if(flagMode && playBoard.isThis(x, y,"bomb") && Board.doneAnimating)
 						{
 							playBoard.bombs.remove(x, y); 
 							playBoard.endOfGameSetWrong();
@@ -656,8 +695,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 							gameOver = true;
 							playBoard.endTimer();
 							bombAnimation();
-
-
 						} //TODO FIX WINNING AND LOSING FROM THIS SCREEN
 						else if(flagMode && playBoard.win){
 
