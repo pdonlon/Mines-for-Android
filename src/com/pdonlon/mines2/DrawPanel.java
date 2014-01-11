@@ -61,6 +61,12 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	public static Context context;
 	boolean paused;
 	AlertDialog.Builder builder;
+	SharedPreferences scores;
+	SharedPreferences bombsSurrounding;
+	SharedPreferences flags;
+	SharedPreferences cellStatus;
+	SharedPreferences save;
+	SharedPreferences settings;
 	boolean pauseAlertDialogUp = false;
 
 	public boolean getFlagMode()
@@ -85,6 +91,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		ctx = context;
 		this.mactivity = mactivity;
 
+		initializeSharedPreferences();
 		startTimer();
 
 		if(difficulty.contains("Easy"))
@@ -148,9 +155,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				saveFlagMode();
 			}
 
-			//else if(x2 >= (MainActivity.screenWidth*1)/5)
-			//playBoard.fastClickWholeBoard();
-
 			else if(x2 < (MainActivity.screenWidth*1)/5)
 			{
 				pauseMenu();
@@ -171,7 +175,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 		if(Board.doneAnimating && playBoard.isValid((int)x, (int)y))
 		{
-
 			if (e.getAction() == MotionEvent.ACTION_DOWN)
 			{ //pressed
 				//Log.v("Pressed here: ", ""+e.getX()+ " "+e.getY()); //takes label and text
@@ -213,7 +216,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 					if(playBoard.isValid((int)x, (int)y) && playBoard.beingPressed)
 					{
-
 						if(gameOver)
 							resetGame();
 
@@ -236,20 +238,12 @@ public class DrawPanel extends View implements View.OnTouchListener {
 								showNewHighScore();
 							if(winMessage)
 								winMessage();
-
 						}
-
 						if(playBoard.lose){
 							playBoard.setPressed(false);
 							bombAnimation();
 
 						}
-
-						//						if(showNewHighScore)
-						//							showNewHighScore();
-						//						if(winMessage)
-						//							winMessage();
-
 					}
 					playBoard.setPressed(false);
 					invalidate();
@@ -301,8 +295,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	{
 		//setting preferences
 		//int keyNumber = generateKeyNumber(difficulty);
-
-		SharedPreferences scores = mactivity.getSharedPreferences("scores", Context.MODE_PRIVATE);
 		if(score < scores.getInt(difficulty, 0) || scores.getInt(difficulty, 0) == 0)
 		{
 			showNewHighScore = true;
@@ -316,9 +308,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	{
 
 		makeToast("Saving Game");
-		SharedPreferences bombsSurrounding = mactivity.getSharedPreferences("bombsSurrounding", Context.MODE_PRIVATE); //number of bombs surrounding
-		SharedPreferences cellStatus = mactivity.getSharedPreferences("cellStatus", Context.MODE_PRIVATE); //opened, not opened, flagged
-		SharedPreferences save = mactivity.getSharedPreferences("save", Context.MODE_PRIVATE); //opened, not opened, flagged
 
 		Editor bsEditor = bombsSurrounding.edit();
 		Editor csEditor = cellStatus.edit();
@@ -341,7 +330,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	{
 		makeToast("Loading Game");
 		int counter = 0;
-		SharedPreferences bombsSurrounding = mactivity.getSharedPreferences("bombsSurrounding", Context.MODE_PRIVATE); //number of bombs surrounding
 		for(int y=0; y<playBoard.getHeight(); y++)
 			for(int x=0; x<playBoard.getWidth(); x++)
 			{
@@ -354,10 +342,19 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		invalidate();
 	}
 
+	public void initializeSharedPreferences()
+	{
+		flags = mactivity.getSharedPreferences("flags", Context.MODE_PRIVATE);
+		bombsSurrounding = mactivity.getSharedPreferences("bombsSurrounding", Context.MODE_PRIVATE); //number of bombs surrounding
+		settings = mactivity.getSharedPreferences("settings", Context.MODE_PRIVATE);
+		scores = mactivity.getSharedPreferences("scores", Context.MODE_PRIVATE);
+		cellStatus = mactivity.getSharedPreferences("cellStatus", Context.MODE_PRIVATE); //opened, not opened, flagged
+		save = mactivity.getSharedPreferences("save", Context.MODE_PRIVATE); //opened, not opened, flagged
+
+	}
+
 	public void saveFlagMode()
 	{
-		SharedPreferences flags = mactivity.getSharedPreferences("flags", Context.MODE_PRIVATE);
-
 		Editor editor = flags.edit();
 		editor.putBoolean("flagMode", flagMode); // string is where it is stored
 		editor.commit();
@@ -366,16 +363,12 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 	public void updateFlagMode()
 	{
-		SharedPreferences flags = mactivity.getSharedPreferences("flags", Context.MODE_PRIVATE);
-
 		flagMode = flags.getBoolean("flagMode", false); //false is the default value
 
 	}
 
 	public boolean[] getSettings()
 	{
-		SharedPreferences settings = mactivity.getSharedPreferences("settings", Context.MODE_PRIVATE);
-
 		boolean[] chosen = new boolean[myStringArray.length];
 		for (int i=0; i<myStringArray.length; i++)
 			chosen[i] = settings.getBoolean(myStringArray[i], (i<2)? true : false); //ternary statement
@@ -401,41 +394,13 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		//getting preferences
 		//int keyNumber = generateKeyNumber(difficulty);
 
-		SharedPreferences scores = mactivity.getSharedPreferences("scores", Context.MODE_PRIVATE);
 		int highScore = scores.getInt(difficulty, 0); //0 is the default value
 
 		return highScore;
 	}
 
-	//	public boolean getConvertSelectedItems(int index)
-	//	{	
-	//		boolean [] copy = new boolean[2];
-	//
-	//		if(mSelectedItems == null){
-	//			copy[0] = true;
-	//			copy[1] = false;
-	//		}
-	//		else{
-	//			copy[0] = getSelectedBoolean(0);
-	//			copy[1] = getSelectedBoolean(1);
-	//		}
-	//		return copy[index];
-	//	}
-
-	//	public boolean getSelectedBoolean(int index)
-	//	{
-	//		Log.v("TEST", ""+mSelectedItems.get(index));
-	//		if((Boolean) mSelectedItems.get(index) == true)
-	//
-	//			return true;
-	//
-	//		else
-	//			return false;
-	//	}
-
 	public void saveChecks()
 	{
-		SharedPreferences settings = mactivity.getSharedPreferences("settings", Context.MODE_PRIVATE);
 		Editor editor = settings.edit();
 		for (int i=0; i<selected.length; i++)
 			editor.putBoolean(myStringArray[i], selected[i]);
@@ -450,52 +415,52 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 	public void pauseMenu()
 	{
-			pauseGame();
-			builder = new AlertDialog.Builder(mactivity);
-			// Set the dialog title
-			builder.setTitle("Paused")
+		pauseGame();
+		builder = new AlertDialog.Builder(mactivity);
+		// Set the dialog title
+		builder.setTitle("Paused")
 
-			.setPositiveButton("Resume", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int id) {
-					resumeGame();
-				}
-			})
-			.setNegativeButton("Reset", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int id) {
-					resetGame();
-				}
-			});
+		.setPositiveButton("Resume", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int id) {
+				resumeGame();
+			}
+		})
+		.setNegativeButton("Reset", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int id) {
+				resetGame();
+			}
+		});
 
-			builder.setCancelable(false);
-			builder.show();
+		builder.setCancelable(false);
+		builder.show();
 		//return builder.create();
 	}
 
 	public void quitMenu()
 	{
-			pauseGame();
-			pauseAlertDialogUp = true;
-			builder = new AlertDialog.Builder(mactivity);
-			// Set the dialog title
-			builder.setTitle("Are you sure you want to quit?")
-			.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int id) {
-					saveGame();
-					mactivity.finish();
-				}
-			})
-			.setNegativeButton("No", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int id) {
-					resumeGame();
-				}
-			});
+		pauseGame();
+		pauseAlertDialogUp = true;
+		builder = new AlertDialog.Builder(mactivity);
+		// Set the dialog title
+		builder.setTitle("Are you sure you want to quit?")
+		.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int id) {
+				saveGame();
+				mactivity.finish();
+			}
+		})
+		.setNegativeButton("No", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int id) {
+				resumeGame();
+			}
+		});
 
-			builder.setCancelable(false);
-			builder.show();
+		builder.setCancelable(false);
+		builder.show();
 
 		//return builder.create();
 	}
@@ -564,10 +529,13 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 	public void resumeGame()
 	{
-		pauseAlertDialogUp = false;
-		playBoard.startTimer();
-		paused = false;
-		invalidate();
+		if(!gameOver && playBoard.getTimeCounter() > 0)
+		{
+			pauseAlertDialogUp = false;
+			playBoard.startTimer();
+			paused = false;
+			invalidate();
+		}
 	}
 
 	public void showNewHighScore()
@@ -624,7 +592,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		pauseGame();		
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(mactivity);
-		SharedPreferences scores = mactivity.getSharedPreferences("scores", Context.MODE_PRIVATE);
 
 		builder.setMessage("Easy: "+ scores.getInt("Easy", 0)+" seconds\n\n"+"Medium: "+scores.getInt("Medium", 0)+" seconds\n\n"+"Hard: "+ scores.getInt("Hard", 0)+" seconds").setTitle("High Scores")
 
@@ -715,16 +682,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 						}
 					});
 				}
-				mactivity.runOnUiThread(new Runnable() {
-					public void run() {
-						//						
-						//						
-						//						if(showNewHighScore)
-						//							showNewHighScore();
-						//						if(winMessage)
-						//							winMessage();
-					}
-				});
 			}
 
 		}, 0, 10);

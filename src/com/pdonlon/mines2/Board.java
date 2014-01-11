@@ -105,9 +105,8 @@ public class Board {
 		return board;
 	}
 
-	public Board(int width, int height, DrawPanel g){
-
-
+	public Board(int width, int height, DrawPanel g)
+	{
 		game = g;
 		this.width = width;
 		this.height = height;
@@ -1195,8 +1194,8 @@ public class Board {
 
 	public void zoomOut(float x, float y){
 
-		if(tileSize/2 < 20)
-			return;
+//		if(tileSize/2 < 20)
+//			return;
 
 		tileSize = tileSize/2;
 
