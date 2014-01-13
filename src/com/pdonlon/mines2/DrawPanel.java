@@ -70,6 +70,12 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	SharedPreferences cellFlag;
 	SharedPreferences cellBomb;
 	SharedPreferences cellOpen;
+	SharedPreferences bombLocationX;
+	SharedPreferences bombLocationY;
+	Editor saveEditor;
+	Editor bombXEditor;
+	Editor bombYEditor;
+
 
 	boolean pauseAlertDialogUp = false;
 
@@ -315,7 +321,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 	public void saveGame()
 	{
-		Editor saveEditor = save.edit();
+
 		saveEditor.putString("difficulty", difficulty);
 		saveEditor.putBoolean("gold", playBoard.pro);
 		saveEditor.putInt("time", playBoard.getTimeCounter());
@@ -348,6 +354,8 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 				counter++;
 			}
+		playBoard.saveBombLocations();
+
 		bsEditor.commit();
 		coEditor.commit();
 		cbEditor.commit();
@@ -356,13 +364,19 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 	}
 
+	public void save(Editor editor, String key, int value)
+	{
+		editor.putInt(key, value);
+		editor.commit();
+	}
+
 	public void loadGame()
 	{
 		makeToast("Loading Game");
 		int counter = 0;
-		
+
 		playBoard.setTimeCounter(save.getInt("time", 0));
-		
+
 		for(int y=0; y<playBoard.getHeight(); y++)
 			for(int x=0; x<playBoard.getWidth(); x++)
 			{
@@ -373,11 +387,17 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				boolean flagged = cellFlag.getBoolean(key,false);
 
 				playBoard.createMine(x,y,bs,open,bomb,flagged);
-				//csEditor.putInt(counter+"",); //lookup
 				counter++;
 			}
+
+		for(int x=0; x<save.getInt("total bombs", 0); x++)
+		{//place loaded bombs in the bomb linked list 
+			playBoard.placeBombLocation(bombLocationX.getInt(x+"", 0),bombLocationY.getInt(x+"", 0));
+			Log.v("load:",""+bombLocationX.getInt(x+"", 0)+bombLocationY.getInt(x+"", 0));
+
+		}
 		invalidate();
-		
+
 	}
 
 	public void initializeSharedPreferences()
@@ -392,7 +412,12 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		scores = mactivity.getSharedPreferences("scores", Context.MODE_PRIVATE);
 		cellStatus = mactivity.getSharedPreferences("cellStatus", Context.MODE_PRIVATE); //opened, not opened, flagged
 		save = mactivity.getSharedPreferences("save", Context.MODE_PRIVATE); //opened, not opened, flagged
+		bombLocationX = mactivity.getSharedPreferences("bombLocationX", Context.MODE_PRIVATE); 
+		bombLocationY = mactivity.getSharedPreferences("bombLocationY", Context.MODE_PRIVATE); 
 
+		saveEditor = save.edit();
+		bombXEditor = bombLocationX.edit();
+		bombYEditor = bombLocationY.edit();
 	}
 
 	public void saveFlagMode()
@@ -562,7 +587,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 	public void pauseGame()
 	{
-		if(!paused && playBoard.getTimeCounter() > 0)
+		if(!paused && playBoard.getTimeCounter() > 0 && !gameOver)
 		{
 			playBoard.endTimer();
 			paused = true;
@@ -578,7 +603,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			playBoard.startTimer();
 			paused = false;
 			invalidate();
-
 		}
 	}
 
@@ -695,6 +719,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 						if(flagMode && playBoard.isThis(x, y,"bomb") && Board.doneAnimating)
 						{
 							playBoard.bombs.remove(x, y); 
+							playBoard.bombs.enque(x, y);
 							playBoard.endOfGameSetWrong();
 							playBoard.setLose(true);
 							gameOver = true;
@@ -764,6 +789,8 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			playBoard.endTimer();
 			paused = false;
 			//playBoard.readjust();
+			saveEditor.putBoolean("saveGame", false);
+			saveEditor.commit();
 			invalidate();
 		}
 	}
@@ -794,6 +821,8 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				Board.doneAnimating = false;
 
 				int bombsLeft = playBoard.getUnsafeBombCount()-1;
+				if(playBoard.getUnsafeBombCount()==1)
+					bombsLeft = 1;
 
 				while(bombsLeft>0)
 				{

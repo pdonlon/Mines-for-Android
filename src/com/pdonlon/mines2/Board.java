@@ -130,7 +130,7 @@ public class Board {
 
 		return timeCounter;
 	}
-	
+
 	public void setTimeCounter(int time){
 
 		timeCounter = time;
@@ -451,8 +451,8 @@ public class Board {
 			yes = board[x][y].isFlagged();
 		else if(type.contains("open"))
 			yes = board[x][y].isOpened();
-		
-			return yes;
+
+		return yes;
 	}
 
 	public boolean bomb(int x, int y){ //Play can't access Mines so it is a double method
@@ -474,19 +474,22 @@ public class Board {
 
 
 
-	public void setStartXandY(int x, int y){
+	public void setStartXandY(int x, int y)
+	{
+		if(!game.save.getBoolean("saveGame", false))
+		{
+			startX = x;
+			startY = y;
 
-		startX = x;
-		startY = y;
+			placeBombs();
+			placeBombsSurrounding();
 
-		placeBombs();
-		placeBombsSurrounding();
-
-		if(timer == null)
-			timer = new Timer();
-		else
-			endTimer();
-		startTimer();
+			if(timer == null)
+				timer = new Timer();
+			else
+				endTimer();
+			startTimer();
+		}
 	}
 
 
@@ -982,6 +985,28 @@ public class Board {
 
 	}
 
+	public void saveBombLocations()
+	{
+		int count = 0;
+		int totalBs = totalBombs;
+		while(totalBs>0)
+		{
+			game.save(game.bombXEditor,count+"",bombs.getValues()[0]);
+			game.save(game.bombYEditor,count+"",bombs.getValues()[1]);
+			count++;
+			totalBs--;
+			Log.v("save x:",""+bombs.getValues()[0]+","+bombs.getValues()[1]);
+
+			bombs.deque();
+		}
+	}
+	
+	public void placeBombLocation(int x, int y)
+	{
+		bombs.enque(x,y);
+	}
+	
+
 	public void openBox(int x, int y){
 
 		if(t!=null){
@@ -1011,8 +1036,8 @@ public class Board {
 
 					board[x][y].setOpened(true);
 
-					if(board[x][y].isBomb()){
-
+					if(board[x][y].isBomb())
+					{
 						touchedBomb = true;
 						lose = true;
 
@@ -1022,7 +1047,6 @@ public class Board {
 						endOfGame();
 						game.setGameOver(true);
 						endTimer();
-
 
 					}
 
@@ -1048,8 +1072,6 @@ public class Board {
 			win = true;
 
 			game.updateScores(timeCounter);
-
-			Log.v("highScores", ""+game.getScore());
 			game.setWinMessage(true);
 
 			finishFlagging();
@@ -1098,6 +1120,7 @@ public class Board {
 
 				else if(board[k][i].isFlagged()&&!board[k][i].isBomb()){
 					board[k][i].setWrong(true);
+					bombs.remove(k,i);
 				}
 
 			}
@@ -1181,8 +1204,8 @@ public class Board {
 
 	public void zoomOut(float x, float y){
 
-//		if(tileSize/2 < 20)
-//			return;
+		//		if(tileSize/2 < 20)
+		//			return;
 
 		tileSize = tileSize/2;
 
@@ -1468,8 +1491,6 @@ public class Board {
 
 		paint.setStyle(Style.STROKE);
 		paint.setStrokeWidth((MainActivity.screenWidth)/120); //TODO ADJUST
-
-		Log.v("",""+tileSize);
 
 		//			Log.v("SCREEN WIDTH",""+MainActivity.screenWidth);
 		//			Log.v("SCREEN HEIGHT",""+realBarHeight);
