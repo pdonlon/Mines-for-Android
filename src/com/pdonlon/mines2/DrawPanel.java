@@ -76,6 +76,9 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	Editor bombXEditor;
 	Editor bombYEditor;
 
+	Thread s;
+	Thread l;
+
 
 	boolean pauseAlertDialogUp = false;
 
@@ -100,13 +103,20 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		setOnTouchListener(this);
 		ctx = context;
 		this.mactivity = mactivity;
-
 		initializeSharedPreferences();
+
+		while(!save.getBoolean("done saving", true)){
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		if(save.getBoolean("save", false))
 		{
 			difficulty = save.getString("difficulty", "Easy");
-			if(!save.getBoolean("gold", true))
-				playBoard.proToggle();
+			playBoard.setPro(save.getBoolean("gold", playBoard.pro));
 		}
 		startTimer();
 
@@ -130,14 +140,14 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 		selected = getSettings();
 		mSelectedItems = getInitialSelectedItems(); 
+		updateFlagMode();
+		updateSettings();
 
 		if(!save.getBoolean("saveGame", false))
 			this.playBoard.initializeBoard();
 		else
 			loadGame();
 
-		updateFlagMode();
-		updateSettings();
 	}
 
 	public void setDifficulty(String a){
@@ -321,47 +331,63 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 	public void saveGame()
 	{
-
-		saveEditor.putString("difficulty", difficulty);
-		saveEditor.putBoolean("gold", playBoard.pro);
-		saveEditor.putInt("time", playBoard.getTimeCounter());
-
-		if(gameOver || !(playBoard.getTimeCounter()>0))
-		{
-			saveEditor.putBoolean("saveGame", false);
-			saveEditor.commit();
-			return;
-		}
-		makeToast("Saving Game");
-		saveEditor.putBoolean("saveGame", true);
-
-		Editor bsEditor = bombsSurrounding.edit();
-		Editor coEditor = cellOpen.edit();
-		Editor cbEditor = cellBomb.edit();
-		Editor cfEditor = cellFlag.edit();
-
-		int counter = 0;
-		saveEditor.putBoolean("save", true);
-		saveEditor.putInt("total bombs", playBoard.getTotalBombs());
-
-		for(int y=0; y<playBoard.getHeight(); y++)
-			for(int x=0; x<playBoard.getWidth(); x++)
-			{
-				bsEditor.putInt(counter+"",playBoard.getBombsSurrounding(x,y));
-				cbEditor.putBoolean(counter+"",playBoard.isThis(x, y,"bomb"));
-				coEditor.putBoolean(counter+"",playBoard.isThis(x, y,"open"));
-				cfEditor.putBoolean(counter+"",playBoard.isThis(x, y,"flag"));
-
-				counter++;
-			}
-		playBoard.saveBombLocations();
-
-		bsEditor.commit();
-		coEditor.commit();
-		cbEditor.commit();
-		cfEditor.commit();
+		saveEditor.putBoolean("done saving", false);
 		saveEditor.commit();
+		makeToast("Saving Game");
 
+		Thread s;
+		s = new Thread( new Runnable(){
+			public void run()
+			{
+				synchronized(this){
+					saveEditor.putString("difficulty", difficulty);
+					saveEditor.putBoolean("gold", playBoard.pro);
+					saveEditor.putInt("time", playBoard.getTimeCounter());
+
+					if(gameOver || !(playBoard.getTimeCounter()>0))
+					{
+						saveEditor.putBoolean("saveGame", false);
+						saveEditor.putBoolean("done saving", true);
+						saveEditor.commit();
+						return;
+					}	
+
+					saveEditor.putBoolean("saveGame", true);
+
+					Editor bsEditor = bombsSurrounding.edit();
+					Editor coEditor = cellOpen.edit();
+					Editor cbEditor = cellBomb.edit();
+					Editor cfEditor = cellFlag.edit();
+
+					int counter = 0;
+					saveEditor.putBoolean("save", true);
+					saveEditor.putInt("total bombs", playBoard.getTotalBombs());
+
+					for(int y=0; y<playBoard.getHeight(); y++)
+						for(int x=0; x<playBoard.getWidth(); x++)
+						{
+							bsEditor.putInt(counter+"",playBoard.getBombsSurrounding(x,y));
+							cbEditor.putBoolean(counter+"",playBoard.isThis(x, y,"bomb"));
+							coEditor.putBoolean(counter+"",playBoard.isThis(x, y,"open"));
+							cfEditor.putBoolean(counter+"",playBoard.isThis(x, y,"flag"));
+
+							counter++;
+						}
+					playBoard.saveBombLocations();
+
+					bsEditor.commit();
+					coEditor.commit();
+					cbEditor.commit();
+					cfEditor.commit();
+					saveEditor.putBoolean("done saving", true);
+					saveEditor.commit();
+					mactivity.finish();
+					
+				}
+			}
+		});
+
+		s.start();
 	}
 
 	public void save(Editor editor, String key, int value)
@@ -373,29 +399,40 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	public void loadGame()
 	{
 		makeToast("Loading Game");
-		int counter = 0;
 
-		playBoard.setTimeCounter(save.getInt("time", 0));
-
-		for(int y=0; y<playBoard.getHeight(); y++)
-			for(int x=0; x<playBoard.getWidth(); x++)
+		l = new Thread( new Runnable(){
+			public void run()
 			{
-				String key = counter+"";
-				int bs = bombsSurrounding.getInt(key, 0);
-				boolean open = cellOpen.getBoolean(key,false);
-				boolean bomb = cellBomb.getBoolean(key,false);
-				boolean flagged = cellFlag.getBoolean(key,false);
 
-				playBoard.createMine(x,y,bs,open,bomb,flagged);
-				counter++;
+				int counter = 0;
+
+				playBoard.setTimeCounter(save.getInt("time", 0));
+
+				for(int y=0; y<playBoard.getHeight(); y++)
+					for(int x=0; x<playBoard.getWidth(); x++)
+					{
+						String key = counter+"";
+						int bs = bombsSurrounding.getInt(key, 0);
+						boolean open = cellOpen.getBoolean(key,false);
+						boolean bomb = cellBomb.getBoolean(key,false);
+						boolean flagged = cellFlag.getBoolean(key,false);
+
+						playBoard.createMine(x,y,bs,open,bomb,flagged);
+						counter++;
+					}
+
+				for(int x=0; x<save.getInt("total bombs", 0); x++)//place loaded bombs in the bomb linked list
+				{ 
+					playBoard.placeBombLocation(bombLocationX.getInt(x+"", 0),bombLocationY.getInt(x+"", 0));
+					Log.v("load:",""+bombLocationX.getInt(x+"", 0)+bombLocationY.getInt(x+"", 0));
+
+				}
+//				notify();
 			}
+			
+		});
 
-		for(int x=0; x<save.getInt("total bombs", 0); x++)
-		{//place loaded bombs in the bomb linked list 
-			playBoard.placeBombLocation(bombLocationX.getInt(x+"", 0),bombLocationY.getInt(x+"", 0));
-			Log.v("load:",""+bombLocationX.getInt(x+"", 0)+bombLocationY.getInt(x+"", 0));
-
-		}
+		l.start();
 		invalidate();
 
 	}
@@ -425,13 +462,11 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		Editor editor = flags.edit();
 		editor.putBoolean("flagMode", flagMode); // string is where it is stored
 		editor.commit();
-
 	}
 
 	public void updateFlagMode()
 	{
 		flagMode = flags.getBoolean("flagMode", false); //false is the default value
-
 	}
 
 	public boolean[] getSettings()
@@ -508,29 +543,30 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 	public void quitMenu()
 	{
-		pauseGame();
-		pauseAlertDialogUp = true;
-		builder = new AlertDialog.Builder(mactivity);
-		// Set the dialog title
-		builder.setTitle("Are you sure you want to quit?")
-		.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int id) {
-				saveGame();
-				mactivity.finish();
-			}
-		})
-		.setNegativeButton("No", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int id) {
-				resumeGame();
-			}
-		});
-
-		builder.setCancelable(false);
-		builder.show();
-
-		//return builder.create();
+		//		pauseGame();
+		//		pauseAlertDialogUp = true;
+		//		builder = new AlertDialog.Builder(mactivity);
+		//		// Set the dialog title
+		//		builder.setTitle("Are you sure you want to quit?")
+		//		.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+		//			@Override
+		//			public void onClick(DialogInterface dialog, int id) {
+		//				saveGame();
+		//				mactivity.finish();
+		//			}
+		//		})
+		//		.setNegativeButton("No", new DialogInterface.OnClickListener() {
+		//			@Override
+		//			public void onClick(DialogInterface dialog, int id) {
+		//				resumeGame();
+		//			}
+		//		});
+		//
+		//		builder.setCancelable(false);
+		//		builder.show();
+		//
+		//		//return builder.create();
+		saveGame();
 	}
 
 	public void showSettings()
@@ -592,6 +628,8 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			playBoard.endTimer();
 			paused = true;
 			invalidate();
+			//			if(playBoard.bombs.getHead() != null)
+			//			saveGame();
 		}
 	}
 
@@ -777,8 +815,8 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		gameOver = a;
 	}
 
-	public void resetGame(){
-
+	public void resetGame()
+	{
 		if(playBoard.doneAnimating())
 		{        
 			playBoard.setTimeCounter(0);
@@ -821,8 +859,8 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				Board.doneAnimating = false;
 
 				int bombsLeft = playBoard.getUnsafeBombCount()-1;
-				if(playBoard.getUnsafeBombCount()==1)
-					bombsLeft = 1;
+				//				if(playBoard.getUnsafeBombCount()==0)
+				//					bombsLeft = 1;
 
 				while(bombsLeft>0)
 				{
@@ -849,8 +887,8 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		b.start();
 	}
 
-	public void explosion(){
-
+	public void explosion()
+	{
 		playBoard.openBomb();
 		this.mactivity.runOnUiThread(new Runnable(){ public void run() {
 			invalidate();}});        }

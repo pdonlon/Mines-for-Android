@@ -58,6 +58,7 @@ public class MainActivity extends Activity {
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
+		
 		mens1 = menu.add(0, 1, 2, "Settings");
 		mens2 = menu.add(0, 2, 2,"Reset");
 		mens3 = menu.add(0, 3, 2,"Easy");
@@ -185,7 +186,7 @@ public class MainActivity extends Activity {
 		drawView.playBoard.initializeBoard();
 		drawView.playBoard.adjustTiles();
 		runOnUiThread(new Runnable(){ public void run() {
-			drawView.invalidate();}});
+		drawView.invalidate();}});
 	}
 
 	public int getActionBarHeight() {

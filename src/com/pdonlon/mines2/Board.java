@@ -125,6 +125,13 @@ public class Board {
 
 		pro = !pro;
 	}
+	
+	public static void setPro(boolean a)
+	{
+		pro = a;
+	}
+
+
 
 	public int getTimeCounter(){
 
@@ -137,29 +144,30 @@ public class Board {
 	}
 
 
-	public void readjust(){
+	public void readjust()
+	{
 		offX = 0;
 		offY = 0;
 		adjustTiles();
 	}
 
-	public int getWidth(){
-
+	public int getWidth()
+	{
 		return width;
 	}
 
-	public void setWidth(int a){
-
+	public void setWidth(int a)
+	{
 		width = a;
 	}
 
-	public int getHeight(){
-
+	public int getHeight()
+	{
 		return height;
 	}
 
-	public void setHeight(int a){
-
+	public void setHeight(int a)
+	{
 		height = a;
 	}
 
@@ -306,13 +314,12 @@ public class Board {
 
 		boolean correct = true;		
 
-		for(int y =0; y<height; y++){
-			for(int x=0; x<width; x++){
-
+		for(int y =0; y<height; y++)
+			for(int x=0; x<width; x++)
+			{
 				if(board[x][y].isFlagged()&&!board[x][y].isBomb())
 					correct = false;
 			}
-		}
 
 		return correct;
 
@@ -340,10 +347,9 @@ public class Board {
 
 	}
 
-	public void replace(int x, int y){
-
+	public void replace(int x, int y)
+	{
 		pressed.replaceHead(x, y);
-
 	}
 
 	public void add(int x, int y){
@@ -384,13 +390,10 @@ public class Board {
 
 	public void wipeBoard()
 	{
-		for(int y=0; y<height; y++ ){
-			for(int x=0; x<width; x++){
-
+		for(int y=0; y<height; y++ )
+			for(int x=0; x<width; x++)
 				board[x][y] = new Mine (false, 0, false, false, false);
 
-			}
-		}
 
 	}
 
@@ -403,8 +406,8 @@ public class Board {
 
 	}
 
-	public void startup(){
-
+	public void startup()
+	{
 		bombs.empty();
 
 		board = new Mine[width][height];
@@ -465,8 +468,8 @@ public class Board {
 		board[x][y] = new Mine (opened, bombsSurrounding, flagged, bomb, false); //opened
 	}
 
-	public void initializeBoard(){
-
+	public void initializeBoard()
+	{
 		for(int y=0; y<height; y++)
 			for(int x=0; x<width; x++)
 				board[x][y] = new Mine (false, 0, false, false, false); 
@@ -709,8 +712,8 @@ public class Board {
 		//
 	}
 
-	public void tileOpen(){
-
+	public void tileOpen()
+	{
 		openBox(fast.getValues()[0],fast.getValues()[1]);
 
 		fast.deque();
@@ -1000,12 +1003,12 @@ public class Board {
 			bombs.deque();
 		}
 	}
-	
+
 	public void placeBombLocation(int x, int y)
 	{
 		bombs.enque(x,y);
 	}
-	
+
 
 	public void openBox(int x, int y){
 
@@ -1235,6 +1238,8 @@ public class Board {
 		//		//g.drawRect(0, 0, (tileSize)*getWidth(), (tileSize*getHeight()), pgray);
 
 
+		while(!game.save.getBoolean("done saving", true))
+			return;
 
 		Paint black = new Paint();
 		black.setColor(Color.BLACK);
