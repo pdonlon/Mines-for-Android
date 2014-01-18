@@ -998,7 +998,7 @@ public class Board {
 			game.save(game.bombYEditor,count+"",bombs.getValues()[1]);
 			count++;
 			totalBs--;
-			Log.v("save x:",""+bombs.getValues()[0]+","+bombs.getValues()[1]);
+			//Log.v("save x:",""+bombs.getValues()[0]+","+bombs.getValues()[1]);
 
 			bombs.deque();
 		}
@@ -1238,9 +1238,6 @@ public class Board {
 		//		//g.drawRect(0, 0, (tileSize)*getWidth(), (tileSize*getHeight()), pgray);
 
 
-		while(!game.save.getBoolean("done saving", true))
-			return;
-
 		Paint black = new Paint();
 		black.setColor(Color.BLACK);
 
@@ -1355,7 +1352,7 @@ public class Board {
 			float xSpacing = offX;
 
 			for(int x=0; x<width; x++){
-
+				
 				paint.setColor(board[x][y].determineColor());
 
 				if(!board[x][y].isOpened()){

@@ -105,6 +105,9 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		this.mactivity = mactivity;
 		initializeSharedPreferences();
 
+		if(save.getBoolean("saveGame", false))
+			makeToast("Loading game");
+		
 		while(!save.getBoolean("done saving", true)){
 			try {
 				Thread.sleep(1);
@@ -133,7 +136,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 		else if(difficulty.contains("Hard"))
 		{
-			playBoard = new Board(30,16,this);
+			playBoard = new Board(16,30,this);
 			playBoard.setTotalBombs(99);
 		}
 		playBoard.setUp();
@@ -255,7 +258,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 						else if(!playBoard.isThis((int)x, (int)y,"open")&&flagMode)
 						{
 							playBoard.markFlagged((int)x, (int)y);
-							Log.v("Flagged here: ", ""+e.getX()+ " "+e.getY());
+							//Log.v("Flagged here: ", ""+e.getX()+ " "+e.getY());
 						}
 
 						playBoard.checkWin();
@@ -294,8 +297,8 @@ public class DrawPanel extends View implements View.OnTouchListener {
 					playBoard.setDiffY(playBoard.getOffY() - y);
 
 					if(!dragging && (Math.abs(playBoard.getDiffX() + pressX) > playBoard.getTileSize() || Math.abs(playBoard.getDiffY() + pressY) > playBoard.getTileSize() )){
-						Log.v(" X: ", ""+Math.abs(playBoard.getDiffX() + pressX));
-						Log.v(" Y: ", ""+Math.abs(playBoard.getDiffY() + pressY));
+						//Log.v(" X: ", ""+Math.abs(playBoard.getDiffX() + pressX));
+						//Log.v(" Y: ", ""+Math.abs(playBoard.getDiffY() + pressY));
 						dragging = true;
 						playBoard.setPressed(false);
 					}
@@ -366,11 +369,15 @@ public class DrawPanel extends View implements View.OnTouchListener {
 					for(int y=0; y<playBoard.getHeight(); y++)
 						for(int x=0; x<playBoard.getWidth(); x++)
 						{
-							bsEditor.putInt(counter+"",playBoard.getBombsSurrounding(x,y));
-							cbEditor.putBoolean(counter+"",playBoard.isThis(x, y,"bomb"));
-							coEditor.putBoolean(counter+"",playBoard.isThis(x, y,"open"));
-							cfEditor.putBoolean(counter+"",playBoard.isThis(x, y,"flag"));
+							String key = counter+"";
 
+							bsEditor.putInt(key,playBoard.getBombsSurrounding(x,y));
+							cbEditor.putBoolean(key,playBoard.isThis(x, y,"bomb"));
+							coEditor.putBoolean(key,playBoard.isThis(x, y,"open"));
+							cfEditor.putBoolean(key,playBoard.isThis(x, y,"flag"));
+
+							//Log.v("saving "+x+" "+y,key);
+							
 							counter++;
 						}
 					playBoard.saveBombLocations();
@@ -398,7 +405,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 	public void loadGame()
 	{
-		makeToast("Loading Game");
+		//makeToast("Loading Game");
 
 		l = new Thread( new Runnable(){
 			public void run()
@@ -418,14 +425,15 @@ public class DrawPanel extends View implements View.OnTouchListener {
 						boolean flagged = cellFlag.getBoolean(key,false);
 
 						playBoard.createMine(x,y,bs,open,bomb,flagged);
+						Log.v("loading "+x+" "+y,key);
+
 						counter++;
 					}
 
 				for(int x=0; x<save.getInt("total bombs", 0); x++)//place loaded bombs in the bomb linked list
 				{ 
 					playBoard.placeBombLocation(bombLocationX.getInt(x+"", 0),bombLocationY.getInt(x+"", 0));
-					Log.v("load:",""+bombLocationX.getInt(x+"", 0)+bombLocationY.getInt(x+"", 0));
-
+					//Log.v("load:",""+bombLocationX.getInt(x+"", 0)+bombLocationY.getInt(x+"", 0));
 				}
 //				notify();
 			}
