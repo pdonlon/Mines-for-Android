@@ -119,7 +119,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		if(save.getBoolean("save", false))
 		{
 			difficulty = save.getString("difficulty", "Easy");
-			playBoard.setPro(save.getBoolean("gold", playBoard.pro));
+			//playBoard.setPro(save.getBoolean("gold", playBoard.pro));
 		}
 		startTimer();
 

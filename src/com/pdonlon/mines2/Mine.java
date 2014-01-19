@@ -4,7 +4,8 @@ import android.graphics.Color;
 
 
 
-public class Mine {
+public class Mine 
+{
 	//	  	size	mines	opened
 	//beg 	8x8 	10		54
 	//med 	16x16 	40		216

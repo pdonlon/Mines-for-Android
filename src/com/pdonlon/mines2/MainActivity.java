@@ -36,7 +36,7 @@ public class MainActivity extends Activity {
 	static MenuItem mens7;
 	static MenuItem mens8;
 	static MenuItem mens9;
-	static boolean pro = true;
+	static boolean pro = false;
 
 	static int screenWidth, screenHeight;
 
