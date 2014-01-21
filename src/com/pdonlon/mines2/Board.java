@@ -49,11 +49,9 @@ public class Board {
 	int fastCount;
 	float diffX;
 	float diffY;
-
 	int flagLimit;
 	int totalBombs;
 	int totalBoxes;
-
 	int startX;
 	int startY;
 	int zoom;
@@ -61,12 +59,10 @@ public class Board {
 	float tileSize = 70;
 	boolean win = false;
 	boolean lose = false;
-
 	boolean firstTurn = true;
 	boolean touchedBomb = false;
 	boolean speedTrick = false;
 	boolean beingPressed = false;
-
 	boolean checkBoard = false; 
 	boolean showHint = false; 
 	boolean hintColorYellow = false;
@@ -86,8 +82,6 @@ public class Board {
 	int windowSizeY = 1100;
 	float offX;
 	float offY;
-	boolean justFinishedFastClick = false;
-
 
 	public static Timer timer;
 	TimerTask tt;
@@ -125,7 +119,7 @@ public class Board {
 
 		pro = !pro;
 	}
-	
+
 	public static void setPro(boolean a)
 	{
 		pro = a;
@@ -133,13 +127,13 @@ public class Board {
 
 
 
-	public int getTimeCounter(){
-
+	public int getTimeCounter()
+	{
 		return timeCounter;
 	}
 
-	public void setTimeCounter(int time){
-
+	public void setTimeCounter(int time)
+	{
 		timeCounter = time;
 	}
 
@@ -181,23 +175,23 @@ public class Board {
 		return zoom;
 	}
 
-	public int getTotalBombs(){
-
+	public int getTotalBombs()
+	{
 		return totalBombs;
 	}
 
-	public void setTotalBombs(int a){
-
+	public void setTotalBombs(int a)
+	{
 		totalBombs = a;
 	}
 
-	public int getTotalBoxes(){
-
+	public int getTotalBoxes()
+	{
 		return totalBoxes;
 	}
 
-	public boolean getTouchedBomb(){
-
+	public boolean getTouchedBomb()
+	{
 		return touchedBomb;
 	}
 
@@ -226,8 +220,8 @@ public class Board {
 		lose = a;
 	}
 
-	public boolean getFirstTurn(){
-
+	public boolean getFirstTurn()
+	{
 		return firstTurn;
 	}
 
@@ -246,7 +240,6 @@ public class Board {
 		flagCount = totalBombs;
 		unsafeBombCount = totalBombs;
 		flagLimit=flagCount;
-
 	}
 
 	public float getOffX()
@@ -408,10 +401,10 @@ public class Board {
 
 	public void startup()
 	{
+		//game.saveGameInProgress(false);
 		bombs.empty();
 
 		board = new Mine[width][height];
-
 		totalBoxes = width*height;
 
 		flagCount = totalBombs;
@@ -419,14 +412,11 @@ public class Board {
 		flagLimit=flagCount;
 
 		timeCounter = 0;
-
-
 		win = false;
 		lose = false;
 
 		firstTurn = true;
 		touchedBomb = false;
-
 	}
 
 	public boolean flagged(int x, int y)
@@ -481,6 +471,8 @@ public class Board {
 	{
 		if(!game.save.getBoolean("saveGame", false))
 		{
+			game.saveGameInProgress(true);
+
 			startX = x;
 			startY = y;
 
@@ -558,23 +550,21 @@ public class Board {
 		}
 	}
 
-	public void placeBombsSurrounding(){
-
-		for(int y=0; y<height; y++){
-			for(int x=0; x<width; x++){
-
-				if(board[x][y].isBomb()){
-
-					for(int j=-1; j<2; j++){			
-						for(int i=-1; i<2; i++){
-
+	public void placeBombsSurrounding()
+	{
+		for(int y=0; y<height; y++)
+			for(int x=0; x<width; x++)
+			{
+				if(board[x][y].isBomb())
+				{
+					for(int j=-1; j<2; j++)		
+						for(int i=-1; i<2; i++)
+						{
 							if(isValid(x+j,y+i)&& !board[x+j][y+i].isBomb())
 								board[x+j][y+i].addOneBombSurrounding();
 						}
-					}
 				}
 			}
-		}
 	}
 
 	public boolean isValid(int x, int y){
@@ -625,13 +615,12 @@ public class Board {
 
 	public void fastClickWholeBoard()
 	{
-		for(int y=0; y<height; y++){
-			for(int x=0; x<width; x++){
-
+		for(int y=0; y<height; y++)
+			for(int x=0; x<width; x++)
+			{
 				if(flagsSurrounding(x,y) == board[x][y].getBombsSurrounding())
 					fastClick(x,y); //causes error -- needs to be called with seprate threads
 			}
-		}
 	}
 
 	public void fastClick(int x, int y){
@@ -650,6 +639,7 @@ public class Board {
 
 						if(board[x+j][y+i].isBomb()){
 							//bombs.remove(x+j,y+i);
+							game.saveGameInProgress(false);
 							lose = true;
 							endOfGame();
 							game.setGameOver(true);
@@ -1042,6 +1032,7 @@ public class Board {
 					if(board[x][y].isBomb())
 					{
 						touchedBomb = true;
+						game.saveGameInProgress(false);
 						lose = true;
 
 						bombs.remove(x,y); //so it won't print twice TODO
@@ -1073,6 +1064,7 @@ public class Board {
 		if(getOpenedBoxCount() == totalBoxes - totalBombs)
 		{
 			win = true;
+			game.saveGameInProgress(false);
 
 			game.updateScores(timeCounter);
 			game.setWinMessage(true);
@@ -1352,7 +1344,7 @@ public class Board {
 			float xSpacing = offX;
 
 			for(int x=0; x<width; x++){
-				
+
 				paint.setColor(board[x][y].determineColor());
 
 				if(!board[x][y].isOpened()){

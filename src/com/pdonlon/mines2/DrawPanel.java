@@ -104,7 +104,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		ctx = context;
 		this.mactivity = mactivity;
 		initializeSharedPreferences();
-
+		
 		if(save.getBoolean("saveGame", false))
 			makeToast("Loading game");
 		
@@ -425,7 +425,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 						boolean flagged = cellFlag.getBoolean(key,false);
 
 						playBoard.createMine(x,y,bs,open,bomb,flagged);
-						Log.v("loading "+x+" "+y,key);
+						//Log.v("loading "+x+" "+y,key);
 
 						counter++;
 					}
@@ -631,7 +631,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 	public void pauseGame()
 	{
-		if(!paused && playBoard.getTimeCounter() > 0 && !gameOver)
+		if(!paused && save.getBoolean("gameInProgress", false) && !gameOver)
 		{
 			playBoard.endTimer();
 			paused = true;
@@ -643,7 +643,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 	public void resumeGame()
 	{
-		if(!gameOver && playBoard.getTimeCounter() > 0)
+		if(!gameOver && save.getBoolean("gameInProgress", false))
 		{
 			pauseAlertDialogUp = false;
 			playBoard.startTimer();
@@ -652,6 +652,13 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		}
 	}
 
+	public void saveGameInProgress(boolean inProgress)
+	{
+		saveEditor.putBoolean("gameInProgress", inProgress);
+		saveEditor.commit();
+		Log.v("Game in Progress =",""+inProgress);
+	}
+	
 	public void showNewHighScore()
 	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(mactivity);
@@ -834,7 +841,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 			playBoard.endTimer();
 			paused = false;
-			//playBoard.readjust();
+			saveEditor.putBoolean("gameInProgress", false);
 			saveEditor.putBoolean("saveGame", false);
 			saveEditor.commit();
 			invalidate();
