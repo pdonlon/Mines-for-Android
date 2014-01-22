@@ -406,6 +406,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	public void loadGame()
 	{
 		//makeToast("Loading Game");
+		//startTimer();
 
 		l = new Thread( new Runnable(){
 			public void run()
@@ -414,7 +415,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				int counter = 0;
 
 				playBoard.setTimeCounter(save.getInt("time", 0));
-
+				
 				for(int y=0; y<playBoard.getHeight(); y++)
 					for(int x=0; x<playBoard.getWidth(); x++)
 					{
@@ -633,6 +634,8 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	{
 		if(!paused && save.getBoolean("gameInProgress", false) && !gameOver)
 		{
+			saveEditor.putInt("time", playBoard.getTimeCounter());
+			saveEditor.commit();
 			playBoard.endTimer();
 			paused = true;
 			invalidate();
@@ -656,7 +659,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	{
 		saveEditor.putBoolean("gameInProgress", inProgress);
 		saveEditor.commit();
-		Log.v("Game in Progress =",""+inProgress);
+		//Log.v("Game in Progress =",""+inProgress);
 	}
 	
 	public void showNewHighScore()

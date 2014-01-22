@@ -499,8 +499,6 @@ public class Board {
 
 	public void startTimer()
 	{
-		if(timer != null)
-		{
 			timer = new Timer();
 
 			timer.scheduleAtFixedRate(new TimerTask() 
@@ -529,7 +527,6 @@ public class Board {
 				}
 
 			}, 0, 1000);
-		}
 	}
 
 	public void placeBombs(){
