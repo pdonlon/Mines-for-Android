@@ -323,43 +323,9 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	{    
 		pauseAlertDialogUp = true;
 		pauseGame();
-		areYouSure();
-
+		hostGame(true);
 	}
 
-	public void areYouSure()
-	{
-		if(!gameOver && playBoard.getTimeCounter()>0)
-		{
-				pauseGame();
-				pauseAlertDialogUp = true;
-				builder = new AlertDialog.Builder(mactivity);
-				// Set the dialog title
-				builder.setMessage("You will lose your current progress");
-
-				builder.setTitle("Are you sure?")
-				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						gameLobby();
-					}
-				})
-				.setNegativeButton("No", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						resumeGame();
-					}
-				});
-		
-				builder.setCancelable(false);
-				builder.show();
-		
-				//return builder.create();
-		}
-		else
-			gameLobby();
-	}
-	
 	public void gameLobby()
 	{	
 		boolean sure;
@@ -370,10 +336,10 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		.setItems(choices, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int select) {
 				if(select == 0)
-					hostGame();
+					hostGame(true);
 				else if(select == 1)
-					joinGame();
-	
+					hostGame(false);
+
 			}
 		});
 		builder.setCancelable(false);
@@ -388,16 +354,13 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		builder.setTitle("Host")
 		.setItems(choices, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int select) {
-				if(select == 0)
-					mactivity.easyGame();
-				else if(select == 1)
-					mactivity.mediumGame();
-				else
-					mactivity.hardGame();
-
+				select++;
+				gameSelect(select);
 				int randomSeed = (int) (Math.random()*1000);
+				playBoard.setSeed(randomSeed);
+				Log.v("host gives random seed", ""+randomSeed);
 				//open middle
-				alertTitleAndMessage("Your game code is: "+ randomSeed,"Give the game code above to your opponent then click start","Start");
+				alertTitleAndMessage("Your game code is: "+(select)+""+randomSeed,"Give the game code above to your opponent then click start","Start");
 				pauseGame();
 			}
 		});
@@ -406,17 +369,39 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 	}
 
-	public void joinGame()
+	public void gameSelect(int select)
+	{
+		if(select == 1)
+			mactivity.easyGame();
+		else if(select == 2)
+			mactivity.mediumGame();
+		else
+			mactivity.hardGame();
+	}
+	public int getGameNumber()
+	{	
+		int gameNumber;
+		if(difficulty.contains("Easy"))
+			gameNumber = 1;
+		else if(difficulty.contains("Medium"))
+			gameNumber = 2;
+		else
+			gameNumber = 3;
+
+		return gameNumber;
+	}
+
+	public void hostGame(boolean host)
 	{
 		// Creating alert Dialog with one Button
 		builder = new AlertDialog.Builder(mactivity);
-		int randomSeed = (int) (Math.random()*100000000);
+		int randomSeed = (int) (Math.random()*1000);
 
 		// Setting Dialog Title
-		builder.setTitle("Join game");
 
-		// Setting Dialog Message
-		builder.setMessage("Type in your opponents game code then press start");
+
+		builder.setTitle("Game Code: "+(getGameNumber())+""+randomSeed).setMessage("Give your opponent this game code to type in or type in theirs");
+
 		final EditText input = new EditText(mactivity);
 		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
 				LinearLayout.LayoutParams.MATCH_PARENT,
@@ -433,26 +418,33 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			public void onClick(DialogInterface dialog,int which) {
 				// Write your code here to execute after dialog
 
-				//				String seed = input.getText().toString();
-				int seedValue;
-				try{
-					seedValue = Integer.parseInt(input.getText().toString());
-				}
-				catch(Exception e)
+				if(!input.getText().toString().equals(""))
 				{
-					resumeGame();
-					return;
-				}
-				if(seedValue > 0)
+					int seedValue;
+					int d;
+					try{
+						seedValue = Integer.parseInt(input.getText().toString().substring(1, input.length()));
+						Log.v("join seed value", ""+seedValue);
+						d = Integer.parseInt(input.getText().toString().charAt(0) + "");
+					}
+					catch(Exception e)
+					{
+						resumeGame();
+						return;
+					}
+					if(seedValue > 0)
+						playBoard.setSeed(seedValue);
+					else
+						resumeGame();
+
+					gameSelect(d);
 					playBoard.setSeed(seedValue);
+				}
 				else
-					resumeGame();
-
-				mactivity.mediumGame();
-				playBoard.setSeed(seedValue);
-
-				playBoard.openBox(10, 10);
-				Log.v("This is your seed!",""+seedValue);
+					gameSelect(getGameNumber());
+				mactivity.runOnUiThread(new Runnable(){ public void run() {
+					playBoard.openBox(playBoard.width/2, playBoard.height/2);
+				}});	
 				//start game
 				//				saveEditor.putBoolean("multiplayer", true);
 				//				saveEditor.commit();
@@ -805,10 +797,10 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			public void onClick(DialogInterface dialog, int id) {
 				resumeGame();
 				if(button.contains("Start"))
-					playBoard.openBox(5, 5);
+					playBoard.openBox(playBoard.width/2, playBoard.height/2);
 			}
 		});
-		
+
 		AlertDialog dialog = builder.create();
 		dialog.show();
 		showNewHighScore = false;
