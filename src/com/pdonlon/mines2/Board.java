@@ -1,5 +1,6 @@
 package com.pdonlon.mines2;
 
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -42,7 +43,6 @@ public class Board {
 
 	int width; 
 	int height;
-
 	int flagCount;
 	int unsafeBombCount;
 	int zeroCount;
@@ -82,10 +82,10 @@ public class Board {
 	int windowSizeY = 1100;
 	float offX;
 	float offY;
+	int seed = -1;
 
 	public static Timer timer;
 	TimerTask tt;
-
 
 	int [] pressedCords = new int[2];
 
@@ -136,7 +136,16 @@ public class Board {
 	{
 		timeCounter = time;
 	}
+	
+	public void setFlagCount(int count) 
+	{
+		flagCount = count;	
+	}
 
+	public void setSeed(int value)
+	{
+		seed = value;
+	}
 
 	public void readjust()
 	{
@@ -529,23 +538,35 @@ public class Board {
 			}, 0, 1000);
 	}
 
-	public void placeBombs(){
+	public void placeBombs()
+	{
+		Random generator;
+		int randomSeed = (int) (Math.random()*100000000);
+		if(seed>-1)
+			generator = new Random(seed);
+		else
+			generator = new Random(randomSeed);
 
-		//bombs = new CheckList();
+		game.save(game.saveEditor, "seed", seed);
 
 		int count = totalBombs;
+ 
+		
+		while(count > 0)
+		{
+			int rand1 = generator.nextInt(width);
+			int rand2 = generator.nextInt(height);
+			//			int rand1 = (int) (Math.random() * width); 
+			//			int rand2 = (int) (Math.random() * height); //to get the y (rectangle ones)
 
-		while(count > 0){
-			int rand1 = (int) (Math.random() * width); 
-			int rand2 = (int) (Math.random() * height); //to get the y (rectangle ones)
-
-			if(!board[rand1][rand2].isBomb() && notSurroundingStart(rand1,rand2)){
+			if(!board[rand1][rand2].isBomb() && notSurroundingStart(rand1,rand2))
+			{
 				board[rand1][rand2].setBomb(true);
 				bombs.enque(rand1,rand2);
 				count--;
 			}
 		}
-	}
+}
 
 	public void placeBombsSurrounding()
 	{

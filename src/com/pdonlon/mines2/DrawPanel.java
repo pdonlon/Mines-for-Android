@@ -19,12 +19,14 @@ import android.graphics.Shader.TileMode;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.graphics.Shader;
@@ -75,6 +77,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	Editor saveEditor;
 	Editor bombXEditor;
 	Editor bombYEditor;
+	boolean multiplayer;
 
 	Thread s;
 	Thread l;
@@ -104,10 +107,10 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		ctx = context;
 		this.mactivity = mactivity;
 		initializeSharedPreferences();
-		
+
 		if(save.getBoolean("saveGame", false))
 			makeToast("Loading game");
-		
+
 		while(!save.getBoolean("done saving", true)){
 			try {
 				Thread.sleep(1);
@@ -319,596 +322,645 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			return true;
 	}
 
-	public void updateScores(int score)
-	{
-		//setting preferences
-		//int keyNumber = generateKeyNumber(difficulty);
-		if(score < scores.getInt(difficulty, 0) || scores.getInt(difficulty, 0) == 0)
-		{
-			showNewHighScore = true;
-			Editor editor = scores.edit();
-			editor.putInt(difficulty, score);
-			editor.commit();
-		}
-	}
+	public void startMultiplayer()
+	{    
+		// Creating alert Dialog with one Button
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(mactivity);
 
-	public void saveGame()
-	{
-		saveEditor.putBoolean("done saving", false);
-		saveEditor.commit();
-		makeToast("Saving Game");
+		// Setting Dialog Title
+		alertDialog.setTitle("PASSWORD");
 
-		Thread s;
-		s = new Thread( new Runnable(){
-			public void run()
-			{
-				synchronized(this){
-					saveEditor.putString("difficulty", difficulty);
-					saveEditor.putBoolean("gold", playBoard.pro);
-					saveEditor.putInt("time", playBoard.getTimeCounter());
+		// Setting Dialog Message
+		alertDialog.setMessage("Enter Password");
+		final EditText input = new EditText(mactivity);
+		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+				LinearLayout.LayoutParams.MATCH_PARENT,
+				LinearLayout.LayoutParams.MATCH_PARENT);
+		input.setLayoutParams(lp);
+		alertDialog.setView(input);
 
-					if(gameOver || !(playBoard.getTimeCounter()>0))
-					{
-						saveEditor.putBoolean("saveGame", false);
-						saveEditor.putBoolean("done saving", true);
-						saveEditor.commit();
-						return;
-					}	
 
-					saveEditor.putBoolean("saveGame", true);
+		// Setting Icon to Dialog
+		//alertDialog.setIcon(R.drawable.key);
 
-					Editor bsEditor = bombsSurrounding.edit();
-					Editor coEditor = cellOpen.edit();
-					Editor cbEditor = cellBomb.edit();
-					Editor cfEditor = cellFlag.edit();
+		// Setting Positive "Yes" Button
+		alertDialog.setPositiveButton("YES",
+				new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog,int which) {
+				// Write your code here to execute after dialog
 
-					int counter = 0;
-					saveEditor.putBoolean("save", true);
-					saveEditor.putInt("total bombs", playBoard.getTotalBombs());
-
-					for(int y=0; y<playBoard.getHeight(); y++)
-						for(int x=0; x<playBoard.getWidth(); x++)
-						{
-							String key = counter+"";
-
-							bsEditor.putInt(key,playBoard.getBombsSurrounding(x,y));
-							cbEditor.putBoolean(key,playBoard.isThis(x, y,"bomb"));
-							coEditor.putBoolean(key,playBoard.isThis(x, y,"open"));
-							cfEditor.putBoolean(key,playBoard.isThis(x, y,"flag"));
-
-							//Log.v("saving "+x+" "+y,key);
-							
-							counter++;
-						}
-					playBoard.saveBombLocations();
-
-					bsEditor.commit();
-					coEditor.commit();
-					cbEditor.commit();
-					cfEditor.commit();
-					saveEditor.putBoolean("done saving", true);
-					saveEditor.commit();
-					mactivity.finish();
-					
-				}
+				String seed = input.getText().toString();
+				Log.v("This is your seed!",""+seed);
+			}
+		});
+		// Setting Negative "NO" Button
+		alertDialog.setNegativeButton("NO",
+				new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				// Write your code here to execute after dialog
+				dialog.cancel();
 			}
 		});
 
-		s.start();
+		// closed
+
+		// Showing Alert Message
+		alertDialog.show();
 	}
 
-	public void save(Editor editor, String key, int value)
+
+public void updateScores(int score)
+{
+	//setting preferences
+	//int keyNumber = generateKeyNumber(difficulty);
+	if(score < scores.getInt(difficulty, 0) || scores.getInt(difficulty, 0) == 0)
 	{
-		editor.putInt(key, value);
+		showNewHighScore = true;
+		Editor editor = scores.edit();
+		editor.putInt(difficulty, score);
 		editor.commit();
 	}
+}
 
-	public void loadGame()
-	{
-		//makeToast("Loading Game");
-		//startTimer();
+public void saveGame()
+{
+	saveEditor.putBoolean("done saving", false);
+	saveEditor.commit();
+	makeToast("Saving Game");
 
-		l = new Thread( new Runnable(){
-			public void run()
-			{
+	Thread s;
+	s = new Thread( new Runnable(){
+		public void run()
+		{
+			synchronized(this){
+				saveEditor.putString("difficulty", difficulty);
+				saveEditor.putBoolean("gold", playBoard.pro);
+				saveEditor.putInt("time", playBoard.getTimeCounter());
+
+				if(gameOver || !(playBoard.getTimeCounter()>0))
+				{
+					saveEditor.putBoolean("saveGame", false);
+					saveEditor.putBoolean("done saving", true);
+					saveEditor.commit();
+					return;
+				}	
+
+				saveEditor.putBoolean("saveGame", true);
+
+				Editor bsEditor = bombsSurrounding.edit();
+				Editor coEditor = cellOpen.edit();
+				Editor cbEditor = cellBomb.edit();
+				Editor cfEditor = cellFlag.edit();
 
 				int counter = 0;
+				saveEditor.putBoolean("save", true);
+				saveEditor.putInt("total bombs", playBoard.getTotalBombs());
+				saveEditor.putInt("flag count", playBoard.getFlagCount());
 
-				playBoard.setTimeCounter(save.getInt("time", 0));
-				
 				for(int y=0; y<playBoard.getHeight(); y++)
 					for(int x=0; x<playBoard.getWidth(); x++)
 					{
 						String key = counter+"";
-						int bs = bombsSurrounding.getInt(key, 0);
-						boolean open = cellOpen.getBoolean(key,false);
-						boolean bomb = cellBomb.getBoolean(key,false);
-						boolean flagged = cellFlag.getBoolean(key,false);
 
-						playBoard.createMine(x,y,bs,open,bomb,flagged);
-						//Log.v("loading "+x+" "+y,key);
+						bsEditor.putInt(key,playBoard.getBombsSurrounding(x,y));
+						cbEditor.putBoolean(key,playBoard.isThis(x, y,"bomb"));
+						coEditor.putBoolean(key,playBoard.isThis(x, y,"open"));
+						cfEditor.putBoolean(key,playBoard.isThis(x, y,"flag"));
+
+						//Log.v("saving "+x+" "+y,key);
 
 						counter++;
 					}
+				playBoard.saveBombLocations();
 
-				for(int x=0; x<save.getInt("total bombs", 0); x++)//place loaded bombs in the bomb linked list
-				{ 
-					playBoard.placeBombLocation(bombLocationX.getInt(x+"", 0),bombLocationY.getInt(x+"", 0));
-					//Log.v("load:",""+bombLocationX.getInt(x+"", 0)+bombLocationY.getInt(x+"", 0));
-				}
-//				notify();
+				bsEditor.commit();
+				coEditor.commit();
+				cbEditor.commit();
+				cfEditor.commit();
+				saveEditor.putBoolean("done saving", true);
+				saveEditor.commit();
+				mactivity.finish();
+
 			}
-			
-		});
-
-		l.start();
-		invalidate();
-
-	}
-
-	public void initializeSharedPreferences()
-	{
-		flags = mactivity.getSharedPreferences("flags", Context.MODE_PRIVATE);
-		cellFlag = mactivity.getSharedPreferences("flag", Context.MODE_PRIVATE);
-		cellOpen = mactivity.getSharedPreferences("open", Context.MODE_PRIVATE);
-		cellBomb = mactivity.getSharedPreferences("bomb", Context.MODE_PRIVATE);
-
-		bombsSurrounding = mactivity.getSharedPreferences("bombsSurrounding", Context.MODE_PRIVATE); //number of bombs surrounding
-		settings = mactivity.getSharedPreferences("settings", Context.MODE_PRIVATE);
-		scores = mactivity.getSharedPreferences("scores", Context.MODE_PRIVATE);
-		cellStatus = mactivity.getSharedPreferences("cellStatus", Context.MODE_PRIVATE); //opened, not opened, flagged
-		save = mactivity.getSharedPreferences("save", Context.MODE_PRIVATE); //opened, not opened, flagged
-		bombLocationX = mactivity.getSharedPreferences("bombLocationX", Context.MODE_PRIVATE); 
-		bombLocationY = mactivity.getSharedPreferences("bombLocationY", Context.MODE_PRIVATE); 
-
-		saveEditor = save.edit();
-		bombXEditor = bombLocationX.edit();
-		bombYEditor = bombLocationY.edit();
-	}
-
-	public void saveFlagMode()
-	{
-		Editor editor = flags.edit();
-		editor.putBoolean("flagMode", flagMode); // string is where it is stored
-		editor.commit();
-	}
-
-	public void updateFlagMode()
-	{
-		flagMode = flags.getBoolean("flagMode", false); //false is the default value
-	}
-
-	public boolean[] getSettings()
-	{
-		boolean[] chosen = new boolean[myStringArray.length];
-		for (int i=0; i<myStringArray.length; i++)
-			chosen[i] = settings.getBoolean(myStringArray[i], (i<2)? true : false); //ternary statement
-
-		//chosen[i] = settings.getBoolean(myStringArray[i], (i==0)? true : false); //ternary statement
-
-		return chosen;
-	}
-
-	public ArrayList<Integer> getInitialSelectedItems()
-	{
-		ArrayList<Integer> theChosen = new ArrayList<Integer>();
-
-		for (int i=0; i<selected.length; i++)
-			if (selected[i])
-				theChosen.add(i);
-
-		return theChosen;
-	}
-
-	public int getScore()
-	{
-		//getting preferences
-		//int keyNumber = generateKeyNumber(difficulty);
-
-		int highScore = scores.getInt(difficulty, 0); //0 is the default value
-
-		return highScore;
-	}
-
-	public void saveChecks()
-	{
-		Editor editor = settings.edit();
-		for (int i=0; i<selected.length; i++)
-			editor.putBoolean(myStringArray[i], selected[i]);
-		editor.commit();
-	}
-
-	public void updateSettings()
-	{
-		vibration = selected[0];
-		animations = selected[1];
-	}
-
-	public void pauseMenu()
-	{
-		pauseGame();
-		pauseAlertDialogUp = true;
-		builder = new AlertDialog.Builder(mactivity);
-		// Set the dialog title
-		builder.setTitle("Paused")
-
-		.setPositiveButton("Resume", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int id) {
-				resumeGame();
-			}
-		})
-		.setNegativeButton("Reset", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int id) {
-				resetGame();
-			}
-		});
-
-		builder.setCancelable(false);
-		builder.show();
-		//return builder.create();
-	}
-
-	public void quitMenu()
-	{
-		//		pauseGame();
-		//		pauseAlertDialogUp = true;
-		//		builder = new AlertDialog.Builder(mactivity);
-		//		// Set the dialog title
-		//		builder.setTitle("Are you sure you want to quit?")
-		//		.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-		//			@Override
-		//			public void onClick(DialogInterface dialog, int id) {
-		//				saveGame();
-		//				mactivity.finish();
-		//			}
-		//		})
-		//		.setNegativeButton("No", new DialogInterface.OnClickListener() {
-		//			@Override
-		//			public void onClick(DialogInterface dialog, int id) {
-		//				resumeGame();
-		//			}
-		//		});
-		//
-		//		builder.setCancelable(false);
-		//		builder.show();
-		//
-		//		//return builder.create();
-		saveGame();
-	}
-
-	public void showSettings()
-	{
-		pauseAlertDialogUp = true;
-		pauseGame();		
-
-		for (int i=0; i<selected.length; i++)
-			selected[i] = false;
-
-		for (Integer e : mSelectedItems)
-			selected[e.intValue()] = true;
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(mactivity);
-		// Set the dialog title
-		builder.setTitle("Settings")
-		// Specify the list array, the items to be selected by default (null for none),
-		// and the listener through which to receive callbacks when items are selected
-		.setMultiChoiceItems(myStringArray, selected,
-				new DialogInterface.OnMultiChoiceClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which,
-					boolean isChecked) {
-				if (isChecked) {
-					// If the user checked the item, add it to the selected items
-					mSelectedItems.add(which);
-				} else if (mSelectedItems.contains(which)) {
-					// Else, if the item is already in the array, remove it 
-					mSelectedItems.remove(Integer.valueOf(which));
-				}
-			}
-		})
-		// Set the action buttons
-		.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int id) {
-				// User clicked OK, so save the mSelectedItems results somewhere
-				// or return them to the component that opened the dialog
-				saveChecks();
-				updateSettings();
-				resumeGame();
-			}
-		})
-		.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int id) {
-				resumeGame();			}
-		});
-
-		builder.setCancelable(false);
-		builder.show();
-		//return builder.create();
-	}
-
-	public void pauseGame()
-	{
-		if(!paused && save.getBoolean("gameInProgress", false) && !gameOver)
-		{
-			saveEditor.putInt("time", playBoard.getTimeCounter());
-			saveEditor.commit();
-			playBoard.endTimer();
-			paused = true;
-			invalidate();
-			//			if(playBoard.bombs.getHead() != null)
-			//			saveGame();
 		}
-	}
+	});
 
-	public void resumeGame()
-	{
-		if(!gameOver && save.getBoolean("gameInProgress", false))
+	s.start();
+}
+
+public void save(Editor editor, String key, int value)
+{
+	editor.putInt(key, value);
+	editor.commit();
+}
+
+public void loadGame()
+{
+	//makeToast("Loading Game");
+	//startTimer();
+
+	l = new Thread( new Runnable(){
+		public void run()
 		{
-			pauseAlertDialogUp = false;
-			playBoard.startTimer();
-			paused = false;
-			invalidate();
-		}
-	}
 
-	public void saveGameInProgress(boolean inProgress)
+			int counter = 0;
+
+			playBoard.setTimeCounter(save.getInt("time", 0));
+			playBoard.setFlagCount(save.getInt("flag count", playBoard.getFlagCount()));
+
+			for(int y=0; y<playBoard.getHeight(); y++)
+				for(int x=0; x<playBoard.getWidth(); x++)
+				{
+					String key = counter+"";
+					int bs = bombsSurrounding.getInt(key, 0);
+					boolean open = cellOpen.getBoolean(key,false);
+					boolean bomb = cellBomb.getBoolean(key,false);
+					boolean flagged = cellFlag.getBoolean(key,false);
+
+					playBoard.createMine(x,y,bs,open,bomb,flagged);
+					//Log.v("loading "+x+" "+y,key);
+
+					counter++;
+				}
+
+			for(int x=0; x<save.getInt("total bombs", 0); x++)//place loaded bombs in the bomb linked list
+			{ 
+				playBoard.placeBombLocation(bombLocationX.getInt(x+"", 0),bombLocationY.getInt(x+"", 0));
+				//Log.v("load:",""+bombLocationX.getInt(x+"", 0)+bombLocationY.getInt(x+"", 0));
+			}
+			//				notify();
+		}
+
+	});
+
+	l.start();
+	invalidate();
+
+}
+
+public void initializeSharedPreferences()
+{
+	flags = mactivity.getSharedPreferences("flags", Context.MODE_PRIVATE);
+	cellFlag = mactivity.getSharedPreferences("flag", Context.MODE_PRIVATE);
+	cellOpen = mactivity.getSharedPreferences("open", Context.MODE_PRIVATE);
+	cellBomb = mactivity.getSharedPreferences("bomb", Context.MODE_PRIVATE);
+
+	bombsSurrounding = mactivity.getSharedPreferences("bombsSurrounding", Context.MODE_PRIVATE); //number of bombs surrounding
+	settings = mactivity.getSharedPreferences("settings", Context.MODE_PRIVATE);
+	scores = mactivity.getSharedPreferences("scores", Context.MODE_PRIVATE);
+	cellStatus = mactivity.getSharedPreferences("cellStatus", Context.MODE_PRIVATE); //opened, not opened, flagged
+	save = mactivity.getSharedPreferences("save", Context.MODE_PRIVATE); //opened, not opened, flagged
+	bombLocationX = mactivity.getSharedPreferences("bombLocationX", Context.MODE_PRIVATE); 
+	bombLocationY = mactivity.getSharedPreferences("bombLocationY", Context.MODE_PRIVATE); 
+
+	saveEditor = save.edit();
+	bombXEditor = bombLocationX.edit();
+	bombYEditor = bombLocationY.edit();
+}
+
+public void saveFlagMode()
+{
+	Editor editor = flags.edit();
+	editor.putBoolean("flagMode", flagMode); // string is where it is stored
+	editor.commit();
+}
+
+public void updateFlagMode()
+{
+	flagMode = flags.getBoolean("flagMode", false); //false is the default value
+}
+
+public boolean[] getSettings()
+{
+	boolean[] chosen = new boolean[myStringArray.length];
+	for (int i=0; i<myStringArray.length; i++)
+		chosen[i] = settings.getBoolean(myStringArray[i], (i<2)? true : false); //ternary statement
+
+	//chosen[i] = settings.getBoolean(myStringArray[i], (i==0)? true : false); //ternary statement
+
+	return chosen;
+}
+
+public ArrayList<Integer> getInitialSelectedItems()
+{
+	ArrayList<Integer> theChosen = new ArrayList<Integer>();
+
+	for (int i=0; i<selected.length; i++)
+		if (selected[i])
+			theChosen.add(i);
+
+	return theChosen;
+}
+
+public int getScore()
+{
+	//getting preferences
+	//int keyNumber = generateKeyNumber(difficulty);
+
+	int highScore = scores.getInt(difficulty, 0); //0 is the default value
+
+	return highScore;
+}
+
+public void saveChecks()
+{
+	Editor editor = settings.edit();
+	for (int i=0; i<selected.length; i++)
+		editor.putBoolean(myStringArray[i], selected[i]);
+	editor.commit();
+}
+
+public void updateSettings()
+{
+	vibration = selected[0];
+	animations = selected[1];
+}
+
+public void pauseMenu()
+{
+	pauseGame();
+	pauseAlertDialogUp = true;
+	builder = new AlertDialog.Builder(mactivity);
+	// Set the dialog title
+	builder.setTitle("Paused")
+
+	.setPositiveButton("Resume", new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int id) {
+			resumeGame();
+		}
+	})
+	.setNegativeButton("Reset", new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int id) {
+			resetGame();
+		}
+	});
+
+	builder.setCancelable(false);
+	builder.show();
+	//return builder.create();
+}
+
+public void quitMenu()
+{
+	//		pauseGame();
+	//		pauseAlertDialogUp = true;
+	//		builder = new AlertDialog.Builder(mactivity);
+	//		// Set the dialog title
+	//		builder.setTitle("Are you sure you want to quit?")
+	//		.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+	//			@Override
+	//			public void onClick(DialogInterface dialog, int id) {
+	//				saveGame();
+	//				mactivity.finish();
+	//			}
+	//		})
+	//		.setNegativeButton("No", new DialogInterface.OnClickListener() {
+	//			@Override
+	//			public void onClick(DialogInterface dialog, int id) {
+	//				resumeGame();
+	//			}
+	//		});
+	//
+	//		builder.setCancelable(false);
+	//		builder.show();
+	//
+	//		//return builder.create();
+	saveGame();
+}
+
+public void showSettings()
+{
+	pauseAlertDialogUp = true;
+	pauseGame();		
+
+	for (int i=0; i<selected.length; i++)
+		selected[i] = false;
+
+	for (Integer e : mSelectedItems)
+		selected[e.intValue()] = true;
+
+	AlertDialog.Builder builder = new AlertDialog.Builder(mactivity);
+	// Set the dialog title
+	builder.setTitle("Settings")
+	// Specify the list array, the items to be selected by default (null for none),
+	// and the listener through which to receive callbacks when items are selected
+	.setMultiChoiceItems(myStringArray, selected,
+			new DialogInterface.OnMultiChoiceClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int which,
+				boolean isChecked) {
+			if (isChecked) {
+				// If the user checked the item, add it to the selected items
+				mSelectedItems.add(which);
+			} else if (mSelectedItems.contains(which)) {
+				// Else, if the item is already in the array, remove it 
+				mSelectedItems.remove(Integer.valueOf(which));
+			}
+		}
+	})
+	// Set the action buttons
+	.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int id) {
+			// User clicked OK, so save the mSelectedItems results somewhere
+			// or return them to the component that opened the dialog
+			saveChecks();
+			updateSettings();
+			resumeGame();
+		}
+	})
+	.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int id) {
+			resumeGame();			}
+	});
+
+	builder.setCancelable(false);
+	builder.show();
+	//return builder.create();
+}
+
+public void pauseGame()
+{
+	if(!paused && save.getBoolean("gameInProgress", false) && !gameOver)
 	{
-		saveEditor.putBoolean("gameInProgress", inProgress);
+		saveEditor.putInt("time", playBoard.getTimeCounter());
 		saveEditor.commit();
-		//Log.v("Game in Progress =",""+inProgress);
+		playBoard.endTimer();
+		paused = true;
+		invalidate();
+		//			if(playBoard.bombs.getHead() != null)
+		//			saveGame();
 	}
-	
-	public void showNewHighScore()
+}
+
+public void resumeGame()
+{
+	if(!gameOver && save.getBoolean("gameInProgress", false))
 	{
-		AlertDialog.Builder builder = new AlertDialog.Builder(mactivity);
-		builder.setMessage(playBoard.getTimeCounter()+" seconds").setTitle("New High Score!")
-
-		.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int id) {
-
-			}
-		});
-		//		.setNegativeButton("Reset", new DialogInterface.OnClickListener() {
-		//			@Override
-		//			public void onClick(DialogInterface dialog, int id) {
-		//				resetGame();
-		//			}
-		//		});
-
-		// 3. Get the AlertDialog from create()
-		AlertDialog dialog = builder.create();
-		dialog.show();
-		showNewHighScore = false;
+		pauseAlertDialogUp = false;
+		playBoard.startTimer();
+		paused = false;
+		invalidate();
 	}
+}
 
-	public void winMessage()
-	{
-		AlertDialog.Builder builder = new AlertDialog.Builder(mactivity);
-		builder.setMessage(playBoard.getTimeCounter()+" seconds").setTitle("You Win!")
+public void saveGameInProgress(boolean inProgress)
+{
+	saveEditor.putBoolean("gameInProgress", inProgress);
+	saveEditor.commit();
+	//Log.v("Game in Progress =",""+inProgress);
+}
 
-		.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int id) {
+public void showNewHighScore()
+{
+	AlertDialog.Builder builder = new AlertDialog.Builder(mactivity);
+	builder.setMessage(playBoard.getTimeCounter()+" seconds").setTitle("New High Score!")
 
-			}
-		})
-		.setNegativeButton("Reset", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int id) {
-				resetGame();
-			}
-		});
+	.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int id) {
 
-		// 3. Get the AlertDialog from create()
-		AlertDialog dialog = builder.create();
-		dialog.show();
-		winMessage = false;
-	}
-
-	public void showAllHighScores()
-	{
-		pauseAlertDialogUp = true;
-		pauseGame();		
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(mactivity);
-
-		builder.setMessage("Easy: "+ scores.getInt("Easy", 0)+" seconds\n\n"+"Medium: "+scores.getInt("Medium", 0)+" seconds\n\n"+"Hard: "+ scores.getInt("Hard", 0)+" seconds").setTitle("High Scores")
-
-		.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int id) {
-				resumeGame();
-			}
-		});
-
-		AlertDialog dialog = builder.create();
-		dialog.setCancelable(false);
-		dialog.show();
-	}
-
-	public void makeToast(String message)
-	{
-		Context context = mactivity.getApplicationContext();
-		CharSequence text = message;
-		int duration = Toast.LENGTH_SHORT;
-
-		Toast toast = Toast.makeText(context, text, duration);
-		//toast.setGravity(Gravity.TOP|Gravity.LEFT, 0, 0); //position of toast
-		toast.show();
-	}
-
-	public void startTimer(){
-
-		timer = new Timer();
-
-		timer.scheduleAtFixedRate(new TimerTask() 
-		{
-			@Override
-			public void run() 
-			{
-				timeCounter+=.1;
-				if(gameOver){
-					return;
-				}
-				if(timeCounter > 3.5 && !dragging && playBoard.beingPressed)
-				{
-					x = (int) playBoard.getPressedCords()[0];
-					y = (int) playBoard.getPressedCords()[1];
-					if(!playBoard.isThis(x,y,"open"))
-					{
-						Vibrator v = (Vibrator) mactivity.getSystemService(Context.VIBRATOR_SERVICE);
-
-						v.vibrate(20);
-						if(!flagMode)
-							playBoard.markFlagged((int)x,(int)y);
-						else
-							playBoard.open((int)x,(int)y);
-
-						playBoard.setPressed(false);
-						justFlagged = true;
-
-						if(flagMode && playBoard.isThis(x, y,"bomb") && Board.doneAnimating)
-						{
-							playBoard.bombs.remove(x, y); 
-							playBoard.bombs.enque(x, y);
-							playBoard.endOfGameSetWrong();
-							playBoard.setLose(true);
-							gameOver = true;
-							playBoard.endTimer();
-							bombAnimation();
-						} //TODO FIX WINNING AND LOSING FROM THIS SCREEN
-						else if(flagMode && playBoard.win){
-
-							//winMessage();
-
-							//playBoard.checkWin();
-							//							if(playBoard.win)
-							//							{
-							//								gameOver = true;
-							//								playBoard.endTimer();
-							//								invalidate();
-							//							}
-						}
-					}
-					mactivity.runOnUiThread(new Runnable() {
-						public void run() {
-							invalidate();
-							if(showNewHighScore)
-								showNewHighScore();
-							if(winMessage)
-								winMessage();
-						}
-					});
-				}
-			}
-
-		}, 0, 10);
-
-	}
-
-	public boolean gameOver(){
-
-		if(playBoard.getWin() || playBoard.getLose())
-		{
-			gameOver = true;
-
-			//			if(winMessage)
-			//				winMessage();
-			//			
-			//			if(showNewHighScore)
-			//				showNewHighScore();
-
-			playBoard.endTimer();
-		}                
-		return gameOver;
-	}
-
-	public void setGameOver(boolean a){
-
-		gameOver = a;
-	}
-
-	public void resetGame()
-	{
-		if(playBoard.doneAnimating())
-		{        
-			playBoard.setTimeCounter(0);
-			playBoard.startup();
-			playBoard.wipeBoard();
-			gameOver = false;
-
-			playBoard.endTimer();
-			paused = false;
-			saveEditor.putBoolean("gameInProgress", false);
-			saveEditor.putBoolean("saveGame", false);
-			saveEditor.commit();
-			invalidate();
 		}
-	}
+	});
+	//		.setNegativeButton("Reset", new DialogInterface.OnClickListener() {
+	//			@Override
+	//			public void onClick(DialogInterface dialog, int id) {
+	//				resetGame();
+	//			}
+	//		});
 
-	public void bombAnimation()
+	// 3. Get the AlertDialog from create()
+	AlertDialog dialog = builder.create();
+	dialog.show();
+	showNewHighScore = false;
+}
+
+public void winMessage()
+{
+	AlertDialog.Builder builder = new AlertDialog.Builder(mactivity);
+	builder.setMessage(playBoard.getTimeCounter()+" seconds").setTitle("You Win!")
+
+	.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int id) {
+
+		}
+	})
+	.setNegativeButton("Reset", new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int id) {
+			resetGame();
+		}
+	});
+
+	// 3. Get the AlertDialog from create()
+	AlertDialog dialog = builder.create();
+	dialog.show();
+	winMessage = false;
+}
+
+public void showAllHighScores()
+{
+	pauseAlertDialogUp = true;
+	pauseGame();		
+
+	AlertDialog.Builder builder = new AlertDialog.Builder(mactivity);
+
+	builder.setMessage("Easy: "+ scores.getInt("Easy", 0)+" seconds\n\n"+"Medium: "+scores.getInt("Medium", 0)+" seconds\n\n"+"Hard: "+ scores.getInt("Hard", 0)+" seconds").setTitle("High Scores")
+
+	.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int id) {
+			resumeGame();
+		}
+	});
+
+	AlertDialog dialog = builder.create();
+	dialog.setCancelable(false);
+	dialog.show();
+}
+
+public void makeToast(String message)
+{
+	Context context = mactivity.getApplicationContext();
+	CharSequence text = message;
+	int duration = Toast.LENGTH_SHORT;
+
+	Toast toast = Toast.makeText(context, text, duration);
+	//toast.setGravity(Gravity.TOP|Gravity.LEFT, 0, 0); //position of toast
+	toast.show();
+}
+
+public void startTimer(){
+
+	timer = new Timer();
+
+	timer.scheduleAtFixedRate(new TimerTask() 
 	{
-		final String tempDifficulty = difficulty;
-
-		int vibrationTime; 
-
-		//TODO
-		if(!animations)
-			vibrationTime = 0;
-		else if(tempDifficulty.contains("Easy"))
-			vibrationTime = 50;
-		else if(tempDifficulty.contains("Medium"))
-			vibrationTime = 25;
-		else 
-			vibrationTime = 10;
-
-		final int tempVibration = vibrationTime;
-
-		Thread b;
-		b = new Thread( new Runnable(){
-			public void run(){
-
-				Vibrator v = (Vibrator) mactivity.getSystemService(Context.VIBRATOR_SERVICE);
-				Board.doneAnimating = false;
-
-				int bombsLeft = playBoard.getUnsafeBombCount()-1;
-				//				if(playBoard.getUnsafeBombCount()==0)
-				//					bombsLeft = 1;
-
-				while(bombsLeft>0)
-				{
-					try {
-						Thread.sleep(tempVibration);
-					} catch(InterruptedException ex) {
-						Thread.currentThread().interrupt();
-					}
-
-					explosion();
-					// Vibration in milliseconds
-					if(vibration){
-						v.vibrate(tempVibration);
-						if(!animations)
-							v.vibrate(100);
-
-					}
-					bombsLeft--;
-				}
-				Board.doneAnimating = true;
+		@Override
+		public void run() 
+		{
+			timeCounter+=.1;
+			if(gameOver){
+				return;
 			}
-		});
+			if(timeCounter > 3.5 && !dragging && playBoard.beingPressed)
+			{
+				x = (int) playBoard.getPressedCords()[0];
+				y = (int) playBoard.getPressedCords()[1];
+				if(!playBoard.isThis(x,y,"open"))
+				{
+					Vibrator v = (Vibrator) mactivity.getSystemService(Context.VIBRATOR_SERVICE);
 
-		b.start();
-	}
+					v.vibrate(20);
+					if(!flagMode)
+						playBoard.markFlagged((int)x,(int)y);
+					else
+						playBoard.open((int)x,(int)y);
 
-	public void explosion()
+					playBoard.setPressed(false);
+					justFlagged = true;
+
+					if(flagMode && playBoard.isThis(x, y,"bomb") && Board.doneAnimating)
+					{
+						playBoard.bombs.remove(x, y); 
+						playBoard.bombs.enque(x, y);
+						playBoard.endOfGameSetWrong();
+						playBoard.setLose(true);
+						gameOver = true;
+						playBoard.endTimer();
+						bombAnimation();
+					} //TODO FIX WINNING AND LOSING FROM THIS SCREEN
+					else if(flagMode && playBoard.win){
+
+						//winMessage();
+
+						//playBoard.checkWin();
+						//							if(playBoard.win)
+						//							{
+						//								gameOver = true;
+						//								playBoard.endTimer();
+						//								invalidate();
+						//							}
+					}
+				}
+				mactivity.runOnUiThread(new Runnable() {
+					public void run() {
+						invalidate();
+						if(showNewHighScore)
+							showNewHighScore();
+						if(winMessage)
+							winMessage();
+					}
+				});
+			}
+		}
+
+	}, 0, 10);
+
+}
+
+public boolean gameOver(){
+
+	if(playBoard.getWin() || playBoard.getLose())
 	{
-		playBoard.openBomb();
-		this.mactivity.runOnUiThread(new Runnable(){ public void run() {
-			invalidate();}});        }
+		gameOver = true;
+
+		//			if(winMessage)
+		//				winMessage();
+		//			
+		//			if(showNewHighScore)
+		//				showNewHighScore();
+
+		playBoard.endTimer();
+	}                
+	return gameOver;
+}
+
+public void setGameOver(boolean a){
+
+	gameOver = a;
+}
+
+public void resetGame()
+{
+	if(playBoard.doneAnimating())
+	{        
+		playBoard.setTimeCounter(0);
+		playBoard.startup();
+		playBoard.wipeBoard();
+		gameOver = false;
+
+		playBoard.endTimer();
+		paused = false;
+		saveEditor.putBoolean("gameInProgress", false);
+		saveEditor.putBoolean("saveGame", false);
+		saveEditor.commit();
+		invalidate();
+	}
+}
+
+public void bombAnimation()
+{
+	final String tempDifficulty = difficulty;
+
+	int vibrationTime; 
+
+	//TODO
+	if(!animations)
+		vibrationTime = 0;
+	else if(tempDifficulty.contains("Easy"))
+		vibrationTime = 50;
+	else if(tempDifficulty.contains("Medium"))
+		vibrationTime = 25;
+	else 
+		vibrationTime = 10;
+
+	final int tempVibration = vibrationTime;
+
+	Thread b;
+	b = new Thread( new Runnable(){
+		public void run(){
+
+			Vibrator v = (Vibrator) mactivity.getSystemService(Context.VIBRATOR_SERVICE);
+			Board.doneAnimating = false;
+
+			int bombsLeft = playBoard.getUnsafeBombCount()-1;
+			//				if(playBoard.getUnsafeBombCount()==0)
+			//					bombsLeft = 1;
+
+			while(bombsLeft>0)
+			{
+				try {
+					Thread.sleep(tempVibration);
+				} catch(InterruptedException ex) {
+					Thread.currentThread().interrupt();
+				}
+
+				explosion();
+				// Vibration in milliseconds
+				if(vibration){
+					v.vibrate(tempVibration);
+					if(!animations)
+						v.vibrate(100);
+
+				}
+				bombsLeft--;
+			}
+			Board.doneAnimating = true;
+		}
+	});
+
+	b.start();
+}
+
+public void explosion()
+{
+	playBoard.openBomb();
+	this.mactivity.runOnUiThread(new Runnable(){ public void run() {
+		invalidate();}});        }
 
 }

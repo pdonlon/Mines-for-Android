@@ -35,7 +35,6 @@ public class MainActivity extends Activity {
 	static MenuItem mens6;
 	static MenuItem mens7;
 	static MenuItem mens8;
-	static MenuItem mens9;
 	static boolean pro = false;
 
 	static int screenWidth, screenHeight;
@@ -64,11 +63,11 @@ public class MainActivity extends Activity {
 		mens3 = menu.add(0, 3, 2,"Easy");
 		mens4 = menu.add(0, 4, 2, "Medium");
 		mens5 = menu.add(0, 5, 2,"Hard");
-		//mens6 = menu.add(0, 6, 2,"Hide Gold");
-		//mens7 = menu.add(0, 7, 2,"Manual Adjust");
 		mens6 = menu.add(0, 6, 2,"High Scores");
+		mens7 = menu.add(0, 7, 2,"Multiplayer");
+
 		if(pro)
-			mens7 = menu.add(0, 7, 2,"Gold Toggle");
+			mens8 = menu.add(0, 8, 2,"Gold Toggle");
 
 
 		return true;
@@ -129,11 +128,7 @@ public class MainActivity extends Activity {
 		switch (item.getItemId()) {
 		default:
 			return false;
-			//		case 1:
-			//			drawView.playBoard.hint();
-			//			runOnUiThread(new Runnable(){ public void run() {
-			//				drawView.invalidate();}});	
-			//			return true;
+			
 		case 1: 
 			drawView.showSettings();
 			return true;
@@ -166,15 +161,22 @@ public class MainActivity extends Activity {
 			startingUp();
 			drawView.playBoard.readjust();
 			return true;
+			
+		case 6:
+			drawView.showAllHighScores();
+			return true;
+			
 		case 7:
+			drawView.startMultiplayer();
+			return true;
+			
+		case 8:
 			Board.proToggle();
 			runOnUiThread(new Runnable(){ public void run() {
 				drawView.invalidate();}});
 			return true;
 
-		case 6:
-			drawView.showAllHighScores();
-			return true;
+
 		}
 
 	}
