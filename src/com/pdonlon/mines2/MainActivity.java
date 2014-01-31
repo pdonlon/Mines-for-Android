@@ -138,28 +138,13 @@ public class MainActivity extends Activity {
 			return true;
 
 		case 3:
-			drawView.playBoard.setWidth(9);
-			drawView.playBoard.setHeight(9);
-			drawView.setDifficulty("Easy");
-			drawView.playBoard.setTotalBombs(10);
-			startingUp();
-			drawView.playBoard.readjust();
+			easyGame();
 			return true;
 		case 4:
-			drawView.playBoard.setWidth(16);
-			drawView.playBoard.setHeight(16);
-			drawView.setDifficulty("Medium");
-			drawView.playBoard.setTotalBombs(40);
-			startingUp();
-			drawView.playBoard.readjust();
+			mediumGame();
 			return true;
 		case 5:
-			drawView.playBoard.setWidth(16);
-			drawView.playBoard.setHeight(30);
-			drawView.setDifficulty("Hard");
-			drawView.playBoard.setTotalBombs(99);
-			startingUp();
-			drawView.playBoard.readjust();
+			hardGame();
 			return true;
 			
 		case 6:
@@ -217,7 +202,36 @@ public class MainActivity extends Activity {
 		}
 		return result;
 	}
+	
+	public void easyGame()
+	{
+		drawView.playBoard.setWidth(9);
+		drawView.playBoard.setHeight(9);
+		drawView.setDifficulty("Easy");
+		drawView.playBoard.setTotalBombs(10);
+		startingUp();
+		drawView.playBoard.readjust();
+	}
 
+	public void mediumGame()
+	{
+		drawView.playBoard.setWidth(16);
+		drawView.playBoard.setHeight(16);
+		drawView.setDifficulty("Medium");
+		drawView.playBoard.setTotalBombs(40);
+		startingUp();
+		drawView.playBoard.readjust();
+	}
+	
+	public void hardGame()
+	{
+		drawView.playBoard.setWidth(16);
+		drawView.playBoard.setHeight(30);
+		drawView.setDifficulty("Hard");
+		drawView.playBoard.setTotalBombs(99);
+		startingUp();
+		drawView.playBoard.readjust();
+	}
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
