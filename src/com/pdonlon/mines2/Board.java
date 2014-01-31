@@ -703,7 +703,7 @@ public class Board {
 						checkWin();
 						if(win){
 							if(game.showNewHighScore)
-								game.showNewHighScore();
+								game.alertTitleAndMessage(getTimeCounter()+" seconds","New High Score!","Okay");
 							if(game.winMessage)
 								game.winMessage();
 

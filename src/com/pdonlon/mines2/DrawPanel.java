@@ -265,7 +265,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 						if(playBoard.win){
 							if(showNewHighScore)
-								showNewHighScore();
+								alertTitleAndMessage(playBoard.getTimeCounter()+" seconds","New High Score!","Okay");
 							if(winMessage)
 								winMessage();
 						}
@@ -323,13 +323,41 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	{    
 		pauseAlertDialogUp = true;
 		pauseGame();
-		gameLobby();
+		areYouSure();
 
 	}
 
 	public void areYouSure()
 	{
+		if(!gameOver && playBoard.getTimeCounter()>0)
+		{
+				pauseGame();
+				pauseAlertDialogUp = true;
+				builder = new AlertDialog.Builder(mactivity);
+				// Set the dialog title
+				builder.setMessage("You will lose your current progress");
+
+				builder.setTitle("Are you sure?")
+				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int id) {
+						gameLobby();
+					}
+				})
+				.setNegativeButton("No", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int id) {
+						resumeGame();
+					}
+				});
 		
+				builder.setCancelable(false);
+				builder.show();
+		
+				//return builder.create();
+		}
+		else
+			gameLobby();
 	}
 	
 	public void gameLobby()
@@ -348,9 +376,8 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	
 			}
 		});
-		builder.show();
 		builder.setCancelable(false);
-		
+		builder.show();
 	}
 
 	public void hostGame()
@@ -358,7 +385,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		String[] choices = {"Easy","Medium","Hard"};
 
 		builder = new AlertDialog.Builder(mactivity);
-		builder.setTitle("Multiplayer")
+		builder.setTitle("Host")
 		.setItems(choices, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int select) {
 				if(select == 0)
@@ -368,36 +395,40 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				else
 					mactivity.hardGame();
 
-				//openMiddle();
-
+				int randomSeed = (int) (Math.random()*1000);
+				//open middle
+				alertTitleAndMessage("Your game code is: "+ randomSeed,"Give the game code above to your opponent then click start","Start");
+				pauseGame();
 			}
 		});
+		builder.setCancelable(false);
 		builder.show();
+
 	}
 
 	public void joinGame()
 	{
 		// Creating alert Dialog with one Button
-		AlertDialog.Builder alertDialog = new AlertDialog.Builder(mactivity);
+		builder = new AlertDialog.Builder(mactivity);
 		int randomSeed = (int) (Math.random()*100000000);
 
 		// Setting Dialog Title
-		alertDialog.setTitle("Multiplayer! = " + randomSeed);
+		builder.setTitle("Join game");
 
 		// Setting Dialog Message
-		alertDialog.setMessage("type in your friends code");
+		builder.setMessage("Type in your opponents game code then press start");
 		final EditText input = new EditText(mactivity);
 		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
 				LinearLayout.LayoutParams.MATCH_PARENT,
 				LinearLayout.LayoutParams.MATCH_PARENT);
 		input.setLayoutParams(lp);
-		alertDialog.setView(input);
+		builder.setView(input);
 
 		// Setting Icon to Dialog
 		//alertDialog.setIcon(R.drawable.key);
 
 		// Setting Positive "Yes" Button
-		alertDialog.setPositiveButton("YES",
+		builder.setPositiveButton("Start",
 				new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog,int which) {
 				// Write your code here to execute after dialog
@@ -428,7 +459,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			}
 		});
 		// Setting Negative "NO" Button
-		alertDialog.setNegativeButton("Cancel",
+		builder.setNegativeButton("Cancel",
 				new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				// Write your code here to execute after dialog
@@ -438,8 +469,8 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 		// closed
 
-		// Showing Alert Message
-		alertDialog.show();
+		builder.setCancelable(false);
+		builder.show();
 	}
 
 
@@ -764,18 +795,20 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		//Log.v("Game in Progress =",""+inProgress);
 	}
 
-	public void showNewHighScore()
+	public void alertTitleAndMessage(String title, String message, final String button)
 	{
 		builder = new AlertDialog.Builder(mactivity);
-		builder.setMessage(playBoard.getTimeCounter()+" seconds").setTitle("New High Score!")
+		builder.setMessage(message).setTitle(title)
 
-		.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+		.setPositiveButton(button, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int id) {
-
+				resumeGame();
+				if(button.contains("Start"))
+					playBoard.openBox(5, 5);
 			}
 		});
-
+		
 		AlertDialog dialog = builder.create();
 		dialog.show();
 		showNewHighScore = false;
@@ -894,7 +927,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 						public void run() {
 							invalidate();
 							if(showNewHighScore)
-								showNewHighScore();
+								alertTitleAndMessage(playBoard.getTimeCounter()+" seconds","New High Score!","Okay");
 							if(winMessage)
 								winMessage();
 						}
