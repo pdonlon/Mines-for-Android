@@ -18,6 +18,7 @@ import android.graphics.RectF;
 import android.graphics.Shader.TileMode;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -358,7 +359,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				gameSelect(select);
 				int randomSeed = (int) (Math.random()*1000);
 				playBoard.setSeed(randomSeed);
-				Log.v("host gives random seed", ""+randomSeed);
 				//open middle
 				alertTitleAndMessage("Your game code is: "+(select)+""+randomSeed,"Give the game code above to your opponent then click start","Start");
 				pauseGame();
@@ -378,6 +378,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		else
 			mactivity.hardGame();
 	}
+	
 	public int getGameNumber()
 	{	
 		int gameNumber;
@@ -395,14 +396,15 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	{
 		// Creating alert Dialog with one Button
 		builder = new AlertDialog.Builder(mactivity);
-		int randomSeed = (int) (Math.random()*1000);
+		final int randomSeed = (int) (Math.random()*1000);
 
 		// Setting Dialog Title
-
-
 		builder.setTitle("Game Code: "+(getGameNumber())+""+randomSeed).setMessage("Give your opponent this game code to type in or type in theirs");
 
+		
 		final EditText input = new EditText(mactivity);
+		input.setInputType(InputType.TYPE_CLASS_NUMBER);
+
 		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
 				LinearLayout.LayoutParams.MATCH_PARENT,
 				LinearLayout.LayoutParams.MATCH_PARENT);
@@ -424,7 +426,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 					int d;
 					try{
 						seedValue = Integer.parseInt(input.getText().toString().substring(1, input.length()));
-						Log.v("join seed value", ""+seedValue);
 						d = Integer.parseInt(input.getText().toString().charAt(0) + "");
 					}
 					catch(Exception e)
@@ -440,11 +441,14 @@ public class DrawPanel extends View implements View.OnTouchListener {
 					gameSelect(d);
 					playBoard.setSeed(seedValue);
 				}
-				else
+				else{
 					gameSelect(getGameNumber());
+					playBoard.setSeed(randomSeed);
+				}
 				mactivity.runOnUiThread(new Runnable(){ public void run() {
-					playBoard.openBox(playBoard.width/2, playBoard.height/2);
-				}});	
+					playBoard.open(playBoard.width/2, playBoard.height/2);
+				}});
+				pauseAlertDialogUp = false;
 				//start game
 				//				saveEditor.putBoolean("multiplayer", true);
 				//				saveEditor.commit();
