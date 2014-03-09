@@ -98,23 +98,6 @@ public class MainActivity extends Activity {
 				//drawView.saveGame();
 			}
 			
-			//		               if (action == KeyEvent.ACTION_DOWN) {
-			//		                 iview.setImageDrawable(constants.open);
-			//		                 //if (Build.VERSION.SDK_INT>=11)
-			//		             //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
-			//		               }
-			//		               return true;
-			//		           case KeyEvent.KEYCODE_CAMERA:
-			//		               if (action == KeyEvent.ACTION_UP) {
-			//		                 iview.setImageDrawable(constants.closed);
-			//		               }
-			//		               if (action == KeyEvent.ACTION_DOWN) {
-			//		                 iview.setImageDrawable(constants.open);
-			//		                 //if (Build.VERSION.SDK_INT>=11)
-			//		             //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
-			//		               }
-			//		               return true;
-
 			return super.dispatchKeyEvent(event);
 		}
 		return super.dispatchKeyEvent(event);
