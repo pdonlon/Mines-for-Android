@@ -28,7 +28,7 @@ public class MainActivity extends Activity {
 	DrawPanel drawView;
 
 	static MenuItem mens1;
-	static MenuItem mens2;
+	static MenuItem mens2; 
 	static MenuItem mens3;
 	static MenuItem mens4;
 	static MenuItem mens5;
@@ -58,13 +58,13 @@ public class MainActivity extends Activity {
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
 		
-		mens1 = menu.add(0, 1, 2, "Settings");
-		mens2 = menu.add(0, 2, 2,"Reset");
-		mens3 = menu.add(0, 3, 2,"Easy");
-		mens4 = menu.add(0, 4, 2, "Medium");
-		mens5 = menu.add(0, 5, 2,"Hard");
-		mens6 = menu.add(0, 6, 2,"High Scores");
-		mens7 = menu.add(0, 7, 2,"Multiplayer");
+		mens1 = menu.add(0, 1, 2, drawView.context.getString(R.string.Settings));
+		mens2 = menu.add(0, 2, 2,drawView.context.getString(R.string.Reset));
+		mens3 = menu.add(0, 3, 2,drawView.context.getString(R.string.Easy));
+		mens4 = menu.add(0, 4, 2, drawView.context.getString(R.string.Medium));
+		mens5 = menu.add(0, 5, 2,drawView.context.getString(R.string.Hard));
+		mens6 = menu.add(0, 6, 2,drawView.context.getString(R.string.High_Scores));
+		mens7 = menu.add(0, 7, 2,drawView.context.getString(R.string.Multiplayer));
 
 		return true;
 	}

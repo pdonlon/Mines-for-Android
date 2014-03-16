@@ -16,6 +16,8 @@ public final class R {
          Customize dimensions originally defined in res/values/dimens.xml (such as
          screen margins) for sw720dp devices (e.g. 10" tablets) in landscape here.
     
+ Default screen margins, per the Android Design guidelines. 
+ Default screen margins, per the Android Design guidelines. 
          */
         public static final int activity_horizontal_margin=0x7f040000;
         public static final int activity_vertical_margin=0x7f040001;
@@ -37,14 +39,19 @@ public final class R {
         public static final int Animations=0x7f050010;
         public static final int Cancel=0x7f050016;
         public static final int Easy=0x7f050012;
+        public static final int Give_your_opponents_the_code=0x7f05001c;
         public static final int Gold=0x7f050011;
         public static final int Hard=0x7f050014;
+        public static final int High_Scores=0x7f050020;
+        public static final int Host_Game=0x7f05001b;
         public static final int Medium=0x7f050013;
         public static final int Multiplayer=0x7f05000e;
+        public static final int New_High_Score=0x7f050019;
         public static final int Okay=0x7f050017;
         public static final int Reset=0x7f050018;
         public static final int Settings=0x7f050015;
         public static final int Vibration=0x7f05000f;
+        public static final int When_all_players_are_ready=0x7f05001d;
         public static final int achievement_daredevil=0x7f050003;
         public static final int achievement_kaboom=0x7f050001;
         public static final int achievement_lightning=0x7f050005;
@@ -53,6 +60,8 @@ public final class R {
         public static final int action_settings=0x7f05000a;
         public static final int app_id=0x7f050000;
         /**  ★★ 
+ ★★ 
+ ★★ 
          */
         public static final int app_name=0x7f050009;
         public static final int hello_world=0x7f05000b;
@@ -61,6 +70,9 @@ public final class R {
         public static final int leaderboard_easy_leaderboard=0x7f050006;
         public static final int leaderboard_hard_leaderboard=0x7f050008;
         public static final int leaderboard_medium_leaderboard=0x7f050007;
+        public static final int loading_game=0x7f05001e;
+        public static final int saving_game=0x7f05001f;
+        public static final int seconds=0x7f05001a;
     }
     public static final class style {
         /** 
@@ -72,9 +84,31 @@ public final class R {
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         
+
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    
+
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        
+
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    
+
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        
          */
         public static final int AppBaseTheme=0x7f060000;
         /**  Application theme. 
+ All customizations that are NOT specific to a particular API-level can go here. 
+ Application theme. 
+ All customizations that are NOT specific to a particular API-level can go here. 
+ Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f060001;

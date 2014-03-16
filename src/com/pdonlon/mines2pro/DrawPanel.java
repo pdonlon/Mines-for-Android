@@ -122,7 +122,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		initializeSharedPreferences();
 		
 		if(save.getBoolean("saveGame", false))
-			makeToast("Loading game");
+			makeToast(context.getString(R.string.loading_game));
 		
 		while(!save.getBoolean("done saving", true)){
 			try {
@@ -136,18 +136,18 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			difficulty = save.getString("difficulty", "Easy");
 			
 		startTimer();
-		if(difficulty.contains("Easy"))
+		if(difficulty.contains(context.getString(R.string.Easy)))
 		{
 			playBoard = new Board(9,9,this);
 			playBoard.setTotalBombs(10);
 		}
-		else if(difficulty.contains("Medium"))
+		else if(difficulty.contains(context.getString(R.string.Medium)))
 		{
 			playBoard = new Board(16,16,this);
 			playBoard.setTotalBombs(40);
 		}
 
-		else if(difficulty.contains("Hard"))
+		else if(difficulty.contains(context.getString(R.string.Hard)))
 		{
 			playBoard = new Board(16,30,this);
 			playBoard.setTotalBombs(99);
@@ -281,7 +281,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 						if(playBoard.win){
 							if(showNewHighScore)
-								alertTitleAndMessage(playBoard.getTimeCounter()+" seconds","New High Score!","Okay");
+								alertTitleAndMessage(playBoard.getTimeCounter()+" "+context.getString(R.string.seconds),context.getString(R.string.New_High_Score),context.getString(R.string.Okay));
 							if(winMessage)
 								winMessage();
 						}
@@ -369,7 +369,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			final int randomSeed = (int) (Math.random()*1000);
 
 			// Setting Dialog Title
-			builder.setTitle("Host Game").setMessage(Html.fromHtml("Give your opponent(s) the code:<br><br><h1>"+getGameNumber()+""+randomSeed+"</h1>When all players are ready, press the start button below to begin."));
+			builder.setTitle(context.getString(R.string.Host_Game)).setMessage(Html.fromHtml(context.getString(R.string.Give_your_opponents_the_code)+"<br><br><h1>"+getGameNumber()+""+randomSeed+"</h1>"+context.getString(R.string.When_all_players_are_ready)));
 			
 			// Setting Positive "Yes" Button
 			builder.setPositiveButton("Start",
@@ -524,7 +524,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		saveEditor.putBoolean("done saving", false);
 		saveEditor.commit();
 		if(!gameOver && playBoard.getTimeCounter()>0)
-			makeToast("Saving Game");
+			makeToast(context.getString(R.string.saving_game));
 
 		Thread s;
 		s = new Thread( new Runnable(){
@@ -785,7 +785,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			}
 		})
 		// Set the action buttons
-		.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+		.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int id) {
 				// User clicked OK, so save the mSelectedItems results somewhere
@@ -968,7 +968,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 						public void run() {
 							invalidate();
 							if(showNewHighScore)
-								alertTitleAndMessage(playBoard.getTimeCounter()+" seconds","New High Score!","Okay");
+								alertTitleAndMessage(playBoard.getTimeCounter()+" "+context.getString(R.string.seconds),context.getString(R.string.New_High_Score),context.getString(R.string.Okay));
 							if(winMessage)
 								winMessage();
 						}
