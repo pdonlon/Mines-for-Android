@@ -25,5 +25,12 @@
     <string name="loading_game">el juego carga</string>
     <string name="saving_game">ahorro de juego</string>
     <string name="High_Scores">Puntuaciones más Altas</string>
+    <string name="join_game">Join Game</string>
+    <string name="enter_code_below">"Enter the host's game code below, and push start when you're ready."</string>
+    <string name="hint_code">"Enter game code here"</string>
+    <string name="Paused">Paused</string>
+    <string name="Resume">Resume</string>
+    <string name="Start">Start</string>
+    <string name="You_Win">You Win!</string>
 
 </resources>

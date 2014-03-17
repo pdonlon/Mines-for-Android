@@ -186,7 +186,7 @@ public class MainActivity extends Activity {
 	{
 		drawView.playBoard.setWidth(9);
 		drawView.playBoard.setHeight(9);
-		drawView.setDifficulty("Easy");
+		drawView.setDifficulty(drawView.context.getString(R.string.Easy));
 		drawView.playBoard.setTotalBombs(10);
 		startingUp();
 		drawView.playBoard.readjust();
@@ -196,7 +196,7 @@ public class MainActivity extends Activity {
 	{
 		drawView.playBoard.setWidth(16);
 		drawView.playBoard.setHeight(16);
-		drawView.setDifficulty("Medium");
+		drawView.setDifficulty(drawView.context.getString(R.string.Medium));
 		drawView.playBoard.setTotalBombs(40);
 		startingUp();
 		drawView.playBoard.readjust();
@@ -206,7 +206,7 @@ public class MainActivity extends Activity {
 	{
 		drawView.playBoard.setWidth(16);
 		drawView.playBoard.setHeight(30);
-		drawView.setDifficulty("Hard");
+		drawView.setDifficulty(drawView.context.getString(R.string.Hard));
 		drawView.playBoard.setTotalBombs(99);
 		startingUp();
 		drawView.playBoard.readjust();

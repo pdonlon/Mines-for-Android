@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <!-- ★★ -->
-    <string name="app_name">Mines Pro</string>
+	<string name="app_name">Mines Pro</string>
     <string name="action_settings">Paramètres</string>
     <string name="hello_world">Hello world!</string>
     <string name="host_new_game">Accueillir un Nouveau Jeu</string>
@@ -20,10 +20,16 @@
     <string name="New_High_Score">Nouveau Score Élevé!</string>
     <string name="seconds">secondes</string>
     <string name="Host_Game">Accueillir Jeu</string>
-    <string name="Give_your_opponents_the_code">Donner à votre adversaire(s) le code:</string>
+	<string name="Give_your_opponents_the_code">Donner à votre adversaire(s) le code:</string>    
     <string name="When_all_players_are_ready">Lorsque tous les joueurs sont prêts, appuyez sur le bouton de démarrage ci-dessous pour commencer</string>
     <string name="loading_game">jeu de chargement</string>
     <string name="saving_game">saving game</string>
     <string name="High_Scores">Scores Élevés</string>
-
+    <string name="join_game">Joindre Jeu</string>
+    <string name="enter_code_below">Entrez le code de jeu de l\'hôte ci-dessous, et début pousser quand vous êtes prêt.</string>
+    <string name="hint_code">Entrez le code de jeu ici</string>
+    <string name="Paused">Pause</string>
+    <string name="Resume">CV</string>
+    <string name="Start">Démarrer</string>
+    <string name="You_Win">Vous gagnez!</string>
 </resources>

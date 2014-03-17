@@ -48,10 +48,14 @@ public final class R {
         public static final int Multiplayer=0x7f05000e;
         public static final int New_High_Score=0x7f050019;
         public static final int Okay=0x7f050017;
+        public static final int Paused=0x7f050024;
         public static final int Reset=0x7f050018;
+        public static final int Resume=0x7f050025;
         public static final int Settings=0x7f050015;
+        public static final int Start=0x7f050026;
         public static final int Vibration=0x7f05000f;
         public static final int When_all_players_are_ready=0x7f05001d;
+        public static final int You_Win=0x7f050027;
         public static final int achievement_daredevil=0x7f050003;
         public static final int achievement_kaboom=0x7f050001;
         public static final int achievement_lightning=0x7f050005;
@@ -64,9 +68,12 @@ public final class R {
  ★★ 
          */
         public static final int app_name=0x7f050009;
+        public static final int enter_code_below=0x7f050022;
         public static final int hello_world=0x7f05000b;
+        public static final int hint_code=0x7f050023;
         public static final int host_new_game=0x7f05000c;
         public static final int join_existing_game=0x7f05000d;
+        public static final int join_game=0x7f050021;
         public static final int leaderboard_easy_leaderboard=0x7f050006;
         public static final int leaderboard_hard_leaderboard=0x7f050008;
         public static final int leaderboard_medium_leaderboard=0x7f050007;

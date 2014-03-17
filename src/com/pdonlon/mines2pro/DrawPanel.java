@@ -43,7 +43,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	int x = 0;
 	int y = 0;
 	Board playBoard;
-	String difficulty = "Easy";
+	String difficulty;
 	boolean gameOver = false;
 	boolean dragging;
 	boolean flagMode;
@@ -113,6 +113,8 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		setOnTouchListener(this);
 		context = mactivity.getApplicationContext(); 
 		
+		//difficulty = context.getString(R.string.Easy);
+		
 		myStringArray[0]=context.getString(R.string.Vibration);
 		myStringArray[1] = context.getString(R.string.Animations);
 		myStringArray[2] = context.getString(R.string.Gold);
@@ -132,9 +134,19 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			}
 		}
 		
-		if(save.getBoolean("save", false))
-			difficulty = save.getString("difficulty", "Easy");
+		if(!save.getBoolean("save", false))
+			difficulty = context.getString(R.string.Easy);
+		else
+			difficulty = save.getString("difficulty", context.getString(R.string.Medium));
+		
+		if(!difficulty.contains(context.getString(R.string.Easy)) && !difficulty.contains(context.getString(R.string.Medium)) && !difficulty.contains(context.getString(R.string.Hard)))
+		{
+			difficulty = context.getString(R.string.Easy);
+			saveEditor.putBoolean("saveGame", false);
+			saveEditor.putInt("time", 0);
+			saveEditor.commit();
 			
+		}
 		startTimer();
 		if(difficulty.contains(context.getString(R.string.Easy)))
 		{
@@ -151,7 +163,9 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		{
 			playBoard = new Board(16,30,this);
 			playBoard.setTotalBombs(99);
-		}
+		}	
+		
+		Log.v(difficulty, "HELLO");
 		
 		playBoard.setUp();
 		selected = getSettings();
@@ -415,9 +429,9 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	public int getGameNumber()
 	{	
 		int gameNumber;
-		if(difficulty.contains("Easy"))
+		if(difficulty.contains(context.getString(R.string.Easy)))
 			gameNumber = 1;
-		else if(difficulty.contains("Medium"))
+		else if(difficulty.contains(context.getString(R.string.Medium)))
 			gameNumber = 2;
 		else
 			gameNumber = 3;
@@ -433,14 +447,14 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		// Setting Dialog Title
 		//builder.setTitle("Game Code: "+(getGameNumber())+""+randomSeed).setMessage("Give your opponent this game code then click start");
 		
-		builder.setTitle("Join Game").setMessage("Enter the host's game code below, and push start when you're ready.");
+		builder.setTitle(context.getString(R.string.join_game)).setMessage(context.getString(R.string.enter_code_below));
 		
 		final EditText input = new EditText(mactivity);
 		input.setInputType(InputType.TYPE_CLASS_NUMBER);
 		input.setFocusableInTouchMode(true);
 		input.setFocusable(true);
 		input.requestFocus();
-		input.setHint("Enter game code here...");
+		input.setHint(context.getString(R.string.hint_code)+"...");
 		
 		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
 				LinearLayout.LayoutParams.MATCH_PARENT,
@@ -729,15 +743,15 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		pauseAlertDialogUp = true;
 		builder = new AlertDialog.Builder(mactivity);
 		// Set the dialog title
-		builder.setTitle("Paused")
+		builder.setTitle(context.getString(R.string.Paused))
 
-		.setPositiveButton("Resume", new DialogInterface.OnClickListener() {
+		.setPositiveButton(context.getString(R.string.Resume), new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int id) {
 				resumeGame();
 			}
 		})
-		.setNegativeButton("Reset", new DialogInterface.OnClickListener() {
+		.setNegativeButton(context.getString(R.string.Reset), new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int id) {
 				resetGame();
@@ -785,7 +799,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			}
 		})
 		// Set the action buttons
-		.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+		.setPositiveButton(context.getString(R.string.Okay), new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int id) {
 				// User clicked OK, so save the mSelectedItems results somewhere
@@ -846,7 +860,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			@Override
 			public void onClick(DialogInterface dialog, int id) {
 				resumeGame();
-				if(button.contains("Start"))
+				if(button.contains(context.getString(R.string.Start)))
 					playBoard.openBox(playBoard.width/2, playBoard.height/2);
 			}
 		});
@@ -859,7 +873,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	public void winMessage()
 	{
 		builder = new AlertDialog.Builder(mactivity);
-		builder.setMessage(playBoard.getTimeCounter()+" seconds").setTitle("You Win!")
+		builder.setMessage(playBoard.getTimeCounter()+" "+context.getString(R.string.seconds)).setTitle(context.getString(R.string.You_Win))
 
 		.setPositiveButton(context.getString(R.string.Okay), new DialogInterface.OnClickListener() {
 			@Override
@@ -887,7 +901,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		
 		builder = new AlertDialog.Builder(mactivity);
 
-		builder.setMessage(context.getString(R.string.Easy)+": "+ scores.getInt("Easy", 0)+" seconds\n\n"+context.getString(R.string.Medium)+": "+scores.getInt("Medium", 0)+" seconds\n\n"+context.getString(R.string.Hard)+": "+ scores.getInt("Hard", 0)+" seconds").setTitle("High Scores")
+		builder.setMessage(context.getString(R.string.Easy)+": "+ scores.getInt(context.getString(R.string.Easy), 0)+" "+context.getString(R.string.seconds)+"\n\n"+context.getString(R.string.Medium)+": "+scores.getInt(context.getString(R.string.Medium), 0)+" "+context.getString(R.string.seconds)+"\n\n"+context.getString(R.string.Hard)+": "+ scores.getInt(context.getString(R.string.Hard), 0)+" "+context.getString(R.string.seconds)).setTitle(context.getString(R.string.High_Scores))
 
 		.setNegativeButton(context.getString(R.string.Okay), new DialogInterface.OnClickListener() {
 			@Override
@@ -1030,9 +1044,9 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		//TODO
 		if(!animations)
 			vibrationTime = 0;
-		else if(tempDifficulty.contains("Easy"))
+		else if(tempDifficulty.contains(context.getString(R.string.Easy)))
 			vibrationTime = 50;
-		else if(tempDifficulty.contains("Medium"))
+		else if(tempDifficulty.contains(context.getString(R.string.Medium)))
 			vibrationTime = 25;
 		else 
 			vibrationTime = 10;
