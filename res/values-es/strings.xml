@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <!-- ★★ -->
-    <string name="app_name">Mines Pro</string>
+    <string name="app_name">Minas HD</string>
     <string name="action_settings">Configuración</string>
     <string name="hello_world">Hello world!</string>
     <string name="host_new_game">Organiza un nuevo Juego</string>
@@ -17,7 +17,7 @@
     <string name="Cancel">Cancelar</string>
     <string name="Okay">Bueno</string>
     <string name="Reset">Reajustar</string>
-    <string name="New_High_Score">Nuevo Récord!</string>
+    <string name="New_High_Score">¡Nuevo Récord!</string>
     <string name="seconds">segundo</string>
     <string name="Host_Game">Juego Anfitrión</string>
     <string name="Give_your_opponents_the_code">Dele a su oponente(s) el código:</string>
@@ -25,12 +25,12 @@
     <string name="loading_game">el juego carga</string>
     <string name="saving_game">ahorro de juego</string>
     <string name="High_Scores">Puntuaciones más Altas</string>
-    <string name="join_game">Join Game</string>
-    <string name="enter_code_below">"Enter the host's game code below, and push start when you're ready."</string>
-    <string name="hint_code">"Enter game code here"</string>
-    <string name="Paused">Paused</string>
-    <string name="Resume">Resume</string>
-    <string name="Start">Start</string>
-    <string name="You_Win">You Win!</string>
+    <string name="join_game">Únete a Juego</string>
+    <string name="enter_code_below">Introduce el código de juego de la serie a continuación, y empujar inicio cuando esté listo</string>
+    <string name="hint_code">Introduce el código de juego aquí</string>
+    <string name="Paused">En pausa</string>
+    <string name="Resume">Continuar</string>
+    <string name="Start">Comienzo</string>
+    <string name="You_Win">¡Usted gana!</string>
 
 </resources>
