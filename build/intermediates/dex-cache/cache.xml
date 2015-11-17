@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/8.1.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="997773777cf3904c11d6764fe3b7668538220e49">
+        <dex dex="/Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/pre-dexed/debug/classes-e93b5436caa326bb9e63bec039103c2f5f66dc7b.jar" />
+    </item>
+    <item
+        jar="/Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="1ee588ff2c4daf7b97c1cbf922a6c7f027285c2f">
+        <dex dex="/Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/pre-dexed/debug/classes-11e4d95d76d9c4aeb44cf2fc97d5647cea0a3cd9.jar" />
+    </item>
+    <item
+        jar="/Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="d0dda274b703dd9c5bb056867649d22b4171ae7d">
+        <dex dex="/Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/pre-dexed/debug/classes-e80b0e7de7c60b7d5f539e227f4d0e5f7baecf77.jar" />
+    </item>
+    <item
+        jar="/Users/PhilipDonlon/Downloads/adt-bundle-mac-x86_64-20130917/sdk/extras/android/m2repository/com/android/support/support-annotations/22.2.0/support-annotations-22.2.0.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="66b42a1f3eb7676070b7ef7f14b603483aecbee1">
+        <dex dex="/Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/pre-dexed/debug/support-annotations-22.2.0-15c244713a573667cbba0b360576f5ddea927042.jar" />
+    </item>
+    <item
+        jar="/Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.1.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="82825756edeeb3b56b15e73b2edd56e93da5a444">
+        <dex dex="/Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/pre-dexed/debug/classes-0a52f8974062227368f0f5d3fd47b21fedecc006.jar" />
+    </item>
+    <item
+        jar="/Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-drive/8.1.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="3c729e6d76a36c5dc27e6a4c4009296f49eaa88a">
+        <dex dex="/Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/pre-dexed/debug/classes-1dbd1941856391b723ba1186db35ca0ff4b12c23.jar" />
+    </item>
+    <item
+        jar="/Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/jars/libs/internal_impl-22.2.0.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="57f2ab85c164ff1676ec64dee787981c046fab79">
+        <dex dex="/Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/pre-dexed/debug/internal_impl-22.2.0-49832cbab730aacbde9220f9f9cb10e9712508a1.jar" />
+    </item>
+    <item
+        jar="/Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-games/8.1.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="993834cb17d07d51b92db89d2c330243592ebf77">
+        <dex dex="/Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/pre-dexed/debug/classes-3926750d718f9353df7f52ad08a4fb911562dafc.jar" />
+    </item>
+    <item
+        jar="/Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appindexing/8.1.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="4477ea44f5ec5ad064022a22691732d7638ff197">
+        <dex dex="/Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/pre-dexed/debug/classes-724a2329c0b0b4022035449a12f0a6f9a26648ba.jar" />
+    </item>
+
+</items>

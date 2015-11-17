@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!-- ★★ -->
+	<string name="app_name">Mines Pro</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="host_new_game">Accueillir un Nouveau Jeu</string>
+    <string name="join_existing_game">Joindre jeu Existant</string>
+    <string name="Multiplayer">Multijouneur</string>
+    <string name="Vibration">Vibration</string>
+    <string name="Animations">Animations</string>
+    <string name="Gold">Or</string>
+    <string name="Easy">Facile</string>
+    <string name="Medium">Moyen</string>
+    <string name="Hard">Dur</string>
+    <string name="Settings">Paramètres</string>
+    <string name="Cancel">Annuler</string>
+    <string name="Okay">Bien</string>
+    <string name="Save">enregistrer</string>
+    <string name="Leaderboard">Leaderboard</string>
+    <string name="Online_Leaderboard">Online Leaderboard</string>
+    <string name="Next">Next</string>
+    <string name="Reset">Remettre</string>
+    <string name="New_High_Score">Nouveau Score Élevé!</string>
+    <string name="New_Game">Nouveau Jeu</string>
+    <string name="seconds">secondes</string>
+    <string name="Host_Game">Accueillir Jeu</string>
+	<string name="Give_your_opponents_the_code">Donner à votre adversaire(s) le code:</string>    
+    <string name="When_all_players_are_ready">Lorsque tous les joueurs sont prêts, appuyez sur le bouton de démarrage ci-dessous pour commencer</string>
+    <string name="loading_game">jeu de chargement</string>
+    <string name="saving_game">saving game</string>
+    <string name="High_Scores">Scores Élevés</string>
+    <string name="join_game">Joindre Jeu</string>
+    <string name="enter_code_below">Entrez le code de jeu de l\'hôte ci-dessous, et début pousser quand vous êtes prêt.</string>
+    <string name="hint_code">Entrez le code de jeu ici</string>
+    <string name="Paused">Pause</string>
+    <string name="Resume">CV</string>
+    <string name="Start">Démarrer</string>
+    <string name="You_Win">Vous gagnez!</string>
+
+    <!-- Sign-in status messages -->
+    <string name="error_null_person">
+        Error: Plus.PeopleApi.getCurrentPerson returned null. Ensure that the Google+ API is
+        enabled for your project, you have a properly configured google-services.json file
+        and that your device has an internet connection.
+    </string>
+    <!-- Google Play Services error for Toast -->
+
+    <!-- Button labels -->
+    <string name="disconnect">Disconnect</string>
+
+    <!-- Content Description for images -->
+    <string name="desc_google_icon">Google Logo</string>
+
+    <!-- Rationale for asking for Contacts -->
+    <string name="contacts_permission_rationale">Contacts access is needed in order to retrieve your email address.</string>
+
+</resources>

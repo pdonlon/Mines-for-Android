@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!-- ★★ -->
+    <string name="app_name">Minas HD</string>
+    <string name="action_settings">Configuración</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="host_new_game">Organiza un nuevo Juego</string>
+    <string name="join_existing_game">Únete a juego existentes</string>
+    <string name="Multiplayer">Multijugador</string>
+    <string name="Vibration">Vibración</string>
+    <string name="Animations">Animaciones</string>
+    <string name="Gold">Oro</string>
+    <string name="Easy">Fácil</string>
+    <string name="Medium">Medio</string>
+    <string name="Hard">Duro</string>
+    <string name="Settings">Configuración</string>
+    <string name="Cancel">Cancelar</string>
+    <string name="Okay">Bueno</string>
+    <string name="Save">Guardar</string>
+    <string name="Reset">Reajustar</string>
+    <string name="Leaderboard">Leaderboard</string>
+    <string name="Online_Leaderboard">Online Leaderboard</string>
+    <string name="Next">Next</string>
+    <string name="New_High_Score">¡Nuevo Récord!</string>
+    <string name="New_Game">Nuevo Juego</string>
+    <string name="seconds">segundo</string>
+    <string name="Host_Game">Juego Anfitrión</string>
+    <string name="Give_your_opponents_the_code">Dele a su oponente(s) el código:</string>
+    <string name="When_all_players_are_ready">Cuando todos los jugadores están listos, pulse el botón de inicio a continuación para comenzar</string>
+    <string name="loading_game">el juego carga</string>
+    <string name="saving_game">ahorro de juego</string>
+    <string name="High_Scores">Puntuaciones más Altas</string>
+    <string name="join_game">Únete a Juego</string>
+    <string name="enter_code_below">Introduce el código de juego de la serie a continuación, y empujar inicio cuando esté listo</string>
+    <string name="hint_code">Introduce el código de juego aquí</string>
+    <string name="Paused">En pausa</string>
+    <string name="Resume">Continuar</string>
+    <string name="Start">Comienzo</string>
+    <string name="You_Win">¡Usted gana!</string>
+    <!-- Sign-in status messages -->
+    <string name="error_null_person">
+        Error: Plus.PeopleApi.getCurrentPerson returned null. Ensure that the Google+ API is
+        enabled for your project, you have a properly configured google-services.json file
+        and that your device has an internet connection.
+    </string>
+    <!-- Google Play Services error for Toast -->
+
+    <!-- Button labels -->
+    <string name="disconnect">Disconnect</string>
+
+    <!-- Content Description for images -->
+    <string name="desc_google_icon">Google Logo</string>
+
+    <!-- Rationale for asking for Contacts -->
+    <string name="contacts_permission_rationale">Contacts access is needed in order to retrieve your email address.</string>
+
+</resources>

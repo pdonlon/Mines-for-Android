@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!-- ★★ -->
+    <string name="app_name">Mines HD</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="host_new_game">Host a new Game</string>
+    <string name="join_existing_game">Join existing Game</string>
+    <string name="Multiplayer">Multiplayer</string>
+    <string name="Vibration">Vibration</string>
+    <string name="Animations">Animations</string>
+    <string name="Gold">Gold</string>
+    <string name="Easy">Easy</string>
+    <string name="Medium">Medium</string>
+    <string name="Hard">Hard</string>
+    <string name="Settings">Settings</string>
+    <string name="Cancel">Cancel</string>
+    <string name="Okay">Okay</string>
+    <string name="Save">Save</string>
+    <string name="Reset">Reset</string>
+    <string name="Leaderboard">Leaderboard</string>
+    <string name="Online_Leaderboard">Online Leaderboard</string>
+    <string name="Next">Next</string>
+    <string name="New_High_Score">New High Score!</string>
+    <string name="New_Game">New Game</string>
+    <string name="seconds">seconds</string>
+    <string name="Host_Game">Host Game</string>
+    <string name="Give_your_opponents_the_code">Give your opponent(s) the code:</string>
+    <string name="When_all_players_are_ready">When all players are ready, press the start button below to begin</string>
+    <string name="loading_game">loading game</string>
+    <string name="saving_game">saving game</string>
+    <string name="High_Scores">High Scores</string>
+    <string name="join_game">Join Game</string>
+    <string name="enter_code_below">Enter the host\'s game code below, and push start when you\'re ready.</string>
+    <string name="hint_code">Enter game code here</string>
+    <string name="Paused">Paused</string>
+    <string name="Resume">Resume</string>
+    <string name="Start">Start</string>
+    <string name="You_Win">You Win!</string>
+    <!-- Sign-in status messages -->
+    <string name="signed_in_fmt" translatable="false">Signed in as: %s</string>
+    <string name="signing_in" translatable="false">Signing in…</string>
+    <string name="signed_out" translatable="false">Signed out</string>
+    <string name="signed_in_err" translatable="false">"Error: please check logs."</string>
+    <string name="error_null_person">
+        Error: Plus.PeopleApi.getCurrentPerson returned null. Ensure that the Google+ API is
+        enabled for your project, you have a properly configured google-services.json file
+        and that your device has an internet connection.
+    </string>
+    <!-- Google Play Services error for Toast -->
+    <string name="play_services_error_fmt" translatable="false">Google Play Services Error: %i</string>
+
+    <!-- Button labels -->
+    <string name="sign_out" translatable="false">Sign Out</string>
+    <string name="disconnect">Disconnect</string>
+
+    <!-- Content Description for images -->
+    <string name="desc_google_icon">Google Logo</string>
+
+    <!-- Rationale for asking for Contacts -->
+    <string name="contacts_permission_rationale">Contacts access is needed in order to retrieve your email address.</string>
+
+
+
+</resources>

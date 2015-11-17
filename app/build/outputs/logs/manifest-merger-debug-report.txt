@@ -1,0 +1,224 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:2:1-46:12
+	xmlns:tools
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:3:5-51
+	xmlns:android
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:2:11-69
+	package
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:4:5-33
+		INJECTED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml
+	android:versionName
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:6:5-31
+		INJECTED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml
+	android:versionCode
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:5:5-29
+		INJECTED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml
+uses-sdk
+ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:7:5-13:107
+MERGED from [com.android.support:multidex:1.0.1] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.android.support/multidex/1.0.1/AndroidManifest.xml:18:5-42
+MERGED from [com.google.android.gms:play-services-measurement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.1.0/AndroidManifest.xml:18:5-42
+MERGED from [com.google.android.gms:play-services-base:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.1.0/AndroidManifest.xml:18:5-42
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:18:5-42
+MERGED from [com.android.support:support-v4:22.2.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/AndroidManifest.xml:20:5-43
+MERGED from [com.google.android.gms:play-services-analytics:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/8.1.0/AndroidManifest.xml:18:5-42
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:18:5-42
+MERGED from [com.android.support:support-v4:22.2.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/AndroidManifest.xml:20:5-43
+MERGED from [com.google.android.gms:play-services-ads:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/8.1.0/AndroidManifest.xml:23:5-42
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:18:5-42
+MERGED from [com.android.support:support-v4:22.2.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/AndroidManifest.xml:20:5-43
+MERGED from [com.google.android.gms:play-services-appindexing:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appindexing/8.1.0/AndroidManifest.xml:18:5-42
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:18:5-42
+MERGED from [com.android.support:support-v4:22.2.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/AndroidManifest.xml:20:5-43
+MERGED from [com.google.android.gms:play-services-ads:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/8.1.0/AndroidManifest.xml:23:5-42
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:18:5-42
+MERGED from [com.android.support:support-v4:22.2.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/AndroidManifest.xml:20:5-43
+MERGED from [com.google.android.gms:play-services-appindexing:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appindexing/8.1.0/AndroidManifest.xml:18:5-42
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:18:5-42
+MERGED from [com.android.support:support-v4:22.2.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/AndroidManifest.xml:20:5-43
+MERGED from [com.google.android.gms:play-services-games:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-games/8.1.0/AndroidManifest.xml:18:5-42
+MERGED from [com.google.android.gms:play-services-base:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.1.0/AndroidManifest.xml:18:5-42
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:18:5-42
+MERGED from [com.android.support:support-v4:22.2.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/AndroidManifest.xml:20:5-43
+MERGED from [com.google.android.gms:play-services-drive:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-drive/8.1.0/AndroidManifest.xml:18:5-42
+MERGED from [com.google.android.gms:play-services-base:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.1.0/AndroidManifest.xml:18:5-42
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:18:5-42
+MERGED from [com.android.support:support-v4:22.2.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/AndroidManifest.xml:20:5-43
+MERGED from [com.google.android.gms:play-services-identity:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-identity/8.1.0/AndroidManifest.xml:18:5-42
+MERGED from [com.google.android.gms:play-services-base:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.1.0/AndroidManifest.xml:18:5-42
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:18:5-42
+MERGED from [com.android.support:support-v4:22.2.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/AndroidManifest.xml:20:5-43
+MERGED from [com.google.android.gms:play-services-plus:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/8.1.0/AndroidManifest.xml:18:5-42
+MERGED from [com.google.android.gms:play-services-base:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.1.0/AndroidManifest.xml:18:5-42
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:18:5-42
+MERGED from [com.android.support:support-v4:22.2.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/AndroidManifest.xml:20:5-43
+	android:targetSdkVersion
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:9:9-38
+		INJECTED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:8:9-34
+		INJECTED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml
+	tools:overrideLibrary
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:7:5-13:107
+uses-permission#android.permission.VIBRATE
+ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:15:6-65
+	android:name
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:15:23-65
+uses-permission#android.permission.INTERNET
+ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:16:5-67
+MERGED from [com.google.android.gms:play-services-measurement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.1.0/AndroidManifest.xml:21:5-67
+MERGED from [com.google.android.gms:play-services-analytics:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/8.1.0/AndroidManifest.xml:21:5-67
+MERGED from [com.google.android.gms:play-services-ads:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/8.1.0/AndroidManifest.xml:20:5-66
+MERGED from [com.google.android.gms:play-services-ads:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/8.1.0/AndroidManifest.xml:20:5-66
+	android:name
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:16:22-76
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:17:6-78
+MERGED from [com.google.android.gms:play-services-measurement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.1.0/AndroidManifest.xml:22:5-79
+MERGED from [com.google.android.gms:play-services-analytics:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/8.1.0/AndroidManifest.xml:22:5-79
+MERGED from [com.google.android.gms:play-services-ads:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/8.1.0/AndroidManifest.xml:21:5-78
+MERGED from [com.google.android.gms:play-services-ads:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/8.1.0/AndroidManifest.xml:21:5-78
+	android:name
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:17:6-78
+uses-permission#android.permission.GET_ACCOUNTS
+ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:16:5-18:71
+	android:name
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:16:5-18:71
+uses-permission#android.permission.USE_CREDENTIALS
+ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:15:5-19:74
+	android:name
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:15:5-19:74
+application
+ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:24:9-41:19
+MERGED from [com.google.android.gms:play-services-measurement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.1.0/AndroidManifest.xml:26:5-46:19
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:20:5-24:19
+MERGED from [com.android.support:support-v4:22.2.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-analytics:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/8.1.0/AndroidManifest.xml:24:5-20
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:20:5-24:19
+MERGED from [com.android.support:support-v4:22.2.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-ads:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/8.1.0/AndroidManifest.xml:24:5-32:19
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:20:5-24:19
+MERGED from [com.android.support:support-v4:22.2.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-appindexing:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appindexing/8.1.0/AndroidManifest.xml:19:5-20
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:20:5-24:19
+MERGED from [com.android.support:support-v4:22.2.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-ads:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/8.1.0/AndroidManifest.xml:24:5-32:19
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:20:5-24:19
+MERGED from [com.android.support:support-v4:22.2.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-appindexing:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appindexing/8.1.0/AndroidManifest.xml:19:5-20
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:20:5-24:19
+MERGED from [com.android.support:support-v4:22.2.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-games:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-games/8.1.0/AndroidManifest.xml:19:5-20
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:20:5-24:19
+MERGED from [com.android.support:support-v4:22.2.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-drive:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-drive/8.1.0/AndroidManifest.xml:19:5-20
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:20:5-24:19
+MERGED from [com.android.support:support-v4:22.2.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-identity:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-identity/8.1.0/AndroidManifest.xml:19:5-20
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:20:5-24:19
+MERGED from [com.android.support:support-v4:22.2.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-plus:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/8.1.0/AndroidManifest.xml:19:5-20
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:20:5-24:19
+MERGED from [com.android.support:support-v4:22.2.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/AndroidManifest.xml:22:5-20
+	android:label
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:27:13-45
+	android:allowBackup
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:24:9-41:19
+	android:icon
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:24:9-41:19
+	android:theme
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:24:9-41:19
+meta-data#com.google.android.gms.version
+ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:29:17-68
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:21:9-23:69
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:21:9-23:69
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:21:9-23:69
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:21:9-23:69
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:21:9-23:69
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:21:9-23:69
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:21:9-23:69
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:21:9-23:69
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:21:9-23:69
+MERGED from [com.google.android.gms:play-services-basement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/AndroidManifest.xml:21:9-23:69
+	android:name
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:29:25-66
+	android:value
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:29:17-68
+meta-data#com.google.android.gms.games.APP_ID
+ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:31:17-45
+	android:name
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:31:27-74
+	android:value
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:31:17-45
+activity#com.pdonlon.mines2.MainActivity
+ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:35:9-41:20
+	android:screenOrientation
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:35:9-41:20
+	android:label
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:35:9-41:20
+	android:name
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:35:19-71
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:35:9-37:29
+action#android.intent.action.MAIN
+ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:36:1-37:69
+	android:name
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:36:1-37:69
+category#android.intent.category.LAUNCHER
+ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:36:1-37:77
+	android:name
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:36:1-37:77
+activity#com.google.android.gms.ads.AdActivity
+ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:40:1-41:115
+MERGED from [com.google.android.gms:play-services-ads:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/8.1.0/AndroidManifest.xml:26:9-29:64
+MERGED from [com.google.android.gms:play-services-ads:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/8.1.0/AndroidManifest.xml:26:9-29:64
+	android:configChanges
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:40:1-41:115
+	android:theme
+		ADDED from [com.google.android.gms:play-services-ads:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/8.1.0/AndroidManifest.xml:29:13-61
+	android:name
+		ADDED from /Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/AndroidManifest.xml:40:1-41:115
+uses-permission#android.permission.WAKE_LOCK
+ADDED from [com.google.android.gms:play-services-measurement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.1.0/AndroidManifest.xml:24:5-67
+	android:name
+		ADDED from [com.google.android.gms:play-services-measurement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.1.0/AndroidManifest.xml:24:22-65
+provider#com.google.android.gms.measurement.AppMeasurementContentProvider
+ADDED from [com.google.android.gms:play-services-measurement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.1.0/AndroidManifest.xml:28:7-31:37
+	android:exported
+		ADDED from [com.google.android.gms:play-services-measurement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.1.0/AndroidManifest.xml:31:11-35
+	android:authorities
+		ADDED from [com.google.android.gms:play-services-measurement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.1.0/AndroidManifest.xml:29:11-76
+	android:name
+		ADDED from [com.google.android.gms:play-services-measurement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.1.0/AndroidManifest.xml:30:11-90
+receiver#com.google.android.gms.measurement.AppMeasurementReceiver
+ADDED from [com.google.android.gms:play-services-measurement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.1.0/AndroidManifest.xml:33:7-39:18
+	android:enabled
+		ADDED from [com.google.android.gms:play-services-measurement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.1.0/AndroidManifest.xml:35:11-33
+	android:name
+		ADDED from [com.google.android.gms:play-services-measurement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.1.0/AndroidManifest.xml:34:11-83
+intent-filter#com.google.android.gms.measurement.UPLOAD
+ADDED from [com.google.android.gms:play-services-measurement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.1.0/AndroidManifest.xml:36:9-38:25
+action#com.google.android.gms.measurement.UPLOAD
+ADDED from [com.google.android.gms:play-services-measurement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.1.0/AndroidManifest.xml:37:11-77
+	android:name
+		ADDED from [com.google.android.gms:play-services-measurement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.1.0/AndroidManifest.xml:37:19-75
+service#com.google.android.gms.measurement.AppMeasurementService
+ADDED from [com.google.android.gms:play-services-measurement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.1.0/AndroidManifest.xml:41:7-44:37
+	android:exported
+		ADDED from [com.google.android.gms:play-services-measurement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.1.0/AndroidManifest.xml:44:11-35
+	android:enabled
+		ADDED from [com.google.android.gms:play-services-measurement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.1.0/AndroidManifest.xml:43:11-33
+	android:name
+		ADDED from [com.google.android.gms:play-services-measurement:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.1.0/AndroidManifest.xml:42:11-82
+activity#com.google.android.gms.ads.purchase.InAppPurchaseActivity
+ADDED from [com.google.android.gms:play-services-ads:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/8.1.0/AndroidManifest.xml:30:9-31:52
+MERGED from [com.google.android.gms:play-services-ads:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/8.1.0/AndroidManifest.xml:30:9-31:52
+	android:theme
+		ADDED from [com.google.android.gms:play-services-ads:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/8.1.0/AndroidManifest.xml:31:13-50
+	android:name
+		ADDED from [com.google.android.gms:play-services-ads:8.1.0] /Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/8.1.0/AndroidManifest.xml:30:19-91

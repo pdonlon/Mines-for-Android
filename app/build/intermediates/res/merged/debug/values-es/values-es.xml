@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <string name="Animations">Animaciones</string>
+    <string name="Cancel">Cancelar</string>
+    <string name="Easy">Fácil</string>
+    <string name="Give_your_opponents_the_code">Dele a su oponente(s) el código:</string>
+    <string name="Gold">Oro</string>
+    <string name="Hard">Duro</string>
+    <string name="High_Scores">Puntuaciones más Altas</string>
+    <string name="Host_Game">Juego Anfitrión</string>
+    <string name="Leaderboard">Leaderboard</string>
+    <string name="Medium">Medio</string>
+    <string name="Multiplayer">Multijugador</string>
+    <string name="New_Game">Nuevo Juego</string>
+    <string name="New_High_Score">¡Nuevo Récord!</string>
+    <string name="Okay">Bueno</string>
+    <string name="Online_Leaderboard">Online Leaderboard</string>
+    <string name="Paused">En pausa</string>
+    <string name="Reset">Reajustar</string>
+    <string name="Resume">Continuar</string>
+    <string name="Save">Guardar</string>
+    <string name="Settings">Configuración</string>
+    <string name="Start">Comienzo</string>
+    <string name="Vibration">Vibración</string>
+    <string name="When_all_players_are_ready">Cuando todos los jugadores están listos, pulse el botón de inicio a continuación para comenzar</string>
+    <string name="You_Win">¡Usted gana!</string>
+    <string name="achievement_daredevil">CgkIl-W7-vYaEAIQBw</string>
+    <string name="achievement_kaboom">CgkIl-W7-vYaEAIQBQ</string>
+    <string name="achievement_lightning">CgkIl-W7-vYaEAIQCQ</string>
+    <string name="achievement_speed_demon">CgkIl-W7-vYaEAIQCA</string>
+    <string name="achievement_speedy">CgkIl-W7-vYaEAIQBg</string>
+    <string name="action_settings">Configuración</string>
+    <string name="app_id">925285413527</string>
+    <string name="app_name">Minas HD</string>
+    <string msgid="6428604800157361567" name="common_android_wear_notification_needs_update_text">"<ns1:g id="APP_NAME">%1$s</ns1:g> necesita que la aplicación Android Wear se actualice."</string>
+    <string msgid="2453027084525739603" name="common_android_wear_update_text">"<ns1:g id="APP_NAME">%1$s</ns1:g> no funcionará hasta que no actualices la aplicación Android Wear."</string>
+    <string msgid="1366439133145190222" name="common_android_wear_update_title">"Actualizar Android Wear"</string>
+    <string msgid="6534628256897874213" name="common_google_play_services_api_unavailable_text">"<ns1:g id="APP_NAME">%1$s</ns1:g> necesita uno o varios servicios de Google Play que no están disponibles en este momento. Ponte en contacto con el desarrollador para obtener ayuda."</string>
+    <string msgid="4181637455539816337" name="common_google_play_services_enable_button">"Habilitar servicios de Google Play"</string>
+    <string msgid="4896236883690196080" name="common_google_play_services_enable_text">"<ns1:g id="APP_NAME">%1$s</ns1:g> no funcionará hasta que no habilites los servicios de Google Play."</string>
+    <string msgid="529078775174559253" name="common_google_play_services_enable_title">"Habilitar servicios de Google Play"</string>
+    <string msgid="2443362625939284971" name="common_google_play_services_error_notification_requested_by_msg">"Solicitada por <ns1:g id="APP_NAME">%1$s</ns1:g>"</string>
+    <string msgid="8515591849428043265" name="common_google_play_services_install_button">"Descargar servicios de Google Play"</string>
+    <string msgid="8836325110837822534" name="common_google_play_services_install_text_phone">"<ns1:g id="APP_NAME">%1$s</ns1:g> no funcionará si los servicios de Google Play no están instalados en tu teléfono."</string>
+    <string msgid="542176290824754127" name="common_google_play_services_install_text_tablet">"<ns1:g id="APP_NAME">%1$s</ns1:g> no funcionará si los servicios de Google Play no están instalados en tu tablet."</string>
+    <string msgid="26645092511305524" name="common_google_play_services_install_title">"Descargar servicios de Google Play"</string>
+    <string msgid="4983316348021735578" name="common_google_play_services_invalid_account_text">"La cuenta especificada no existe en este dispositivo. Selecciona otra cuenta."</string>
+    <string msgid="1066672360770936753" name="common_google_play_services_invalid_account_title">"Cuenta no válida"</string>
+    <string msgid="2583358409598976717" name="common_google_play_services_needs_enabling_title">"Una aplicación requiere que se habiliten los servicios de Google Play."</string>
+    <string msgid="9038847255613537209" name="common_google_play_services_network_error_text">"Se necesita una conexión de datos para establecer conexión con los servicios de Google Play."</string>
+    <string msgid="3827284619958211114" name="common_google_play_services_network_error_title">"Error de red"</string>
+    <string msgid="1388129345631079938" name="common_google_play_services_notification_needs_update_title">"Una aplicación requiere una actualización de servicios de Google Play."</string>
+    <string msgid="1852570676146674985" name="common_google_play_services_notification_ticker">"Error de servicios de Google Play"</string>
+    <string msgid="5194079840165204725" name="common_google_play_services_sign_in_failed_text">"Error al iniciar sesión en la cuenta especificada. Selecciona otra cuenta."</string>
+    <string msgid="8164948898147532159" name="common_google_play_services_sign_in_failed_title">"Error al iniciar sesión"</string>
+    <string msgid="4762332809710093730" name="common_google_play_services_unknown_issue">"Error desconocido relacionado con los servicios de Google Play"</string>
+    <string msgid="7682982632307307938" name="common_google_play_services_unsupported_text">"<ns1:g id="APP_NAME">%1$s</ns1:g> se basa en los servicios de Google Play, pero no son compatibles con tu dispositivo. Ponte en contacto con el fabricante para obtener asistencia."</string>
+    <string msgid="6334768798839376943" name="common_google_play_services_unsupported_title">"Servicios de Google Play"</string>
+    <string msgid="8932944190611227642" name="common_google_play_services_update_button">"Actualizar"</string>
+    <string msgid="5709479369299147668" name="common_google_play_services_update_text">"<ns1:g id="APP_NAME">%1$s</ns1:g> no funcionará hasta que no actualices los servicios de Google Play."</string>
+    <string msgid="6006316683626838685" name="common_google_play_services_update_title">"Actualiza los servicios de Google Play"</string>
+    <string msgid="2201289642219771610" name="common_google_play_services_updating_text">"<ns1:g id="APP_NAME">%1$s</ns1:g> no funcionará hasta que finalice la actualización en curso de los servicios de Google Play."</string>
+    <string msgid="815008177440683245" name="common_google_play_services_updating_title">"Actualización servicios Play en curso"</string>
+    <string msgid="411506735369601515" name="common_open_on_phone">"Abrir en teléfono"</string>
+    <string name="contacts_permission_rationale">Contacts access is needed in order to retrieve your email address.</string>
+    <string name="desc_google_icon">Google Logo</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="enter_code_below">Introduce el código de juego de la serie a continuación, y empujar inicio cuando esté listo</string>
+    <string name="error_null_person">
+        Error: Plus.PeopleApi.getCurrentPerson returned null. Ensure that the Google+ API is
+        enabled for your project, you have a properly configured google-services.json file
+        and that your device has an internet connection.
+    </string>
+    <string name="hello_world">Hello world!</string>
+    <string name="hint_code">Introduce el código de juego aquí</string>
+    <string name="host_new_game">Organiza un nuevo Juego</string>
+    <string name="join_existing_game">Únete a juego existentes</string>
+    <string name="join_game">Únete a Juego</string>
+    <string name="leaderboard_easy_leaderboard">CgkIl-W7-vYaEAIQAg</string>
+    <string name="leaderboard_hard_leaderboard">CgkIl-W7-vYaEAIQBA</string>
+    <string name="leaderboard_medium_leaderboard">CgkIl-W7-vYaEAIQAw</string>
+    <string name="loading_game">el juego carga</string>
+    <string name="package_name">com.pdonlon.mines2</string>
+    <string name="saving_game">ahorro de juego</string>
+    <string name="seconds">segundo</string>
+    <style name="AppBaseTheme" parent="android:Theme.Holo">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+</resources>
