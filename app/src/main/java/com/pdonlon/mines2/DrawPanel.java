@@ -1,6 +1,7 @@
 package com.pdonlon.mines2;
 
 import java.lang.reflect.Array;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
@@ -93,9 +94,13 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	SharedPreferences bombLocationX;
 	SharedPreferences bombLocationY;
 	Editor settingsEditor;
+	Editor scoresEditor;
 	Editor saveEditor;
 	Editor bombXEditor;
 	Editor bombYEditor;
+	DecimalFormat df = new DecimalFormat("#.##");
+	DecimalFormat df2 = new DecimalFormat(".##");
+
 	com.google.android.gms.common.SignInButton signInButton;
 
 	Thread s;
@@ -202,17 +207,27 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			playBoard.setTimeCounter(save.getInt("time", -1));
 			loadGame();
 		}
-		myHighScoresArray = new String[]{context.getString(R.string.Easy)+": "+ scores.getLong(context.getString(R.string.Easy), 0)/1000+" "+context.getString(R.string.seconds),context.getString(R.string.Medium)+": "+scores.getLong(context.getString(R.string.Medium), 0)/1000+" "+context.getString(R.string.seconds),context.getString(R.string.Hard)+": "+ scores.getLong(context.getString(R.string.Hard), 0)/1000+" "+context.getString(R.string.seconds)};
+		myHighScoresArray = new String[]{context.getString(R.string.Easy)+": "+ df.format((double) (scores.getLong(context.getString(R.string.Easy), 0) / 1000.0))+" "+context.getString(R.string.seconds),context.getString(R.string.Medium)+": "+df.format((double)(scores.getLong(context.getString(R.string.Medium), 0)/1000.0))+" "+context.getString(R.string.seconds),context.getString(R.string.Hard)+": "+ df.format((double) (scores.getLong(context.getString(R.string.Hard), 0) / 1000.0))+" "+context.getString(R.string.seconds)};
 		//TODO popup for new/old users telling them about new features/highscores
 
-//		if(settings.getInt("Version", 0) == 0)
-//		{
-//			displayNewMessage
-//		}
-//		else
-//			displayLoyaltyMessage
 
-		settingsEditor.putInt("Version", BuildConfig.VERSION_CODE);
+
+		if(settings.getInt("Version", 0) == 0)
+		{
+			if(scores.getLong(context.getString(R.string.Easy),0)>0)
+				scoresEditor.putLong(context.getString(R.string.Easy),(scores.getLong(context.getString(R.string.Easy),0)*1000));
+			if(scores.getLong(context.getString(R.string.Medium),0)>0)
+				scoresEditor.putLong(context.getString(R.string.Medium),(scores.getLong(context.getString(R.string.Medium), 0)*1000));
+			if (scores.getLong(context.getString(R.string.Hard), 0) > 0)
+				scoresEditor.putLong(context.getString(R.string.Hard), (scores.getLong(context.getString(R.string.Hard),0)*1000));
+
+			settingsEditor.putInt("Version", BuildConfig.VERSION_CODE);
+			Log.v("! @ # $ BUILD -",""+BuildConfig.VERSION_CODE);
+			settingsEditor.commit();
+			newFeatures();
+			//displayNewFeaturesMessage
+		}
+
 	}
 
 	public void setDifficulty(String a){
@@ -397,8 +412,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	{
 		String[] choices = {context.getString(R.string.host_new_game),context.getString(R.string.join_existing_game)};
 
-
-
 		builder = new AlertDialog.Builder(mactivity);
 		builder.setTitle(context.getString(R.string.Multiplayer))
 				.setSingleChoiceItems(choices, 0,
@@ -429,6 +442,27 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 		builder.setCancelable(false);
 		builder.show();
+	}
+
+	public void newFeatures()
+	{
+		builder = new AlertDialog.Builder(mactivity);
+		builder.setTitle(context.getString(R.string.New_Features))
+				.setMessage("Online Leader Boards\n\nMore precise scores\n\nNew interface\n\n\nMore updates coming soon!")
+				.setPositiveButton(context.getString(R.string.Okay), new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int id) {
+
+					}
+				});
+
+		builder.setCancelable(false);
+		builder.show();
+	}
+
+	public void openingMessage()
+	{
+
 	}
 
 	public void hostGame()
@@ -573,11 +607,12 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		if(score < scores.getLong(difficulty, 0) || scores.getLong(difficulty, 0) == 0)
 		{
 			showNewHighScore = true;
-			Editor editor = scores.edit();
-			editor.putLong(difficulty, score);
-			editor.commit();
-			myHighScoresArray[getGameNumber()] = myDifficultiesArray[getGameNumber()]+": "+ scores.getLong(myDifficultiesArray[getGameNumber()], 0)/1000+" "+context.getString(R.string.seconds);
+			scoresEditor.putLong(difficulty, score);
+			scoresEditor.commit();
+			myHighScoresArray[getGameNumber()] = myDifficultiesArray[getGameNumber()]+": "+ df.format((double)(scores.getLong(myDifficultiesArray[getGameNumber()], 0)/1000.0))+" "+context.getString(R.string.seconds);
 		}
+		else
+			showNewHighScore = false;
 		//fish
 	}
 
@@ -713,6 +748,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		bombLocationY = mactivity.getSharedPreferences("bombLocationY", Context.MODE_PRIVATE);
 
 		settingsEditor = settings.edit();
+		scoresEditor = scores.edit();
 		saveEditor = save.edit();
 		bombXEditor = bombLocationX.edit();
 		bombYEditor = bombLocationY.edit();
@@ -945,6 +981,16 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		showNewHighScore = false;
 	}
 
+	public void determineDifficulty()
+	{
+		if(playBoard.getTotalBombs() == 10)
+			difficulty = context.getString(R.string.Easy);
+		else if(playBoard.getTotalBombs() == 40)
+			difficulty = context.getString(R.string.Medium);
+		else if(playBoard.getTotalBombs() == 99)
+			difficulty = context.getString(R.string.Hard);
+	}
+
 	public void winMessage()
 	{
 		builder = new AlertDialog.Builder(mactivity);
@@ -957,7 +1003,7 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 			title = (context.getString(R.string.You_Win));
 
-		builder.setMessage(playBoard.getTimeCounter()+" "+context.getString(R.string.seconds)+" "+playBoard.getMillisecondsCounter()+" ms").setTitle(title)
+		builder.setMessage(playBoard.getTimeCounter()+""+df2.format(((double) playBoard.getMillisecondsCounter()) / 1000.0)+" "+context.getString(R.string.seconds)).setTitle(title)
 
 				.setPositiveButton(context.getString(R.string.Okay), new DialogInterface.OnClickListener() {
 					@Override
@@ -1017,10 +1063,11 @@ public class DrawPanel extends View implements View.OnTouchListener {
 					}
 				})
 
-				.setPositiveButton(context.getString(R.string.Online_Leaderboard), new DialogInterface.OnClickListener() {
+				.setPositiveButton(context.getString(R.string.Leaderboard), new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
 						pauseGame();
+						difficulty = myDifficultiesArray[difficultySelect];
 						if (!mactivity.isUserConnected()) {
 							leaderboardPressed = true;
 							mactivity.onSignInClicked();

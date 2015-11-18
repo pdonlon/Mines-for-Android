@@ -228,6 +228,8 @@ public class MainActivity extends Activity implements
 		Games.Leaderboards.submitScore(mGoogleApiClient, hmap.get(drawView.getDifficulty()), score);
 		displayLeaderboard(drawView.getDifficulty());
 		drawView.setLeaderboardPressed(false);
+		drawView.determineDifficulty();
+		//TODO display pause menu
 	}
 
 	@Override

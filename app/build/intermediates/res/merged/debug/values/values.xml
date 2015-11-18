@@ -28,8 +28,10 @@
     <string name="Leaderboard">Leaderboard</string>
     <string name="Medium">Medium</string>
     <string name="Multiplayer">Multiplayer</string>
+    <string name="New_Features">New Features</string>
     <string name="New_Game">New Game</string>
     <string name="New_High_Score">New High Score!</string>
+    <string name="Next">Next</string>
     <string name="Okay">Okay</string>
     <string name="Online_Leaderboard">Online Leaderboard</string>
     <string name="Paused">Paused</string>
@@ -116,7 +118,7 @@
     <string name="signing_in" translatable="false">Signing in…</string>
     <string name="store_picture_message">"Allow Ad to store image in Picture gallery?"</string>
     <string name="store_picture_title">Save image</string>
-    <style name="AppBaseTheme" parent="android:Theme.Holo">
+    <style name="AppTheme" parent="android:Theme.Material.Light">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
