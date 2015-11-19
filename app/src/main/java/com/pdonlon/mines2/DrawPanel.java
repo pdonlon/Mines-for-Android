@@ -207,27 +207,21 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			playBoard.setTimeCounter(save.getInt("time", -1));
 			loadGame();
 		}
-		myHighScoresArray = new String[]{context.getString(R.string.Easy)+": "+ df.format((double) (scores.getLong(context.getString(R.string.Easy), 0) / 1000.0))+" "+context.getString(R.string.seconds),context.getString(R.string.Medium)+": "+df.format((double)(scores.getLong(context.getString(R.string.Medium), 0)/1000.0))+" "+context.getString(R.string.seconds),context.getString(R.string.Hard)+": "+ df.format((double) (scores.getLong(context.getString(R.string.Hard), 0) / 1000.0))+" "+context.getString(R.string.seconds)};
 		//TODO popup for new/old users telling them about new features/highscores
-
-
 
 		if(settings.getInt("Version", 0) == 0)
 		{
-			if(scores.getLong(context.getString(R.string.Easy),0)>0)
-				scoresEditor.putLong(context.getString(R.string.Easy),(scores.getLong(context.getString(R.string.Easy),0)*1000));
-			if(scores.getLong(context.getString(R.string.Medium),0)>0)
-				scoresEditor.putLong(context.getString(R.string.Medium),(scores.getLong(context.getString(R.string.Medium), 0)*1000));
-			if (scores.getLong(context.getString(R.string.Hard), 0) > 0)
-				scoresEditor.putLong(context.getString(R.string.Hard), (scores.getLong(context.getString(R.string.Hard),0)*1000));
+			scoresEditor.putLong(context.getString(R.string.Easy),(scores.getInt(context.getString(R.string.Easy),0)*1000));
+			scoresEditor.putLong(context.getString(R.string.Medium), (scores.getInt(context.getString(R.string.Medium), 0) * 1000));
+			scoresEditor.putLong(context.getString(R.string.Hard), (scores.getInt(context.getString(R.string.Hard), 0) * 1000));
 
 			settingsEditor.putInt("Version", BuildConfig.VERSION_CODE);
-			Log.v("! @ # $ BUILD -",""+BuildConfig.VERSION_CODE);
+			scoresEditor.commit();
 			settingsEditor.commit();
-			newFeatures();
-			//displayNewFeaturesMessage
-		}
 
+			newFeatures();
+		}
+		myHighScoresArray = new String[]{context.getString(R.string.Easy)+": "+ df.format((scores.getLong(context.getString(R.string.Easy), 0) / 1000.0))+" "+context.getString(R.string.seconds),context.getString(R.string.Medium)+": "+df.format((scores.getLong(context.getString(R.string.Medium), 0)/1000.0))+" "+context.getString(R.string.seconds),context.getString(R.string.Hard)+": "+ df.format((scores.getLong(context.getString(R.string.Hard), 0) / 1000.0))+" "+context.getString(R.string.seconds)};
 	}
 
 	public void setDifficulty(String a){
@@ -293,7 +287,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		{
 			if (e.getAction() == MotionEvent.ACTION_DOWN)
 			{ //pressed
-				//Log.v("Pressed here: ", ""+e.getX()+ " "+e.getY()); //takes label and text
 
 				justPressedBar = false;
 				justFlagged = false;
@@ -341,7 +334,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 						else if(!playBoard.isThis((int)x, (int)y,"open")&&flagMode)
 						{
 							playBoard.markFlagged((int)x, (int)y);
-							//Log.v("Flagged here: ", ""+e.getX()+ " "+e.getY());
 						}
 
 						playBoard.checkWin();
@@ -379,8 +371,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 					playBoard.setDiffY(playBoard.getOffY() - y);
 
 					if(!dragging && (Math.abs(playBoard.getDiffX() + pressX) > playBoard.getTileSize() || Math.abs(playBoard.getDiffY() + pressY) > playBoard.getTileSize() )){
-						//Log.v(" X: ", ""+Math.abs(playBoard.getDiffX() + pressX));
-						//Log.v(" Y: ", ""+Math.abs(playBoard.getDiffY() + pressY));
 						dragging = true;
 						playBoard.setPressed(false);
 					}
@@ -448,13 +438,16 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	{
 		builder = new AlertDialog.Builder(mactivity);
 		builder.setTitle(context.getString(R.string.New_Features))
-				.setMessage("Online Leader Boards\n\nMore precise scores\n\nNew interface\n\n\nMore updates coming soon!")
-				.setPositiveButton(context.getString(R.string.Okay), new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-
-					}
-				});
+				.setMessage("\n•   " + context.getString(R.string.Online_Leader_Boards) +
+						"\n\n•   " + context.getString(R.string.Precise_Scores) +
+						"\n\n•   " + context.getString(R.string.New_Interface) +
+						"\n\n\n" + context.getString(R.string.More_updates_coming_soon))
+						.setPositiveButton(context.getString(R.string.Okay), new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								resumeGame();
+							}
+						});
 
 		builder.setCancelable(false);
 		builder.show();
@@ -611,9 +604,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 			scoresEditor.commit();
 			myHighScoresArray[getGameNumber()] = myDifficultiesArray[getGameNumber()]+": "+ df.format((double)(scores.getLong(myDifficultiesArray[getGameNumber()], 0)/1000.0))+" "+context.getString(R.string.seconds);
 		}
-		else
-			showNewHighScore = false;
-		//fish
 	}
 
 	public void saveGame()
@@ -661,9 +651,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 							cbEditor.putBoolean(key,playBoard.isThis(x, y,"bomb"));
 							coEditor.putBoolean(key,playBoard.isThis(x, y,"open"));
 							cfEditor.putBoolean(key,playBoard.isThis(x, y,"flag"));
-
-							//Log.v("saving "+x+" "+y,key);
-
 							counter++;
 						}
 					playBoard.saveBombLocations();
@@ -713,15 +700,12 @@ public class DrawPanel extends View implements View.OnTouchListener {
 						boolean flagged = cellFlag.getBoolean(key,false);
 
 						playBoard.createMine(x,y,bs,open,bomb,flagged);
-						//Log.v("loading "+x+" "+y,key);
-
 						counter++;
 					}
 
 				for(int x=0; x<save.getInt("total bombs", 0); x++)//place loaded bombs in the bomb linked list
 				{
 					playBoard.placeBombLocation(bombLocationX.getInt(x+"", 0),bombLocationY.getInt(x+"", 0));
-					//Log.v("load:",""+bombLocationX.getInt(x+"", 0)+bombLocationY.getInt(x+"", 0));
 				}
 				//				notify();
 			}
@@ -808,7 +792,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	{
 		if(playBoard.getOpenedBoxCount() == 0)
 			return;
-		//Log.v("PAUSED"," GAME");
 		pauseGame();
 		pauseAlertDialogUp = true;
 		builder = new AlertDialog.Builder(mactivity);
@@ -959,7 +942,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	{
 		saveEditor.putBoolean("gameInProgress", inProgress);
 		saveEditor.commit();
-		//Log.v("Game in Progress =",""+inProgress);
 	}
 
 	public void alertTitleAndMessage(String title, String message, final String button)
@@ -1000,8 +982,9 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		if(showNewHighScore)
 			title = (context.getString(R.string.New_High_Score));
 		else
-
 			title = (context.getString(R.string.You_Win));
+
+		showNewHighScore = false;
 
 		builder.setMessage(playBoard.getTimeCounter()+""+df2.format(((double) playBoard.getMillisecondsCounter()) / 1000.0)+" "+context.getString(R.string.seconds)).setTitle(title)
 

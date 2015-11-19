@@ -323,14 +323,7 @@
                     "endOffset": 2198
                 },
                 "from": {
-                    "file": "/Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/res/values/strings.xml",
-                    "position": {
-                        "startLine": 25,
-                        "startColumn": 4,
-                        "startOffset": 1114,
-                        "endColumn": 53,
-                        "endOffset": 1163
-                    }
+                    "file": "/Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/res/values/strings.xml"
                 }
             },
             {
@@ -1361,7 +1354,7 @@
                     "startOffset": 10161,
                     "endLine": 126,
                     "endColumn": 12,
-                    "endOffset": 10452
+                    "endOffset": 10446
                 },
                 "from": {
                     "file": "/Users/PhilipDonlon/StudioProjects/Mines2/app/src/main/res/values/styles.xml",
@@ -1371,7 +1364,7 @@
                         "startOffset": 186,
                         "endLine": 12,
                         "endColumn": 12,
-                        "endOffset": 477
+                        "endOffset": 471
                     }
                 }
             },
@@ -1379,10 +1372,10 @@
                 "to": {
                     "startLine": 127,
                     "startColumn": 4,
-                    "startOffset": 10457,
+                    "startOffset": 10451,
                     "endLine": 134,
                     "endColumn": 10,
-                    "endOffset": 10876
+                    "endOffset": 10870
                 },
                 "from": {
                     "file": "/Users/PhilipDonlon/StudioProjects/Mines2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/8.1.0/res/values/admob_iap_style.xml"

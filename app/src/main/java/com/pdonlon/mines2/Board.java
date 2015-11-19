@@ -448,7 +448,6 @@ public class Board {
 		timeCounter = -1;
 		millisecondsCounter = 0;
 		millisecondsStart = 0;
-		Log.v("Startup", ""+getMillisecondsCounter()+"ms");
 		win = false;
 		lose = false;
 
@@ -531,8 +530,6 @@ public class Board {
 		{
 			timer.cancel();
 			timer.purge();
-			Log.v("Ending Timer1", "" + getMillisecondsCounter() + "ms");
-			Log.v("Ending Timer 2", "" + getMillisecondsCounter() + "ms");
 			timerActive = false;
 		}
 	}
@@ -540,7 +537,6 @@ public class Board {
 	public void startTimer()
 	{
 		timerActive = true;
-		Log.v("Starting Timer", ""+getMillisecondsCounter()+"ms");
 		millisecondsStart = System.currentTimeMillis();
 		timer = new Timer();
 
@@ -729,8 +725,8 @@ public class Board {
 
 						checkWin();
 						if(win){
-							if(game.winMessage)
-								game.winMessage();
+								if(game.winMessage)
+									game.winMessage();
 
 						}
 
@@ -1027,7 +1023,6 @@ public class Board {
 			game.save(game.bombYEditor,count+"",bombs.getValues()[1]);
 			count++;
 			totalBs--;
-			//Log.v("save x:",""+bombs.getValues()[0]+","+bombs.getValues()[1]);
 
 			bombs.deque();
 		}
@@ -1036,7 +1031,6 @@ public class Board {
 	public void placeBombLocation(int x, int y)
 	{
 		bombs.enque(x,y);
-		Log.v("HELLO","HELLO");
 	}
 
 

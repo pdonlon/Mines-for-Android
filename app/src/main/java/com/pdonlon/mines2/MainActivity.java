@@ -284,7 +284,7 @@ public class MainActivity extends Activity implements
 	protected void onPause()
 	{
 		super.onPause();
-		Log.v(TAG, "++ ON PAUSE ++");
+//		Log.v(TAG, "++ ON PAUSE ++");
 		drawView.pauseGame();
 		//call pause function (stops timer and dims screen)
 		//same thing for pressing the clock
@@ -292,7 +292,7 @@ public class MainActivity extends Activity implements
 	protected void onResume()
 	{
 		super.onResume();
-		Log.v(TAG, "++ ON RESUME ++");
+//		Log.v(TAG, "++ ON RESUME ++");
 		if(drawView.paused && !drawView.pauseAlertDialogUp)
 			drawView.pauseMenu();
 		//call pause function (stops timer and dims screen)
@@ -302,14 +302,14 @@ public class MainActivity extends Activity implements
 	protected void onStart()
 	{
 		super.onStart();
-		Log.v(TAG, "++ ON START ++");
+//		Log.v(TAG, "++ ON START ++");
 		mGoogleApiClient.connect();
 	}
 
 	protected void onStop() {
 		super.onStop();
 		//drawView.saveGame();
-		Log.v(TAG, "++ ON STOP ++");
+//		Log.v(TAG, "++ ON STOP ++");
 
 		//drawView.pauseGame();
 		if (mGoogleApiClient.isConnected()) {
@@ -334,7 +334,6 @@ public class MainActivity extends Activity implements
 					connectionResult.startResolutionForResult(this, RC_SIGN_IN);
 					mIsResolving = true;
 				} catch (IntentSender.SendIntentException e) {
-					Log.e(TAG, "Could not resolve ConnectionResult.", e);
 					mIsResolving = false;
 					mGoogleApiClient.connect();
 				}
@@ -352,7 +351,7 @@ public class MainActivity extends Activity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		Log.v(TAG, "++ ON DESTROY ++");
+//		Log.v(TAG, "++ ON DESTROY ++");
 		//drawView.saveGame();
 	}
 
@@ -527,7 +526,6 @@ public class MainActivity extends Activity implements
 //		realButton.setId(R.id.titleId);
 
 //		findViewById(R.id.why).setVisibility(View.INVISIBLE);
-		Log.v("a", "WAS SET COMPLETLEY FINE");
 
 		// Build GoogleApiClient with access to basic profile
 

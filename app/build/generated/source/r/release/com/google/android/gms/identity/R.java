@@ -73,9 +73,9 @@ public final class R {
 		public static final int gtm_analytics = 0x7f040000;
 	}
 	public static final class string {
-		public static final int accept = 0x7f050051;
-		public static final int auth_google_play_services_client_facebook_display_name = 0x7f050052;
-		public static final int auth_google_play_services_client_google_display_name = 0x7f050053;
+		public static final int accept = 0x7f050055;
+		public static final int auth_google_play_services_client_facebook_display_name = 0x7f050056;
+		public static final int auth_google_play_services_client_google_display_name = 0x7f050057;
 		public static final int common_android_wear_notification_needs_update_text = 0x7f050000;
 		public static final int common_android_wear_update_text = 0x7f050001;
 		public static final int common_android_wear_update_title = 0x7f050002;
@@ -106,13 +106,13 @@ public final class R {
 		public static final int common_google_play_services_updating_text = 0x7f05001b;
 		public static final int common_google_play_services_updating_title = 0x7f05001c;
 		public static final int common_open_on_phone = 0x7f05001d;
-		public static final int common_signin_button_text = 0x7f050054;
-		public static final int common_signin_button_text_long = 0x7f050055;
-		public static final int create_calendar_message = 0x7f050056;
-		public static final int create_calendar_title = 0x7f050057;
-		public static final int decline = 0x7f050058;
-		public static final int store_picture_message = 0x7f05005f;
-		public static final int store_picture_title = 0x7f050060;
+		public static final int common_signin_button_text = 0x7f050058;
+		public static final int common_signin_button_text_long = 0x7f050059;
+		public static final int create_calendar_message = 0x7f05005a;
+		public static final int create_calendar_title = 0x7f05005b;
+		public static final int decline = 0x7f05005c;
+		public static final int store_picture_message = 0x7f050063;
+		public static final int store_picture_title = 0x7f050064;
 	}
 	public static final class style {
 		public static final int Theme_IAPTheme = 0x7f070002;

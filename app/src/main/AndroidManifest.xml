@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.pdonlon.mines2"
     android:versionCode="23"
-    android:versionName="2.01">
+    android:versionName="3.0">
     
     <uses-sdk
         android:minSdkVersion="9"
