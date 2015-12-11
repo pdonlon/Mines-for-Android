@@ -245,8 +245,8 @@ com/google/android/gms/ads/internal/client/zzy$zza.class
 com/google/android/gms/internal/zzez.class
 com/google/android/gms/internal/zzgn.class
 com/google/android/gms/ads/internal/zzk.class
-com/google/android/gms/common/GoogleApiAvailability.class
 android/support/annotation/DrawableRes.class
+com/google/android/gms/common/GoogleApiAvailability.class
 android/support/v4/app/NotificationCompat$Builder.class
 com/google/android/gms/common/api/CommonStatusCodes.class
 com/pdonlon/mines2/Board.class

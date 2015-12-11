@@ -4,6 +4,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.Api;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -15,6 +16,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -124,6 +126,7 @@ public class MainActivity extends Activity implements
 	static MenuItem mens8;
 	static boolean pro = false;
 
+	Toast notify;
 	//com.google.android.gms.common.SignInButton realButton;
 
 	static int screenWidth, screenHeight;
@@ -213,6 +216,14 @@ public class MainActivity extends Activity implements
 		return true;
 	}
 
+	public boolean isGooglePlayServicesInstalled()
+	{
+		//com.google.android.gms
+
+		GoogleApiAvailability g = GoogleApiAvailability.getInstance();
+		return (g.isGooglePlayServicesAvailable(this) == ConnectionResult.SUCCESS);
+	}
+
 	public void onSignOutClicked() {
 		// Clear the default account so that GoogleApiClient will not automatically
 		// connect in the future.
@@ -284,7 +295,6 @@ public class MainActivity extends Activity implements
 	protected void onPause()
 	{
 		super.onPause();
-//		Log.v(TAG, "++ ON PAUSE ++");
 		drawView.pauseGame();
 		//call pause function (stops timer and dims screen)
 		//same thing for pressing the clock
@@ -292,7 +302,6 @@ public class MainActivity extends Activity implements
 	protected void onResume()
 	{
 		super.onResume();
-//		Log.v(TAG, "++ ON RESUME ++");
 		if(drawView.paused && !drawView.pauseAlertDialogUp)
 			drawView.pauseMenu();
 		//call pause function (stops timer and dims screen)
@@ -302,19 +311,18 @@ public class MainActivity extends Activity implements
 	protected void onStart()
 	{
 		super.onStart();
-//		Log.v(TAG, "++ ON START ++");
 		mGoogleApiClient.connect();
 	}
 
 	protected void onStop() {
 		super.onStop();
 		//drawView.saveGame();
-//		Log.v(TAG, "++ ON STOP ++");
 
 		//drawView.pauseGame();
 		if (mGoogleApiClient.isConnected()) {
 			mGoogleApiClient.disconnect();
-		}	}
+		}
+	}
 
 	public boolean isUserConnected()
 	{
@@ -362,6 +370,8 @@ public class MainActivity extends Activity implements
 		mens3 = menu.add(0, 3, 2, DrawPanel.context.getString(R.string.New_Game));
 		mens4 = menu.add(0, 4, 2, DrawPanel.context.getString(R.string.High_Scores));
 		mens5 = menu.add(0, 5, 2, DrawPanel.context.getString(R.string.Multiplayer));
+		mens6 = menu.add(0,6,2, "Rate Game");
+		//mens7 = menu.add(0,7,2, "TESTING 2");
 		//mens6 = menu.add(0, 6, 2, DrawPanel.context.getString(R.string.Gold));
 
 		return true;
@@ -392,7 +402,6 @@ public class MainActivity extends Activity implements
 			if(action == KeyEvent.ACTION_DOWN)
 			{
 				drawView.quitMenu();
-				//System.exit(0);
 			}
 			
 			return super.dispatchKeyEvent(event);
@@ -422,7 +431,35 @@ public class MainActivity extends Activity implements
 		case 5:
 			drawView.startMultiplayer();
 			return true;
-			
+
+		case 6:
+			try
+			{
+				Uri marketUri = Uri.parse("market://details?id=" + getPackageName());
+				Intent i = new Intent(Intent.ACTION_VIEW, marketUri);
+				startActivity(i);
+			}
+			catch (Exception e)
+			{
+				notify.setText("You don\\'t appear to have the Google Play Store");
+				notify.show();
+			}
+			return true;
+
+//			case 7:
+//				try
+//				{
+//					Uri marketUri = Uri.parse("market://details?id=com.google.android.play.games");
+//					Intent i = new Intent(Intent.ACTION_VIEW, marketUri);
+//					startActivity(i);
+//				}
+//				catch (Exception e)
+//				{
+//					notify.setText("You don\\'t appear to have the Google Play Store");
+//					notify.show();
+//				}
+//				return true;
+
 //		case 6:
 			//displayLeaderboard("Easy");
 //			Board.proToggle();
@@ -504,7 +541,7 @@ public class MainActivity extends Activity implements
 	
 	public void updateTitleColor(boolean gold)
 	{
-		if(gold) //gold font
+		if (gold) //gold font
 			getActionBar().setTitle(Html.fromHtml("<font color=\"#FFD700\">"+ getString(R.string.app_name)+"</font>"));
 		else
 			getActionBar().setTitle(getString(R.string.app_name));
@@ -512,8 +549,8 @@ public class MainActivity extends Activity implements
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
 
 		hmap = new HashMap<String, String>();
 		hmap.put("Easy", getString(R.string.leaderboard_easy_leaderboard));
@@ -557,7 +594,8 @@ public class MainActivity extends Activity implements
 		// comment me out to die
 		//layout2.addView(realButton);
 
-		
+		notify = Toast.makeText(drawView.context, "", Toast.LENGTH_SHORT);
+
 		if (drawView.save.getBoolean("gold", pro)) //gold font
 			getActionBar().setTitle(Html.fromHtml("<font color=\"#FFD700\">"+ getString(R.string.app_name)+"</font>"));
 

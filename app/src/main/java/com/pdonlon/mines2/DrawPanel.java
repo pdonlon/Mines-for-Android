@@ -12,6 +12,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -19,6 +20,7 @@ import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader.TileMode;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.text.Html;
@@ -41,6 +43,8 @@ import android.widget.Toast;
 import android.graphics.Shader;
 import android.content.SharedPreferences;
 
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.games.Games;
 
 public class DrawPanel extends View implements View.OnTouchListener {
@@ -144,9 +148,8 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		myDifficultiesArray = new String[]{context.getString(R.string.Easy),context.getString(R.string.Medium),context.getString(R.string.Hard)};
 		difficultyMap = new HashMap<String, String>();
 		difficultyMap.put(context.getString(R.string.Easy), 0);
-		difficultyMap.put(context.getString(R.string.Medium),1);
-		difficultyMap.put(context.getString(R.string.Hard),2);
-
+		difficultyMap.put(context.getString(R.string.Medium), 1);
+		difficultyMap.put(context.getString(R.string.Hard), 2);
 
 		myStringArray[0]=context.getString(R.string.Vibration);
 		myStringArray[1] = context.getString(R.string.Animations);
@@ -156,7 +159,13 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		this.mactivity = mactivity;
 		initializeSharedPreferences();
 
-		while(!save.getBoolean("done saving", true)){
+
+		if(save.getBoolean("saveGame", false))
+			makeToast(context.getString(R.string.loading_game));
+
+		long beforeSleep = System.currentTimeMillis();
+
+		while(!save.getBoolean("done saving", true) && (System.currentTimeMillis() - beforeSleep < 2500)){
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
@@ -201,8 +210,11 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		updateFlagMode();
 		updateSettings();
 
-		if(!save.getBoolean("saveGame", false))
+		playBoard.setTimeCounter(-1);
+
+		if(!save.getBoolean("saveGame", false)) {
 			this.playBoard.initializeBoard();
+		}
 		else{
 			playBoard.setTimeCounter(save.getInt("time", -1));
 			loadGame();
@@ -242,7 +254,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 	public boolean onTouch(View v, MotionEvent e)
 	{
-
 		float x = (e.getX()-playBoard.getOffX())/(playBoard.tileSize);
 		float y = (e.getY()-playBoard.getOffY())/(playBoard.tileSize);
 
@@ -427,8 +438,8 @@ public class DrawPanel extends View implements View.OnTouchListener {
 					hostGame();
 				else if (selection == 1)
 					joinGame();
-		}
-	});
+			}
+		});
 
 		builder.setCancelable(false);
 		builder.show();
@@ -519,7 +530,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		builder = new AlertDialog.Builder(mactivity);
 
 		// Setting Dialog Title
-		//builder.setTitle("Game Code: "+(getGameNumber())+""+randomSeed).setMessage("Give your opponent this game code then click start");
 
 		builder.setTitle(context.getString(R.string.join_game)).setMessage(context.getString(R.string.enter_code_below));
 
@@ -536,9 +546,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		input.setLayoutParams(lp);
 		builder.setView(input);
 
-
-
-
 		// Setting Positive "Yes" Button
 		builder.setPositiveButton("Start",
 				new DialogInterface.OnClickListener() {
@@ -553,7 +560,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 					}
 					catch(Exception e)
 					{
-						//builder.setMessage("Please enter a valid game code");
 						resumeGame();
 						return;
 					}
@@ -571,8 +577,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				}});
 				pauseAlertDialogUp = false;
 				//start game
-				//				saveEditor.putBoolean("multiplayer", true);
-				//				saveEditor.commit();
 			}
 		});
 		// Setting Negative "NO" Button
@@ -610,22 +614,25 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	{
 		saveEditor.putBoolean("done saving", false);
 		saveEditor.commit();
+		if(!gameOver && playBoard.getOpenedBoxCount()>0) {
+			makeToast(context.getString(R.string.saving_game));
+		}
 
 		Thread s;
 		s = new Thread( new Runnable(){
-			public void run()
-			{
-				synchronized(this){
+			public void run() {
+				synchronized (this) {
 					saveEditor.putString("difficulty", difficulty);
 					saveEditor.putBoolean("gold", Board.pro);
-					playBoard.endTimer();
+//					playBoard.endTimer();
 					saveEditor.putInt("time", playBoard.getTimeCounter());
 
-					if(gameOver || !(playBoard.getTimeCounter()>0))
+					if(gameOver || !(playBoard.getOpenedBoxCount()>0))
 					{
 						saveEditor.putBoolean("saveGame", false);
 						saveEditor.putBoolean("done saving", true);
 						saveEditor.commit();
+						Log.v("HELLO","THIS COULD BE GOOD");
 						return;
 					}
 
@@ -790,8 +797,6 @@ public class DrawPanel extends View implements View.OnTouchListener {
 
 	public void pauseMenu()
 	{
-		if(playBoard.getOpenedBoxCount() == 0)
-			return;
 		pauseGame();
 		pauseAlertDialogUp = true;
 		builder = new AlertDialog.Builder(mactivity);
@@ -944,6 +949,36 @@ public class DrawPanel extends View implements View.OnTouchListener {
 		saveEditor.commit();
 	}
 
+	public void googlePlayServicesMissingMessage()
+	{
+		builder = new AlertDialog.Builder(mactivity);
+		builder.setMessage("Google play services need to be installed for leaderboards to work").setTitle("Google Play Services Missing")
+
+				.setNegativeButton(context.getString(R.string.Cancel), new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int id) {
+						resumeGame();
+					}
+				})
+				.setPositiveButton("Install", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int id) {
+						try {
+							Uri marketUri = Uri.parse("market://details?id=com.google.android.play.games");
+							Intent i = new Intent(Intent.ACTION_VIEW, marketUri);
+							mactivity.startActivity(i);
+						} catch (Exception e) {
+							mactivity.notify.setText("You don\\'t appear to have the Google Play Store");
+							mactivity.notify.show();
+						}
+					}
+				});
+
+		AlertDialog dialog = builder.create();
+		dialog.show();
+		showNewHighScore = false;
+	}
+
 	public void alertTitleAndMessage(String title, String message, final String button)
 	{
 		builder = new AlertDialog.Builder(mactivity);
@@ -998,11 +1033,22 @@ public class DrawPanel extends View implements View.OnTouchListener {
 				.setNeutralButton(context.getString(R.string.Leaderboard), new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
-						if (!mactivity.isUserConnected()) {
-							leaderboardPressed = true;
-							mactivity.onSignInClicked();
-						} else
-							mactivity.submitScore(scores.getLong(difficulty, 0));
+
+						int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(mactivity.getApplicationContext());
+
+						Log.v("GOOGLE PLAY SERVICES "+status,"GET APP");
+						//nexus 7 was a success
+						//nexus 7 was a success
+
+						if (!mactivity.isGooglePlayServicesInstalled()) {
+							googlePlayServicesMissingMessage();
+						} else {
+							if (!mactivity.isUserConnected()) {
+								leaderboardPressed = true;
+								mactivity.onSignInClicked();
+							} else
+								mactivity.submitScore(scores.getLong(difficulty, 0));
+						}
 					}
 				})
 
@@ -1069,9 +1115,8 @@ public class DrawPanel extends View implements View.OnTouchListener {
 	public void makeToast(String message)
 	{
 		CharSequence text = message;
-		int duration = Toast.LENGTH_SHORT;
 
-		Toast toast = Toast.makeText(context, text, duration);
+		Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
 		//toast.setGravity(Gravity.TOP|Gravity.LEFT, 0, 0); //position of toast
 		toast.show();
 	}

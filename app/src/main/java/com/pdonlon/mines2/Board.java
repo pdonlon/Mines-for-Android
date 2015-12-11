@@ -86,7 +86,6 @@ public class Board {
 	int timeCounter;
 	long millisecondsCounter;
 	long millisecondsStart;
-	boolean timerActive;
 
 	float offX;
 	float offY;
@@ -526,17 +525,15 @@ public class Board {
 
 	public void endTimer()
 	{
-		if(timer != null && timerActive)
+		if(timer != null)
 		{
 			timer.cancel();
 			timer.purge();
-			timerActive = false;
 		}
 	}
 
 	public void startTimer()
 	{
-		timerActive = true;
 		millisecondsStart = System.currentTimeMillis();
 		timer = new Timer();
 
@@ -545,10 +542,11 @@ public class Board {
 			@Override
 			public void run()
 			{
-				timeCounter++;
-				millisecondsStart = System.currentTimeMillis();
-				tikTok();
-
+				if(!lose) {
+					timeCounter++;
+					millisecondsStart = System.currentTimeMillis();
+					tikTok();
+				}
 				game.mactivity.runOnUiThread(new Runnable()
 				{
 					public void run()
@@ -686,9 +684,10 @@ public class Board {
 							game.setGameOver(true);
 							endTimer();
 						}
-						fast.enque(x+j, y+i);
-						fastCount++;
-
+						else {
+							fast.enque(x + j, y + i);
+							fastCount++;
+						}
 					}
 				}
 			}
@@ -696,7 +695,7 @@ public class Board {
 		else
 			return;
 		fastAnimation();
-		checkWin();
+		//checkWin();
 	}
 
 	public void fastAnimation(){
@@ -723,7 +722,7 @@ public class Board {
 				game.mactivity.runOnUiThread(new Runnable() {
 					public void run() {
 
-						checkWin();
+						//checkWin();
 						if(win){
 								if(game.winMessage)
 									game.winMessage();
@@ -743,12 +742,15 @@ public class Board {
 
 	public void tileOpen()
 	{
-		openBox(fast.getValues()[0],fast.getValues()[1]);
+		openBox(fast.getValues()[0], fast.getValues()[1]);
 
 		fast.deque();
 
-		game.mactivity.runOnUiThread(new Runnable(){ public void run() {
-			game.invalidate();}});
+		game.mactivity.runOnUiThread(new Runnable() {
+			public void run() {
+				game.invalidate();
+			}
+		});
 
 	}
 
@@ -861,6 +863,8 @@ public class Board {
 		catch(Exception e){
 
 		}
+
+		checkWin();
 
 		game.mactivity.runOnUiThread(new Runnable(){ public void run() {
 			game.invalidate();}});
@@ -1111,18 +1115,6 @@ public class Board {
 		checkBoard();
 	}
 
-	public boolean lost(){
-
-		for(int y=0; y<height; y++){
-			for(int x=0; x<width; x++){
-
-				if(board[x][y].isBomb() && board[x][y].isOpened())
-					return true;
-			}
-		}
-		return false;
-	}
-
 	public int getOpenedBoxCount(){
 
 		int opened = 0;
@@ -1177,28 +1169,6 @@ public class Board {
 
 		if(lose || win)
 			gameOver = true;
-
-		return gameOver;
-	}
-
-	public String gameOverMessage(){ //TODO
-
-		String gameOver = "";
-		//
-		//		if(win)
-		//		{
-		//			if(!compactMode)
-		//				gameOver = "Game Over! You win! Time: "+timeCounter; //timer*1000;
-		//			else
-		//				gameOver = "Game over you win! Time: "+timeCounter; //timer*1000;
-		//		}
-		//		else
-		//		{
-		//			if(!compactMode)
-		//				gameOver = "Game Over! You Lose! "+timeCounter;
-		//			else
-		//				gameOver = "Game over you lose! Time: "+timeCounter; //timer*1000;
-		//		}
 
 		return gameOver;
 	}
