@@ -1,4 +1,5 @@
-![Kaboom logo](https://github.com/adam-design/Kaboom/raw/master/Android/res/ic_launcher.png) Kaboom!!
+<img src="https://durianapps.com/mines.png" width=150 />
+Download: https://durianapps.com/apps/mines/
 
 ## License
 ```
